@@ -188,7 +188,9 @@ async function apiRequest<T>(path: string, init: RequestInit): Promise<T> {
   let response: Response;
 
   try {
-    response = await fetch(`/api${path}`, {
+    const apiBaseUrl = (import.meta.env.VITE_HUB_API_URL || "").replace(/\/$/, "");
+
+    response = await fetch(`${apiBaseUrl}${path}`, {
       ...init,
       headers: {
         "Content-Type": "application/json",
