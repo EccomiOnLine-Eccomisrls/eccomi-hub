@@ -1,0 +1,14 @@
+node_modules
+.next
+.open-next
+out
+dist
+.DS_Store
+*.log
+*.tsbuildinfo
+__pycache__/
+*.pyc
+vite.config.js
+vite.config.d.ts
+.env*
+!.env.example
