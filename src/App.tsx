@@ -379,7 +379,7 @@ const pageTitles: Record<ViewKey, { eyebrow: string; title: string; subtitle: st
 };
 
 const POSTA_OPERATIONAL_URL = "https://eccomi-posta-backend.onrender.com/dashboard/pratiche";
-const NOLEGGIO_OPERATIONAL_URL = "https://eccomi-noleggio.b55k7dq9qc.chatgpt.site/";
+const NOLEGGIO_OPERATIONAL_URL = "https://noleggio.eccomionline.com/ceo";
 const requestedPreview = new URLSearchParams(window.location.search).get("preview");
 const DEV_PREVIEW_VIEW: ViewKey | null = Boolean((import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV)
   && requestedPreview
