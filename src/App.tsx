@@ -2537,11 +2537,81 @@ function EcosystemDrawer({
             </section>
 
             <section className="drawer-section">
-              <span className="drawer-section__title">Pipeline</span>
+              <span className="drawer-section__title">Pipeline operativa</span>
               <div className="posta-service-grid">
-                <span><small>Approvate</small><strong>{noleggioSummary.summary.approved}</strong></span>
-                <span><small>In scadenza</small><strong>{noleggioSummary.summary.expiring}</strong></span>
-                <span><small>Scadute / archiviate</small><strong>{noleggioSummary.summary.expired}</strong></span>
+                <span>
+                  <small>Nuove quotazioni</small>
+                  <strong>{noleggioSummary.pipeline.quotationsNew}</strong>
+                </span>
+                <span>
+                  <small>Verifica AI</small>
+                  <strong>{noleggioSummary.pipeline.aiReview}</strong>
+                </span>
+                <span>
+                  <small>Da approvare</small>
+                  <strong>{noleggioSummary.pipeline.pendingApproval}</strong>
+                </span>
+                <span>
+                  <small>Pubblicate</small>
+                  <strong>{noleggioSummary.pipeline.published}</strong>
+                </span>
+                <span>
+                  <small>Lead nuovi</small>
+                  <strong>{noleggioSummary.pipeline.leadsNew}</strong>
+                </span>
+                <span>
+                  <small>Lead in lavorazione</small>
+                  <strong>{noleggioSummary.pipeline.leadsWorking}</strong>
+                </span>
+                <span>
+                  <small>Contratti</small>
+                  <strong>{noleggioSummary.pipeline.contracts}</strong>
+                </span>
+                <span>
+                  <small>Consegne</small>
+                  <strong>{noleggioSummary.pipeline.deliveries}</strong>
+                </span>
+                <span>
+                  <small>Archiviate</small>
+                  <strong>{noleggioSummary.pipeline.archived}</strong>
+                </span>
+              </div>
+            </section>
+
+            <section className="drawer-section">
+              <span className="drawer-section__title">Decision Center · Alert</span>
+              <div className="posta-practice-list">
+                {noleggioSummary.alerts.map((alert, index) => (
+                  <div className="posta-practice-row" key={`${alert.type}-${index}`}>
+                    <span
+                      className={`status-dot ${
+                        alert.type === "warning"
+                          ? "status-dot--orange"
+                          : alert.type === "success"
+                            ? "status-dot--green"
+                            : "status-dot--blue"
+                      }`}
+                    />
+                    <span>
+                      <strong>{alert.title}</strong>
+                      <small>
+                        {alert.type === "warning"
+                          ? "Richiede attenzione"
+                          : alert.type === "success"
+                            ? "Nuova opportunità"
+                            : "Informazione operativa"}
+                      </small>
+                    </span>
+                  </div>
+                ))}
+
+                {!noleggioSummary.alerts.length && (
+                  <div className="empty-state">
+                    <ShieldCheck size={22} />
+                    <strong>Nessun alert operativo</strong>
+                    <span>Al momento non risultano attività urgenti.</span>
+                  </div>
+                )}
               </div>
             </section>
 

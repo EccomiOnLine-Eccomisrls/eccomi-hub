@@ -149,6 +149,23 @@ export type NoleggioRecentEvent = {
   createdAt: string;
 };
 
+export type NoleggioPipeline = {
+  quotationsNew: number;
+  aiReview: number;
+  pendingApproval: number;
+  published: number;
+  leadsNew: number;
+  leadsWorking: number;
+  contracts: number;
+  deliveries: number;
+  archived: number;
+};
+
+export type NoleggioAlert = {
+  type: string;
+  title: string;
+};
+
 export type NoleggioSummary = {
   source: string;
   safeReadOnly: boolean;
@@ -166,6 +183,8 @@ export type NoleggioSummary = {
     contracts: number;
     commissionCents: number;
   };
+  pipeline: NoleggioPipeline;
+  alerts: NoleggioAlert[];
   recent: NoleggioRecentEvent[];
 };
 
@@ -359,6 +378,21 @@ type NoleggioSummaryPayload = {
     contracts: number;
     commission_cents: number;
   };
+  pipeline?: {
+    quotations_new: number;
+    ai_review: number;
+    pending_approval: number;
+    published: number;
+    leads_new: number;
+    leads_working: number;
+    contracts: number;
+    deliveries: number;
+    archived: number;
+  };
+  alerts?: Array<{
+    type: string;
+    title: string;
+  }>;
   recent: Array<{
     id: string;
     event_type: string;
@@ -394,6 +428,23 @@ export async function getNoleggioSummary(accessToken: string): Promise<NoleggioS
       contracts: Number(payload.summary.contracts || 0),
       commissionCents: Number(payload.summary.commission_cents || 0),
     },
+    pipeline: {
+      quotationsNew: Number(payload.pipeline?.quotations_new || 0),
+      aiReview: Number(payload.pipeline?.ai_review || 0),
+      pendingApproval: Number(payload.pipeline?.pending_approval || 0),
+      published: Number(payload.pipeline?.published || 0),
+      leadsNew: Number(payload.pipeline?.leads_new || 0),
+      leadsWorking: Number(payload.pipeline?.leads_working || 0),
+      contracts: Number(payload.pipeline?.contracts || 0),
+      deliveries: Number(payload.pipeline?.deliveries || 0),
+      archived: Number(payload.pipeline?.archived || 0),
+    },
+    alerts: Array.isArray(payload.alerts)
+      ? payload.alerts.map((alert) => ({
+        type: String(alert.type || "info"),
+        title: String(alert.title || ""),
+      }))
+      : [],
     recent: Array.isArray(payload.recent)
       ? payload.recent.map((event) => ({
         id: event.id,
