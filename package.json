@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/update-noleggio-operational-url.mjs",
     "build": "tsc --noEmit && vite build",
     "postbuild": "node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
