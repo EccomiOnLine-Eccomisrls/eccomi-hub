@@ -2,7 +2,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 
 const LEGACY_NOLEGGIO_URL = "https://eccomi-noleggio.b55k7dq9qc.chatgpt.site/";
-const RENDER_NOLEGGIO_URL = "https://eccomi-noleggio.onrender.com/";
+const NOLEGGIO_OPERATIONAL_URL = "https://noleggio.eccomionline.com/ceo";
 
 function replaceLegacyNoleggioUrl(): Plugin {
   return {
@@ -14,7 +14,7 @@ function replaceLegacyNoleggioUrl(): Plugin {
       }
 
       return {
-        code: code.replaceAll(LEGACY_NOLEGGIO_URL, RENDER_NOLEGGIO_URL),
+        code: code.replaceAll(LEGACY_NOLEGGIO_URL, NOLEGGIO_OPERATIONAL_URL),
         map: null,
       };
     },
