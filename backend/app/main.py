@@ -694,17 +694,14 @@ async def noleggio_summary(
 
     async with httpx.AsyncClient(timeout=20.0) as client:
         response = await client.get(
-            (
-                f"{NOLEGGIO_API_URL}"
-                "/internal/hub/summary"
-            ),
+            f"{NOLEGGIO_API_URL}/api/internal/hub-summary",
             headers={
-                "X-Hub-Read-Secret": (
-                    NOLEGGIO_HUB_READ_SECRET
+                "Authorization": (
+                    f"Bearer {NOLEGGIO_HUB_READ_SECRET}"
                 ),
                 "Accept": "application/json",
             },
-        )
+       )
 
     if not response.is_success:
         raise HTTPException(
