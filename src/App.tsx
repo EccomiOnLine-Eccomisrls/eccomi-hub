@@ -571,7 +571,7 @@ export default function Home() {
   );
 
   const saveSession = (session: HubSession) => {
-    window.sessionStorage.setItem("eccomi-hub-session", JSON.stringify(session));
+    window.localStorage.setItem("eccomi-hub-session", JSON.stringify(session));
     setHubSession(session);
     setCurrentUser(session.user);
     setAuthenticated(true);
@@ -579,7 +579,7 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    const savedSession = window.sessionStorage.getItem("eccomi-hub-session");
+    const savedSession = window.localStorage.getItem("eccomi-hub-session");
     if (savedSession) {
       try {
         const session = JSON.parse(savedSession) as HubSession;
@@ -595,7 +595,7 @@ export default function Home() {
               })
               .catch(() => {
                 if (!cancelled) {
-                  window.sessionStorage.removeItem("eccomi-hub-session");
+                  window.localStorage.removeItem("eccomi-hub-session");
                   setHubSession(null);
                   setCurrentUser(null);
                   setAuthenticated(false);
@@ -608,7 +608,7 @@ export default function Home() {
           }
         }
       } catch {
-        window.sessionStorage.removeItem("eccomi-hub-session");
+        window.localStorage.removeItem("eccomi-hub-session");
       }
     }
 
@@ -807,7 +807,7 @@ export default function Home() {
   };
 
   const signOut = () => {
-    window.sessionStorage.removeItem("eccomi-hub-session");
+    window.localStorage.removeItem("eccomi-hub-session");
     setAuthenticated(false);
     setHubSession(null);
     setCurrentUser(null);
