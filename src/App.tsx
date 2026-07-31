@@ -505,9 +505,9 @@ function withNoleggioSummary(
       revenue: String(noleggioSummary.summary.active),
       margin: String(noleggioSummary.summary.leadsTotal),
       open: toWork,
-      trend: noleggioSummary.summary.pendingApproval
-        ? `${noleggioSummary.summary.pendingApproval} da approvare`
-        : "Aggiornato",
+      trend: toWork > 0
+        ? `${toWork} ${toWork === 1 ? "attività da lavorare" : "attività da lavorare"}`
+        : "Nessuna attività critica",
       primaryMetricLabel: "Promozioni online",
       secondaryMetricLabel: "Lead totali",
       dataMode: "real",
@@ -2514,6 +2514,15 @@ function EcosystemDrawer({
       + noleggioSummary.summary.newLeads
       + noleggioSummary.summary.workingLeads;
 
+    const noleggioBusinessEvents = noleggioSummary.recent.filter((event) => {
+      const eventType = event.eventType.toLowerCase();
+      return !eventType.includes("delete")
+        && !eventType.includes("purge");
+    });
+
+    const hiddenTechnicalEvents =
+      noleggioSummary.recent.length - noleggioBusinessEvents.length;
+
     return (
       <div className="drawer-layer">
         <button className="drawer-scrim" onClick={onClose} aria-label="Chiudi" />
@@ -2537,79 +2546,159 @@ function EcosystemDrawer({
             </section>
 
             <section className="drawer-section">
-              <span className="drawer-section__title">Pipeline operativa</span>
+              <span className="drawer-section__title">
+                Pipeline operativa
+              </span>
+
+              <div className="posta-readonly-note">
+                <CarFront size={18} />
+                <span>
+                  <strong>Pubblicazione offerte</strong>
+                  <small>
+                    Dalla quotazione ricevuta fino alla pubblicazione online.
+                  </small>
+                </span>
+              </div>
+
               <div className="posta-service-grid">
                 <span>
                   <small>Nuove quotazioni</small>
-                  <strong>{noleggioSummary.pipeline.quotationsNew}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.quotationsNew}
+                  </strong>
                 </span>
+
                 <span>
                   <small>Verifica AI</small>
-                  <strong>{noleggioSummary.pipeline.aiReview}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.aiReview}
+                  </strong>
                 </span>
+
                 <span>
                   <small>Da approvare</small>
-                  <strong>{noleggioSummary.pipeline.pendingApproval}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.pendingApproval}
+                  </strong>
                 </span>
+
                 <span>
                   <small>Pubblicate</small>
-                  <strong>{noleggioSummary.pipeline.published}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.published}
+                  </strong>
                 </span>
+              </div>
+
+              <div className="posta-readonly-note">
+                <CarFront size={18} />
+                <span>
+                  <strong>Pipeline commerciale</strong>
+                  <small>
+                    Dal nuovo contatto fino alla firma del contratto.
+                  </small>
+                </span>
+              </div>
+
+              <div className="posta-service-grid">
                 <span>
                   <small>Lead nuovi</small>
-                  <strong>{noleggioSummary.pipeline.leadsNew}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.leadsNew}
+                  </strong>
                 </span>
+
                 <span>
-                  <small>Lead in lavorazione</small>
-                  <strong>{noleggioSummary.pipeline.leadsWorking}</strong>
+                  <small>In lavorazione</small>
+                  <strong>
+                    {noleggioSummary.pipeline.leadsWorking}
+                  </strong>
                 </span>
+
                 <span>
                   <small>Contratti</small>
-                  <strong>{noleggioSummary.pipeline.contracts}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.contracts}
+                  </strong>
                 </span>
+              </div>
+
+              <div className="posta-readonly-note">
+                <ShieldCheck size={18} />
+                <span>
+                  <strong>Gestione operativa</strong>
+                  <small>
+                    Consegne completate e pratiche archiviate.
+                  </small>
+                </span>
+              </div>
+
+              <div className="posta-service-grid">
                 <span>
                   <small>Consegne</small>
-                  <strong>{noleggioSummary.pipeline.deliveries}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.deliveries}
+                  </strong>
                 </span>
+
                 <span>
                   <small>Archiviate</small>
-                  <strong>{noleggioSummary.pipeline.archived}</strong>
+                  <strong>
+                    {noleggioSummary.pipeline.archived}
+                  </strong>
                 </span>
               </div>
             </section>
 
             <section className="drawer-section">
-              <span className="drawer-section__title">Decision Center · Alert</span>
+              <span className="drawer-section__title">
+                Decision Center · Alert
+              </span>
+
               <div className="posta-practice-list">
-                {noleggioSummary.alerts.map((alert, index) => (
-                  <div className="posta-practice-row" key={`${alert.type}-${index}`}>
-                    <span
-                      className={`status-dot ${
-                        alert.type === "warning"
-                          ? "status-dot--orange"
-                          : alert.type === "success"
-                            ? "status-dot--green"
-                            : "status-dot--blue"
-                      }`}
-                    />
-                    <span>
-                      <strong>{alert.title}</strong>
-                      <small>
-                        {alert.type === "warning"
-                          ? "Richiede attenzione"
-                          : alert.type === "success"
-                            ? "Nuova opportunità"
-                            : "Informazione operativa"}
-                      </small>
-                    </span>
-                  </div>
-                ))}
+                {noleggioSummary.alerts.map((alert, index) => {
+                  const alertType = alert.type.toLowerCase();
+
+                  const priority =
+                    alertType === "critical" || alertType === "error"
+                      ? "Critico"
+                      : alertType === "warning"
+                        ? "Attenzione"
+                        : alertType === "success"
+                          ? "Opportunità"
+                          : "Informazione";
+
+                  const dotClass =
+                    alertType === "critical" || alertType === "error"
+                      ? "status-dot--red"
+                      : alertType === "warning"
+                        ? "status-dot--orange"
+                        : alertType === "success"
+                          ? "status-dot--green"
+                          : "status-dot--blue";
+
+                  return (
+                    <div
+                      className="posta-practice-row"
+                      key={`${alert.type}-${alert.title}-${index}`}
+                    >
+                      <span className={`status-dot ${dotClass}`} />
+
+                      <span>
+                        <strong>{alert.title}</strong>
+                        <small>{priority}</small>
+                      </span>
+                    </div>
+                  );
+                })}
 
                 {!noleggioSummary.alerts.length && (
                   <div className="empty-state">
                     <ShieldCheck size={22} />
                     <strong>Nessun alert operativo</strong>
-                    <span>Al momento non risultano attività urgenti.</span>
+                    <span>
+                      Al momento non risultano attività urgenti.
+                    </span>
                   </div>
                 )}
               </div>
@@ -2618,14 +2707,56 @@ function EcosystemDrawer({
             <section className="drawer-section">
               <span className="drawer-section__title">Ultimi eventi</span>
               <div className="posta-practice-list">
-                {noleggioSummary.recent.slice(0, 6).map((event) => (
+                {noleggioBusinessEvents.slice(0, 6).map((event) => (
                   <div className="posta-practice-row" key={event.id}>
                     <span className="status-dot status-dot--blue" />
-                    <span><strong>{event.title}</strong><small>{formatPostaStatus(event.eventType)}</small></span>
-                    <time>{formatRelativeDate(event.createdAt)}</time>
+
+                    <span>
+                      <strong>{event.title}</strong>
+                      <small>
+                        {formatPostaStatus(event.eventType)}
+                      </small>
+                    </span>
+
+                    <time>
+                      {formatRelativeDate(event.createdAt)}
+                    </time>
                   </div>
                 ))}
-                {!noleggioSummary.recent.length && <div className="empty-state"><CarFront size={22} /><strong>Nessun evento recente</strong><span>I nuovi caricamenti e le pubblicazioni compariranno qui.</span></div>}
+
+                {!noleggioBusinessEvents.length && (
+                  <div className="empty-state">
+                    <CarFront size={22} />
+                    <strong>
+                      Nessun evento commerciale recente
+                    </strong>
+                    <span>
+                      Nuovi lead, pubblicazioni e contratti
+                      compariranno qui.
+                    </span>
+                  </div>
+                )}
+
+                {hiddenTechnicalEvents > 0 && (
+                  <div className="posta-readonly-note">
+                    <ShieldCheck size={18} />
+
+                    <span>
+                      <strong>
+                        {hiddenTechnicalEvents}
+                        {" "}
+                        {hiddenTechnicalEvents === 1
+                          ? "evento tecnico escluso"
+                          : "eventi tecnici esclusi"}
+                      </strong>
+
+                      <small>
+                        Eliminazioni e manutenzioni restano
+                        disponibili nei log dell’area Noleggio.
+                      </small>
+                    </span>
+                  </div>
+                )}
               </div>
             </section>
 
