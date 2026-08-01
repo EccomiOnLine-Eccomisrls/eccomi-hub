@@ -134,6 +134,114 @@ export function buildCeoPriorities(params: CeoPriorityParams): CeoPriority[] {
   return priorities.slice(0, 5);
 }
 
+export type ExecutiveBriefing = {
+  headline: string;
+  message: string;
+  objective: string;
+};
+
+export type ExecutiveBriefingParams = {
+  priorities: CeoPriority[];
+  postaSummary: PostaSummary | null;
+  noleggioSummary: NoleggioSummary | null;
+  openDecisionCount: number;
+};
+
+export function buildExecutiveBriefing(
+  params: ExecutiveBriefingParams,
+): ExecutiveBriefing {
+  const criticalCount = params.priorities.filter(
+    (item) => item.severity === "critical",
+  ).length;
+
+  const warningCount = params.priorities.filter(
+    (item) => item.severity === "warning",
+  ).length;
+
+  const opportunityCount = params.priorities.filter(
+    (item) => item.severity === "opportunity",
+  ).length;
+
+  const topPriority = params.priorities.find(
+    (item) =>
+      item.severity === "critical" ||
+      item.severity === "warning" ||
+      item.severity === "opportunity",
+  );
+
+  if (criticalCount > 0) {
+    return {
+      headline: "Richiesta attenzione immediata",
+      message:
+        criticalCount === 1
+          ? "È presente una criticità che richiede il tuo intervento."
+          : `Sono presenti ${criticalCount} criticità che richiedono il tuo intervento.`,
+      objective: topPriority?.title || "Verificare le criticità operative",
+    };
+  }
+
+  if (warningCount > 0) {
+    return {
+      headline: "Attenzione controllata",
+      message:
+        warningCount === 1
+          ? "È presente una priorità operativa da gestire oggi."
+          : `Sono presenti ${warningCount} priorità operative da gestire oggi.`,
+      objective: topPriority?.title || "Completare le priorità operative",
+    };
+  }
+
+  if (opportunityCount > 0) {
+    return {
+      headline: "Giornata orientata alla crescita",
+      message:
+        opportunityCount === 1
+          ? "È disponibile una nuova opportunità commerciale."
+          : `Sono disponibili ${opportunityCount} opportunità commerciali.`,
+      objective: topPriority?.title || "Valutare le opportunità commerciali",
+    };
+  }
+
+  if (params.openDecisionCount > 0) {
+    return {
+      headline: "Decisioni da completare",
+      message:
+        params.openDecisionCount === 1
+          ? "Una decisione è ancora aperta nel Decision Center."
+          : `${params.openDecisionCount} decisioni sono ancora aperte nel Decision Center.`,
+      objective: "Completare le decisioni ancora aperte",
+    };
+  }
+
+  const realSignals: string[] = [];
+
+  if (params.postaSummary) {
+    realSignals.push(
+      `${params.postaSummary.summary.open} pratiche Posta aperte`,
+    );
+  }
+
+  if (params.noleggioSummary) {
+    const noleggioActivities =
+      params.noleggioSummary.summary.pendingApproval +
+      params.noleggioSummary.summary.newLeads +
+      params.noleggioSummary.summary.workingLeads;
+
+    realSignals.push(
+      `${noleggioActivities} attività Noleggio da monitorare`,
+    );
+  }
+
+  return {
+    headline: "Ecosistema operativo",
+    message: realSignals.length
+      ? `Situazione sotto controllo: ${realSignals.join(" e ")}.`
+      : "Nessuna criticità bloccante rilevata nei sistemi collegati.",
+    objective: "Concentrarsi sulla crescita dell’ecosistema",
+  };
+}
+
+
 export function getCeoGreeting(name: string) {
   const hour = new Date().getHours();
   if (hour < 12) return `Buongiorno ${name}`;

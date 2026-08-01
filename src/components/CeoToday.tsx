@@ -9,6 +9,7 @@ type CeoTodayProps = {
   activitiesToVerify: number;
   criticalIssues: number;
   dataModeLabel: string;
+  objective: string;
   onOpenPriorities: () => void;
 };
 
@@ -30,6 +31,7 @@ export function CeoToday({
   activitiesToVerify,
   criticalIssues,
   dataModeLabel,
+  objective,
   onOpenPriorities,
 }: CeoTodayProps) {
   const formattedDate = formatItalianDate();
@@ -63,7 +65,7 @@ export function CeoToday({
               </div>
               <div>
                 <span>Obiettivo del giorno</span>
-                <strong>Trasformare i segnali in priorità e decisioni immediate</strong>
+                <strong>{objective}</strong>
               </div>
             </div>
           </div>
