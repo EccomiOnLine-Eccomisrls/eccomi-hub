@@ -1112,6 +1112,7 @@ export default function Home() {
               noleggioState={noleggioState}
               displayName={displayName}
               greeting={greeting}
+              testMode={testMode}
               onNavigate={navigate}
               onSelectEcosystem={setSelectedEcosystem}
               onNewEntry={() => setNewEntryOpen(true)}
@@ -1735,6 +1736,7 @@ function DashboardView({
   noleggioState,
   displayName,
   greeting,
+  testMode,
   onNavigate,
   onSelectEcosystem,
   onNewEntry,
@@ -1748,34 +1750,46 @@ function DashboardView({
   noleggioState: "idle" | "loading" | "ready" | "error";
   displayName: string;
   greeting: string;
+  testMode: boolean;
   onNavigate: (key: ViewKey) => void;
   onSelectEcosystem: (item: Ecosystem) => void;
   onNewEntry: () => void;
 }) {
   const postaLive = postaState === "ready" ? postaSummary : null;
   const noleggioLive = noleggioState === "ready" ? noleggioSummary : null;
-  const kpis = [
-    { label: "Ricavi del mese", value: "€ 48.320", trend: "+12,4%", trendType: "up", note: "vs mese precedente", icon: CircleDollarSign },
-    { label: "Margine", value: "€ 14.870", trend: "+8,1%", trendType: "up", note: "30,8% sui ricavi", icon: WalletCards },
-    { label: "Clienti attivi", value: "1.284", trend: "+5,2%", trendType: "up", note: "64 nuovi questo mese", icon: UserCheck },
-    {
-      label: postaLive ? "Posta · da lavorare" : "Pratiche aperte",
-      value: postaLive ? String(postaLive.summary.open) : "86",
-      trend: postaLive ? `${postaLive.summary.createdToday} oggi` : "12 oggi",
-      trendType: "neutral",
-      note: postaLive ? `${postaLive.summary.sent} inviate a Poste` : "Tempo medio 1,8 giorni",
-      icon: FolderKanban,
-    },
-    {
-      label: postaLive ? "Posta · anomalie" : "Pratiche critiche",
-      value: postaLive ? String(postaLive.summary.errors) : "7",
-      trend: postaLive ? `${postaLive.summary.manual} manuali` : "−2",
-      trendType: postaLive?.summary.errors ? "neutral" : "down",
-      note: postaLive ? "Fonte reale in sola lettura" : "3 richiedono attenzione",
-      icon: AlertTriangle,
-    },
-    { label: "Opportunità", value: "34", trend: "+€ 21,6K", trendType: "up", note: "Valore potenziale", icon: Target },
-  ];
+  const unavailableNote = "Dato amministrativo non ancora collegato";
+
+  const kpis = testMode
+    ? [
+        { label: "Ricavi del mese", value: "€ 48.320", trend: "+12,4%", trendType: "up", note: "Dato dimostrativo", icon: CircleDollarSign },
+        { label: "Margine", value: "€ 14.870", trend: "+8,1%", trendType: "up", note: "Dato dimostrativo", icon: WalletCards },
+        { label: "Clienti attivi", value: "1.284", trend: "+5,2%", trendType: "up", note: "Dato dimostrativo", icon: UserCheck },
+        { label: "Pratiche aperte", value: "86", trend: "12 oggi", trendType: "neutral", note: "Dato dimostrativo", icon: FolderKanban },
+        { label: "Pratiche critiche", value: "7", trend: "−2", trendType: "down", note: "Dato dimostrativo", icon: AlertTriangle },
+        { label: "Opportunità", value: "34", trend: "+€ 21,6K", trendType: "up", note: "Dato dimostrativo", icon: Target },
+      ]
+    : [
+        { label: "Ricavi del mese", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: CircleDollarSign },
+        { label: "Margine", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: WalletCards },
+        { label: "Clienti attivi", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: UserCheck },
+        {
+          label: "Posta · da lavorare",
+          value: postaLive ? String(postaLive.summary.open) : "—",
+          trend: postaLive ? `${postaLive.summary.createdToday} oggi` : "—",
+          trendType: "neutral",
+          note: postaLive ? `${postaLive.summary.sent} inviate a Poste` : "Dato reale non disponibile",
+          icon: FolderKanban,
+        },
+        {
+          label: "Posta · anomalie",
+          value: postaLive ? String(postaLive.summary.errors) : "—",
+          trend: postaLive ? `${postaLive.summary.manual} manuali` : "—",
+          trendType: postaLive?.summary.errors ? "neutral" : "down",
+          note: postaLive ? "Fonte reale in sola lettura" : "Dato reale non disponibile",
+          icon: AlertTriangle,
+        },
+        { label: "Opportunità", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: Target },
+      ];
 
   const statusLabel = postaLive && noleggioLive ? "Attenzione controllata" : postaLive ? "Posta in osservazione" : noleggioLive ? "Noleggio in osservazione" : "Ecosistema stabile";
   const statusMessage = postaLive && noleggioLive
@@ -1802,7 +1816,13 @@ function DashboardView({
         operatingEcosystems={ecosystems.length}
         activitiesToVerify={priorities.length}
         criticalIssues={priorities.filter((item) => item.severity === "critical").length}
-        dataModeLabel={postaLive || noleggioLive ? "Dati reali attivi" : "Dati dimostrativi"}
+        dataModeLabel={
+          testMode
+            ? "Dati dimostrativi"
+            : postaLive || noleggioLive
+              ? "Dati reali attivi"
+              : "Dati reali non disponibili"
+        }
         onOpenPriorities={() => onNavigate("ai")}
       />
       <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />

@@ -24,8 +24,8 @@ function StatusDot({ tone }: { tone: "green" | "amber" | "red" }) {
 export function CeoControlCenter({ priorities, onOpenDecisionCenter }: { priorities: CeoPriority[]; onOpenDecisionCenter: () => void }) {
   const activityCounters = [
     { label: "Da approvare", value: String(priorities.filter((item) => item.severity === "warning" || item.severity === "critical").length), tone: "amber" },
-    { label: "In lavorazione", value: String(Math.max(1, priorities.length - 1)), tone: "green" },
-    { label: "Completate oggi", value: "32", tone: "green" },
+    { label: "In lavorazione", value: String(Math.max(0, priorities.length - 1)), tone: "green" },
+    { label: "Completate oggi", value: "—", tone: "green" },
   ];
 
   return (
@@ -50,7 +50,7 @@ export function CeoControlCenter({ priorities, onOpenDecisionCenter }: { priorit
         <article className="ceo-control-center__card ceo-control-center__card--ecosystems">
           <div className="ceo-control-center__head">
             <span className="ceo-control-center__eyebrow">Ecosistemi</span>
-            <span className="ceo-control-center__hint">Dati reali attivi</span>
+            <span className="ceo-control-center__hint">Stato indicativo</span>
           </div>
           <div className="ceo-control-center__ecosystems">
             {ecosystems.map((item) => (
