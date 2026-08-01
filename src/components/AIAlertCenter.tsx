@@ -1,6 +1,10 @@
-import { ArrowRight, AlertTriangle, Bot, CheckCircle2, Lightbulb, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, AlertTriangle, Bot, CheckCircle2, ChevronDown, Lightbulb, Sparkles, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { CeoPriority, CeoPrioritySeverity } from "../lib/ceoIntelligence";
+import {
+  explainCeoPriority,
+  type CeoPriority,
+  type CeoPrioritySeverity,
+} from "../lib/ceoIntelligence";
 
 type AIAlertCenterProps = {
   priorities: CeoPriority[];
@@ -33,6 +37,7 @@ function getActionLabel(targetView: CeoPriority["targetView"]) {
 
 export function AIAlertCenter({ priorities, onNavigate }: AIAlertCenterProps) {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [expandedPriorityId, setExpandedPriorityId] = useState<string | null>(null);
   const filteredPriorities = useMemo(() => {
     if (activeFilter === "all") return priorities;
     return priorities.filter((item) => item.severity === activeFilter);
@@ -77,6 +82,9 @@ export function AIAlertCenter({ priorities, onNavigate }: AIAlertCenterProps) {
             {filteredPriorities.map((priority) => {
               const meta = severityMeta[priority.severity];
               const Icon = meta.icon;
+              const explanation = explainCeoPriority(priority);
+              const expanded = expandedPriorityId === priority.id;
+
               return (
                 <article className={`alert-card ${meta.className}`} key={priority.id}>
                   <span className={`alert-icon alert-icon--${priority.severity}`}>
@@ -89,9 +97,59 @@ export function AIAlertCenter({ priorities, onNavigate }: AIAlertCenterProps) {
                     </div>
                     <h3>{priority.title}</h3>
                     <p>{priority.description}</p>
-                    <button onClick={() => onNavigate(priority.targetView)}>
-                      {priority.actionLabel} <ArrowRight size={15} />
-                    </button>
+
+                    <div className="alert-card__actions">
+                      <button
+                        className="alert-card__why-button"
+                        onClick={() =>
+                          setExpandedPriorityId(
+                            expanded ? null : priority.id,
+                          )
+                        }
+                        aria-expanded={expanded}
+                      >
+                        Perché lo vedo?
+                        <ChevronDown
+                          size={15}
+                          className={
+                            expanded
+                              ? "alert-card__chevron alert-card__chevron--open"
+                              : "alert-card__chevron"
+                          }
+                        />
+                      </button>
+
+                      <button onClick={() => onNavigate(priority.targetView)}>
+                        {priority.actionLabel} <ArrowRight size={15} />
+                      </button>
+                    </div>
+
+                    {expanded && (
+                      <div className="decision-intelligence">
+                        <div className="decision-intelligence__item">
+                          <span>PERCHÉ</span>
+                          <p>{explanation.why}</p>
+                        </div>
+
+                        <div className="decision-intelligence__item decision-intelligence__item--risk">
+                          <span>RISCHIO SE NON INTERVIENI</span>
+                          <p>{explanation.risk}</p>
+                        </div>
+
+                        <div className="decision-intelligence__item decision-intelligence__item--benefit">
+                          <span>BENEFICIO ATTESO</span>
+                          <p>{explanation.benefit}</p>
+                        </div>
+
+                        <div className="decision-intelligence__recommendation">
+                          <Sparkles size={16} />
+                          <div>
+                            <span>AZIONE CONSIGLIATA</span>
+                            <strong>{explanation.recommendedAction}</strong>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </article>
               );
