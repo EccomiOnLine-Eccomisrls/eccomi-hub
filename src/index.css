@@ -80,15 +80,20 @@ button:disabled { cursor: not-allowed; opacity: .52; }
 .global-search span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; }
 kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; color: #8190a3; background: white; border: 1px solid #dbe3eb; border-radius: 5px; box-shadow: 0 1px 0 #d6dee8; }
 .topbar__actions { display: flex; align-items: center; gap: 10px; }
-.test-switch { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; font-weight: 700; }
-.switch { width: 34px; height: 20px; padding: 2px; border: 0; border-radius: 20px; background: #c8d2dc; transition: .2s ease; }
-.switch span { display: block; width: 16px; height: 16px; border-radius: 50%; background: white; transition: .2s ease; box-shadow: 0 2px 5px rgba(0,0,0,.2); }
-.switch--on { background: var(--blue); }
-.switch--on span { transform: translateX(14px); }
+.topbar-pill, .topbar-status-pill, .topbar-profile-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--muted); font-size: 11px; font-weight: 750; box-shadow: 0 8px 18px rgba(7, 63, 115, 0.04); transition: .16s ease; }
+.topbar-pill:hover, .topbar-status-pill:hover, .topbar-profile-button:hover { color: var(--navy); border-color: #c7d5e3; background: #fcfdff; box-shadow: 0 10px 24px rgba(7, 63, 115, 0.06); }
+.topbar-pill__icon { width: 18px; height: 18px; display: grid; place-items: center; color: var(--blue); }
+.topbar-pill__label, .topbar-status-pill__label, .topbar-profile-button__label { white-space: nowrap; }
+.topbar-ai-button { position: relative; }
+.topbar-ai-button--alert { color: var(--navy); border-color: #f0ddaa; background: linear-gradient(135deg, #fffdf6 0%, #fff7db 100%); }
+.topbar-ai-button--critical { border-color: #f1b3b8; background: linear-gradient(135deg, #fff8f8 0%, #ffe7e7 100%); color: #9a1d2f; }
+.topbar-ai-badge { min-width: 20px; height: 20px; display: grid; place-items: center; padding: 0 6px; border-radius: 999px; background: var(--amber); color: white; font-size: 8px; font-weight: 800; }
+.topbar-ai-button--critical .topbar-ai-badge { background: var(--red); }
+.topbar-status-pill--demo { color: #8f6400; border-color: #f1d9a5; background: #fffaf0; }
+.topbar-status-pill .status-dot { width: 8px; height: 8px; flex: 0 0 auto; }
+.topbar-profile-button__avatar { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; background: var(--blue-light); color: var(--blue); }
 .icon-button { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); background: white; color: var(--muted); border-radius: 10px; transition: .16s ease; }
 .icon-button:hover { color: var(--navy); border-color: #bfccda; background: #f9fbfd; }
-.notification-button { position: relative; }
-.notification-button > span { position: absolute; top: -5px; right: -5px; width: 17px; height: 17px; display: grid; place-items: center; border-radius: 50%; background: var(--red); color: white; font-size: 8px; font-weight: 800; border: 2px solid white; }
 .new-entry-button, .primary-button, .approve-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 10px; padding: 0 14px; background: var(--blue); color: white; font-size: 11px; font-weight: 750; box-shadow: 0 7px 18px rgba(37,99,235,.18); }
 .new-entry-button:hover, .primary-button:hover, .approve-button:hover { background: #1d4ed8; transform: translateY(-1px); }
 .content { width: min(1540px, 100%); margin: 0 auto; padding: 28px 30px 56px; }
@@ -177,6 +182,16 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; 
   .ceo-today__panel { padding: 20px; }
   .ceo-today__hero, .ceo-today__footer { flex-direction: column; align-items: flex-start; }
   .ceo-today__metrics { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .topbar { height: auto; padding: 14px 16px; flex-wrap: wrap; gap: 12px; }
+  .topbar__actions { gap: 8px; flex-wrap: wrap; }
+  .topbar-pill__label, .topbar-status-pill__label, .topbar-profile-button__label { display: none; }
+  .topbar-pill, .topbar-status-pill, .topbar-profile-button { min-height: 34px; padding: 0 9px; }
+  .topbar-profile-button__avatar { width: 24px; height: 24px; }
+  .new-entry-button { padding: 0 10px; }
+  .new-entry-button span { display: none; }
 }
 
 @media (max-width: 640px) {
