@@ -1,21 +1,16 @@
-import { Activity, AlertTriangle, ArrowRight, CalendarDays, Sparkles, Target, TrendingUp } from "lucide-react";
+import { Activity, ArrowRight, Sparkles } from "lucide-react";
 
 type CeoTodayProps = {
   displayName: string;
+  greeting: string;
   statusLabel: string;
   statusMessage: string;
   operatingEcosystems: number;
   activitiesToVerify: number;
   criticalIssues: number;
+  dataModeLabel: string;
   onOpenPriorities: () => void;
 };
-
-function getGreeting(name: string) {
-  const hour = new Date().getHours();
-  if (hour < 12) return `Buongiorno ${name}`;
-  if (hour < 18) return `Buon pomeriggio ${name}`;
-  return `Buonasera ${name}`;
-}
 
 function formatItalianDate() {
   return new Intl.DateTimeFormat("it-IT", {
@@ -28,14 +23,15 @@ function formatItalianDate() {
 
 export function CeoToday({
   displayName,
+  greeting,
   statusLabel,
   statusMessage,
   operatingEcosystems,
   activitiesToVerify,
   criticalIssues,
+  dataModeLabel,
   onOpenPriorities,
 }: CeoTodayProps) {
-  const greeting = getGreeting(displayName);
   const formattedDate = formatItalianDate();
 
   return (
@@ -44,10 +40,10 @@ export function CeoToday({
         <div className="ceo-today__hero">
           <div className="ceo-today__intro">
             <span className="ceo-today__eyebrow">ECCOMI TODAY</span>
-            <h2 id="ceo-today-title">{greeting}</h2>
+            <h2 id="ceo-today-title">{greeting || `Buongiorno ${displayName}`}</h2>
             <p>{formattedDate}</p>
           </div>
-          <span className="ceo-today__demo-pill">Dati dimostrativi</span>
+          <span className="ceo-today__demo-pill">{dataModeLabel}</span>
         </div>
 
         <div className="ceo-today__body">
@@ -63,20 +59,20 @@ export function CeoToday({
             <div className="ceo-today__focus-list">
               <div>
                 <span>Sprint attivo</span>
-                <strong>HUB 2.0 – CEO Operating System</strong>
+                <strong>CEO Operating System 2.1 · focus operativo</strong>
               </div>
               <div>
                 <span>Obiettivo del giorno</span>
-                <strong>Rendere ECCOMI HUB la cabina di comando dell’ecosistema</strong>
+                <strong>Trasformare i segnali in priorità e decisioni immediate</strong>
               </div>
             </div>
           </div>
 
           <div className="ceo-today__metrics" role="list" aria-label="Indicatori CEO">
             <div className="ceo-today__metric" role="listitem">
-              <span className="ceo-today__metric-label">+1 di oggi</span>
-              <strong>+1</strong>
-              <small>Nuovo focus CEO</small>
+              <span className="ceo-today__metric-label">Priorità attive</span>
+              <strong>{activitiesToVerify}</strong>
+              <small>azioni da portare avanti</small>
             </div>
             <div className="ceo-today__metric" role="listitem">
               <span className="ceo-today__metric-label">Ecosistemi operativi</span>

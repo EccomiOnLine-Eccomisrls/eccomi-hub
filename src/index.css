@@ -82,6 +82,13 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; 
 .topbar__actions { display: flex; align-items: center; gap: 10px; }
 .topbar-pill, .topbar-status-pill, .topbar-profile-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--muted); font-size: 11px; font-weight: 750; box-shadow: 0 8px 18px rgba(7, 63, 115, 0.04); transition: .16s ease; }
 .topbar-pill:hover, .topbar-status-pill:hover, .topbar-profile-button:hover { color: var(--navy); border-color: #c7d5e3; background: #fcfdff; box-shadow: 0 10px 24px rgba(7, 63, 115, 0.06); }
+.topbar-actions__group { position: relative; display: inline-flex; align-items: center; }
+.topbar-popover { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; min-width: 220px; display: grid; gap: 4px; padding: 12px; border: 1px solid rgba(7, 63, 115, 0.08); border-radius: 14px; background: white; box-shadow: 0 20px 40px rgba(7, 63, 115, 0.12); }
+.topbar-popover strong { color: var(--navy); font-size: 11px; }
+.topbar-popover p, .topbar-popover small { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
+.topbar-popover button { border: 0; border-radius: 8px; padding: 8px 10px; background: var(--blue-light); color: var(--navy); font-size: 9px; font-weight: 700; text-align: left; }
+.topbar-popover__danger { background: var(--red-light) !important; color: var(--red) !important; }
+.topbar-popover--profile { min-width: 220px; }
 .topbar-pill__icon { width: 18px; height: 18px; display: grid; place-items: center; color: var(--blue); }
 .topbar-pill__label, .topbar-status-pill__label, .topbar-profile-button__label { white-space: nowrap; }
 .topbar-ai-button { position: relative; }
@@ -453,6 +460,22 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; 
 .alert-card h3 { margin: 7px 0 4px; color: var(--navy-deep); font-size: 10px; }
 .alert-card p { margin: 0; color: var(--muted); font-size: 8px; line-height: 1.45; }
 .alert-card button { display: flex; align-items: center; gap: 4px; margin: 8px 0 0; padding: 0; border: 0; background: transparent; color: var(--blue); font-size: 8px; font-weight: 750; }
+.ai-filter-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-filter-pill { border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--muted); padding: 6px 10px; font-size: 9px; font-weight: 750; }
+.ai-filter-pill--active { color: var(--navy); border-color: #bcd7ff; background: var(--blue-light); }
+.ai-alert-card--critical { border-left: 3px solid var(--red); }
+.ai-alert-card--warning { border-left: 3px solid var(--amber); }
+.ai-alert-card--opportunity { border-left: 3px solid var(--purple); }
+.ai-alert-card--info { border-left: 3px solid var(--blue); }
+.alert-card__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.alert-card__top small { color: var(--muted-2); font-size: 7px; }
+.alert-icon--critical { color: var(--red); background: var(--red-light); }
+.alert-icon--warning { color: var(--amber); background: var(--amber-light); }
+.alert-icon--opportunity { color: var(--purple); background: var(--purple-light); }
+.alert-icon--info { color: var(--blue); background: var(--blue-light); }
+.empty-state { display: grid; gap: 6px; justify-items: start; padding: 16px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); }
+.empty-state strong { color: var(--navy); font-size: 11px; }
+.empty-state span { font-size: 9px; }
 .rule-list { padding: 7px 15px; }
 .rule-item { display: flex; gap: 9px; padding: 11px 0; border-bottom: 1px solid #edf1f5; }
 .rule-item:last-child { border: 0; }

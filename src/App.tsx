@@ -58,6 +58,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { AIAlertCenter } from "./components/AIAlertCenter";
 import { CeoControlCenter } from "./components/CeoControlCenter";
 import { CeoToday } from "./components/CeoToday";
 import {
@@ -92,6 +93,12 @@ import {
   type NoleggioSummary,
   type PostaSummary,
 } from "./lib/hubApi";
+import {
+  buildCeoPriorities,
+  getCeoGeneralState,
+  getCeoGreeting,
+  type CeoPriority,
+} from "./lib/ceoIntelligence";
 
 type ViewKey =
   | "dashboard"
@@ -154,6 +161,7 @@ type Decision = {
   due: string;
   status: "Da analizzare" | "Informazioni richieste" | "Decisa";
   recommendation: string;
+  assignedTo?: string;
 };
 
 const initialEcosystems: Ecosystem[] = [
@@ -562,7 +570,10 @@ export default function Home() {
   const [decisions, setDecisions] = useState<Decision[]>(initialDecisions);
   const [toast, setToast] = useState<string | null>(null);
   const [testMode, setTestMode] = useState(true);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [assignedToByDecision, setAssignedToByDecision] = useState<Record<number, string>>({});
   const [feedback, setFeedback] = useState("");
   const visibleEcosystems = useMemo(
     () => withNoleggioSummary(
@@ -572,6 +583,24 @@ export default function Home() {
     ),
     [ecosystems, postaSummary, postaState, noleggioSummary, noleggioState],
   );
+
+  const priorities = useMemo<CeoPriority[]>(() => buildCeoPriorities({
+    postaSummary,
+    postaState,
+    noleggioSummary,
+    noleggioState,
+    urgentOpenDecisionCount: decisions.filter((decision) => decision.status !== "Decisa" && decision.urgency === "Alta").length,
+  }), [decisions, noleggioState, noleggioSummary, postaState, postaSummary]);
+
+  const aiAlertCount = priorities.filter((item) => item.severity === "critical" || item.severity === "warning").length;
+  const todayStatusLabel = getCeoGeneralState(postaState, noleggioState);
+  const todayStatusMessage = postaState === "ready" && postaSummary && noleggioState === "ready" && noleggioSummary
+    ? `${postaSummary.summary.total} pratiche Posta e ${noleggioSummary.summary.promotionsTotal} promozioni Noleggio lette dai sistemi reali.`
+    : postaState === "ready" && postaSummary
+      ? `${postaSummary.summary.total} pratiche lette dai sistemi reali, senza modificazioni operative.`
+      : noleggioState === "ready" && noleggioSummary
+        ? `${noleggioSummary.summary.promotionsTotal} promozioni e ${noleggioSummary.summary.leadsTotal} lead letti dal sistema reale.`
+        : "I collegamenti reali sono in caricamento o in configurazione.";
 
   const saveSession = (session: HubSession) => {
     window.localStorage.setItem("eccomi-hub-session", JSON.stringify(session));
@@ -897,9 +926,9 @@ export default function Home() {
 
   const displayName = currentUser?.fullName?.split(" ")[0] || "Salvatore";
   const roleLabel = currentUser?.role === "manager" ? "Responsabile" : currentUser?.role === "operator" ? "Operatore" : "CEO";
-  const aiAlertCount = 5;
+  const greeting = getCeoGreeting(displayName);
   const title = view === "dashboard"
-    ? { ...pageTitles.dashboard, title: `Buongiorno ${displayName}` }
+    ? { ...pageTitles.dashboard, title: greeting }
     : pageTitles[view];
 
   return (
@@ -973,38 +1002,67 @@ export default function Home() {
             </button>
           </div>
           <div className="topbar__actions">
-            <button
-              className={classNames("topbar-pill topbar-ai-button", aiAlertCount > 0 && "topbar-ai-button--alert")}
-              onClick={() => navigate("ai")}
-              aria-label="Apri AI e alert"
-              title="Apri AI e alert"
-            >
-              <span className="topbar-pill__icon">
-                <Sparkles size={16} />
-              </span>
-              <span className="topbar-pill__label">AI &amp; Alert</span>
-              {aiAlertCount > 0 && <span className="topbar-ai-badge">{aiAlertCount}</span>}
-            </button>
-            <button
-              className={classNames("topbar-status-pill", testMode && "topbar-status-pill--demo")}
-              onClick={() => setTestMode((value) => !value)}
-              aria-label={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
-              title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
-            >
-              <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
-              <span className="topbar-status-pill__label">{testMode ? "Demo" : "Live"}</span>
-            </button>
-            <button
-              className="topbar-profile-button"
-              onClick={() => setToast(`Profilo ${roleLabel}: ${currentUser?.email || "utente"}`)}
-              aria-label={`Profilo ${displayName}`}
-              title={`Profilo ${displayName}`}
-            >
-              <span className="topbar-profile-button__avatar">
-                <User size={15} />
-              </span>
-              <span className="topbar-profile-button__label">{displayName}</span>
-            </button>
+            <div className="topbar-actions__group">
+              <button
+                className={classNames("topbar-pill topbar-ai-button", aiAlertCount > 0 && "topbar-ai-button--alert")}
+                onClick={() => navigate("ai")}
+                aria-label="Apri AI e alert"
+                title="Apri AI e alert"
+              >
+                <span className="topbar-pill__icon">
+                  <Sparkles size={16} />
+                </span>
+                <span className="topbar-pill__label">AI &amp; Alert</span>
+                {aiAlertCount > 0 && <span className="topbar-ai-badge">{aiAlertCount}</span>}
+              </button>
+            </div>
+            <div className="topbar-actions__group">
+              <button
+                className={classNames("topbar-status-pill", testMode && "topbar-status-pill--demo")}
+                onClick={() => {
+                  setLivePopoverOpen((value) => !value);
+                  setProfileMenuOpen(false);
+                  setTestMode((value) => !value);
+                }}
+                aria-label={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
+                title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
+              >
+                <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
+                <span className="topbar-status-pill__label">{testMode ? "Demo" : "Live"}</span>
+              </button>
+              {livePopoverOpen && (
+                <div className="topbar-popover">
+                  <strong>Stato dei collegamenti</strong>
+                  <p>{todayStatusLabel}</p>
+                  <small>{todayStatusMessage}</small>
+                </div>
+              )}
+            </div>
+            <div className="topbar-actions__group">
+              <button
+                className="topbar-profile-button"
+                onClick={() => {
+                  setProfileMenuOpen((value) => !value);
+                  setLivePopoverOpen(false);
+                }}
+                aria-label={`Profilo ${displayName}`}
+                title={`Profilo ${displayName}`}
+              >
+                <span className="topbar-profile-button__avatar">
+                  <User size={15} />
+                </span>
+                <span className="topbar-profile-button__label">{displayName}</span>
+              </button>
+              {profileMenuOpen && (
+                <div className="topbar-popover topbar-popover--profile">
+                  <strong>{displayName}</strong>
+                  <small>{roleLabel} · {currentUser?.email || "utente"}</small>
+                  <button onClick={() => { setProfileMenuOpen(false); setToast(`Profilo ${roleLabel}: ${currentUser?.email || "utente"}`); }}>Apri profilo</button>
+                  <button onClick={() => { setProfileMenuOpen(false); setToast("Feedback ricevuto. Grazie per il supporto."); }}>Invia feedback</button>
+                  <button className="topbar-popover__danger" onClick={() => { setProfileMenuOpen(false); signOut(); }}>Esci</button>
+                </div>
+              )}
+            </div>
             {currentUser?.role === "ceo" && (
               <button className="new-entry-button topbar-new-entry" onClick={() => setNewEntryOpen(true)}>
                 <Plus size={18} />
@@ -1047,11 +1105,13 @@ export default function Home() {
             <DashboardView
               ecosystems={visibleEcosystems}
               decisions={decisions}
+              priorities={priorities}
               postaSummary={postaSummary}
               postaState={postaState}
               noleggioSummary={noleggioSummary}
               noleggioState={noleggioState}
               displayName={displayName}
+              greeting={greeting}
               onNavigate={navigate}
               onSelectEcosystem={setSelectedEcosystem}
               onNewEntry={() => setNewEntryOpen(true)}
@@ -1090,13 +1150,19 @@ export default function Home() {
           {view === "decisions" && (
             <DecisionsView
               decisions={decisions}
+              assignedToByDecision={assignedToByDecision}
+              assignedOwnerLabel={displayName}
+              onAssign={(id, owner) => {
+                setAssignedToByDecision((current) => ({ ...current, [id]: owner }));
+                setToast(`Decisione assegnata a ${owner}`);
+              }}
               onAction={(id, status, message) => {
                 setDecisions((current) => current.map((item) => (item.id === id ? { ...item, status } : item)));
                 setToast(message);
               }}
             />
           )}
-          {view === "ai" && <AIView />}
+          {view === "ai" && <AIView priorities={priorities} onNavigate={navigate} />}
           {view === "reports" && <ReportsView />}
           {view === "settings" && <SettingsView />}
         </div>
@@ -1662,22 +1728,26 @@ function NoleggioDashboardView({
 function DashboardView({
   ecosystems,
   decisions,
+  priorities,
   postaSummary,
   postaState,
   noleggioSummary,
   noleggioState,
   displayName,
+  greeting,
   onNavigate,
   onSelectEcosystem,
   onNewEntry,
 }: {
   ecosystems: Ecosystem[];
   decisions: Decision[];
+  priorities: CeoPriority[];
   postaSummary: PostaSummary | null;
   postaState: "idle" | "loading" | "ready" | "error";
   noleggioSummary: NoleggioSummary | null;
   noleggioState: "idle" | "loading" | "ready" | "error";
   displayName: string;
+  greeting: string;
   onNavigate: (key: ViewKey) => void;
   onSelectEcosystem: (item: Ecosystem) => void;
   onNewEntry: () => void;
@@ -1715,19 +1785,27 @@ function DashboardView({
       : noleggioLive
         ? `${noleggioLive.summary.promotionsTotal} promozioni e ${noleggioLive.summary.leadsTotal} lead letti dal sistema reale.`
         : `${ecosystems.length} ecosistemi monitorati, con dati reali attivati progressivamente.`;
+  const urgencyMap: Record<CeoPriority["severity"], string> = {
+    critical: "Critico",
+    warning: "Attenzione",
+    opportunity: "Opportunità",
+    info: "Info",
+  };
 
   return (
     <div className="dashboard-stack">
       <CeoToday
         displayName={displayName}
+        greeting={greeting}
         statusLabel={statusLabel}
         statusMessage={statusMessage}
         operatingEcosystems={ecosystems.length}
-        activitiesToVerify={7}
-        criticalIssues={3}
+        activitiesToVerify={priorities.length}
+        criticalIssues={priorities.filter((item) => item.severity === "critical").length}
+        dataModeLabel={postaLive || noleggioLive ? "Dati reali attivi" : "Dati dimostrativi"}
         onOpenPriorities={() => onNavigate("ai")}
       />
-      <CeoControlCenter onOpenDecisionCenter={() => onNavigate("decisions")} />
+      <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
 
       <section className="kpi-grid">
         {kpis.map((kpi) => {
@@ -1763,9 +1841,16 @@ function DashboardView({
             <button className="icon-button" onClick={() => onNavigate("ai")}><ArrowUpRight size={18} /></button>
           </div>
           <div className="priority-list">
-            <PriorityItem number="01" urgency="Critico" title="Sbloccare 3 pratiche Energia ferme da oltre 48 ore" detail="Impatto stimato: € 2.140 e 3 clienti a rischio" action={() => onNavigate("operations")} />
-            <PriorityItem number="02" urgency="Decisione" title="Valutare il test della nuova offerta dual" detail="Il Decision Center contiene analisi e alternativa consigliata" action={() => onNavigate("decisions")} />
-            <PriorityItem number="03" urgency="Opportunità" title="Contattare 8 clienti compatibili con Eccomi PEC" detail="Valore potenziale stimato: € 1.920 annui" action={() => onNavigate("clients")} />
+            {priorities.slice(0, 3).map((priority, index) => (
+              <PriorityItem
+                key={priority.id}
+                number={`0${index + 1}`}
+                urgency={urgencyMap[priority.severity]}
+                title={priority.title}
+                detail={priority.description}
+                action={() => onNavigate(priority.targetView)}
+              />
+            ))}
           </div>
           <div className="ai-explanation"><Bot size={17} /><span>Priorità calcolate su urgenza, impatto economico, rischio cliente e scadenze.</span></div>
         </div>
@@ -1784,7 +1869,7 @@ function DashboardView({
               </button>
             ))}
           </div>
-          <div className="decision-summary"><span><strong>{decisions.filter((d) => d.status !== "Decisa").length}</strong> da decidere</span><span><strong>2</strong> in esecuzione</span><span><strong>11</strong> verificate</span></div>
+          <div className="decision-summary"><span><strong>{decisions.filter((d) => d.status !== "Decisa").length}</strong> da decidere</span><span><strong>{decisions.filter((d) => d.assignedTo).length}</strong> in esecuzione</span><span><strong>{decisions.filter((d) => d.status === "Decisa").length}</strong> verificate</span></div>
         </div>
       </section>
 
@@ -1997,20 +2082,32 @@ function OperationsView() {
   );
 }
 
-function DecisionsView({ decisions, onAction }: { decisions: Decision[]; onAction: (id: number, status: Decision["status"], message: string) => void }) {
+function DecisionsView({
+  decisions,
+  assignedToByDecision,
+  assignedOwnerLabel,
+  onAction,
+  onAssign,
+}: {
+  decisions: Decision[];
+  assignedToByDecision: Record<number, string>;
+  assignedOwnerLabel: string;
+  onAction: (id: number, status: Decision["status"], message: string) => void;
+  onAssign: (id: number, owner: string) => void;
+}) {
   const open = decisions.filter((decision) => decision.status !== "Decisa").length;
   return (
     <div className="view-stack">
-      <section className="decision-stats"><StatTile icon={Gavel} label="Da decidere" value={String(open)} note="1 ad alta priorità" color="red" /><StatTile icon={Clock3} label="In esecuzione" value="2" note="Entrambe nei tempi" color="blue" /><StatTile icon={CheckCircle2} label="Verificate" value="11" note="Questo mese" color="green" /><StatTile icon={TrendingUp} label="Impatto prodotto" value="€ 18,4K" note="Ultimi 90 giorni" color="purple" /></section>
+      <section className="decision-stats"><StatTile icon={Gavel} label="Da decidere" value={String(open)} note="1 ad alta priorità" color="red" /><StatTile icon={Clock3} label="In esecuzione" value={String(decisions.filter((decision) => decision.status !== "Decisa" && assignedToByDecision[decision.id]).length)} note="Assegnate al team" color="blue" /><StatTile icon={CheckCircle2} label="Verificate" value={String(decisions.filter((decision) => decision.status === "Decisa").length)} note="Questo mese" color="green" /><StatTile icon={TrendingUp} label="Impatto prodotto" value="€ 18,4K" note="Ultimi 90 giorni" color="purple" /></section>
       <section className="decision-list">{decisions.map((decision) => (
         <article className={classNames("decision-card", decision.status === "Decisa" && "decision-card--done")} key={decision.id}>
           <div className="decision-card__status"><span className={`urgency-dot urgency-dot--${decision.urgency.toLowerCase()}`} /><span><small>{decision.ecosystem}</small><strong>{decision.urgency} priorità</strong></span></div>
           <div className="decision-card__main"><div className="decision-card__title"><h3>{decision.title}</h3><span className={`status-badge status-badge--${decision.status === "Decisa" ? "green" : decision.status === "Informazioni richieste" ? "amber" : "blue"}`}><span />{decision.status}</span></div>
-            <div className="decision-facts"><span><CircleDollarSign size={16} /><small>Impatto</small><strong>{decision.impact}</strong></span><span><Clock3 size={16} /><small>Scadenza</small><strong>{decision.due}</strong></span><span><UserCog size={16} /><small>Responsabile</small><strong>{decision.ecosystem.replace("Eccomi ", "Resp. ")}</strong></span></div>
+            <div className="decision-facts"><span><CircleDollarSign size={16} /><small>Impatto</small><strong>{decision.impact}</strong></span><span><Clock3 size={16} /><small>Scadenza</small><strong>{decision.due}</strong></span><span><UserCog size={16} /><small>Responsabile</small><strong>{assignedToByDecision[decision.id] || decision.assignedTo || "Da assegnare"}</strong></span></div>
             <div className="ai-recommendation"><span><Sparkles size={18} /></span><div><small>SUGGERIMENTO AI · AFFIDABILITÀ 87%</small><p>{decision.recommendation}</p></div></div>
           </div>
           <div className="decision-card__actions">
-            {decision.status !== "Decisa" ? <><button className="approve-button" onClick={() => onAction(decision.id, "Decisa", "Decisione approvata e attività generate")}><Check size={17} /> Approva</button><button className="secondary-button" onClick={() => onAction(decision.id, "Informazioni richieste", "Richiesta di approfondimento registrata")}>Chiedi dettagli</button><button className="icon-button"><ChevronDown size={18} /></button></> : <span className="decision-completed"><CheckCircle2 size={18} /> Decisione registrata</span>}
+            {decision.status !== "Decisa" ? <><button className="approve-button" onClick={() => onAction(decision.id, "Decisa", "Decisione approvata e attività generate")}><Check size={17} /> Approva</button><button className="secondary-button" onClick={() => onAction(decision.id, "Informazioni richieste", "Richiesta di approfondimento registrata")}>Rinvia</button><button className="secondary-button" onClick={() => onAssign(decision.id, assignedOwnerLabel)}>Assegna a me</button></> : <span className="decision-completed"><CheckCircle2 size={18} /> Decisione registrata</span>}
           </div>
         </article>
       ))}</section>
@@ -2018,21 +2115,8 @@ function DecisionsView({ decisions, onAction }: { decisions: Decision[]; onActio
   );
 }
 
-function AIView() {
-  const alerts = [
-    { level: "Critico", title: "3 pratiche Energia ferme oltre la soglia", detail: "Possibile impatto su € 2.140 e rischio di abbandono per 3 clienti.", confidence: "94%", icon: AlertTriangle, color: "red" },
-    { level: "Attenzione", title: "Margine Spedizioni in calo da 7 giorni", detail: "Il costo medio per collo è aumentato del 4,2% rispetto alla media mensile.", confidence: "91%", icon: TrendingUp, color: "amber" },
-    { level: "Opportunità", title: "8 clienti compatibili con Eccomi PEC", detail: "Selezionati per profilo, servizi attivi e frequenza di utilizzo documentale.", confidence: "82%", icon: Lightbulb, color: "purple" },
-    { level: "Informazione", title: "Tempo medio Eccomi Posta migliorato", detail: "Da 2,4 a 1,8 giorni negli ultimi 30 giorni.", confidence: "99%", icon: CheckCircle2, color: "blue" },
-  ];
-  return (
-    <div className="view-stack">
-      <section className="ai-hero"><div className="ai-hero__icon"><Sparkles size={31} /></div><div><span>ASSISTENTE DI GOVERNO</span><h2>Le decisioni restano umane.<br />L'analisi diventa più veloce.</h2><p>L'AI legge dati e segnali, indica le priorità e spiega sempre perché propone un'azione.</p></div><div className="ai-hero__stat"><small>Analisi aggiornate</small><strong>2 min fa</strong><span><span className="status-dot status-dot--green" /> Tutti i sistemi</span></div></section>
-      <section className="ai-layout"><div className="panel alert-feed"><div className="panel__head"><div className="panel-title"><span className="panel-icon panel-icon--ai"><Bot size={18} /></span><span><small>OGGI</small><strong>Segnali rilevanti</strong></span></div><div className="filter-chip">Tutti i livelli <ChevronDown size={15} /></div></div>
-        <div className="alert-list">{alerts.map((alert) => { const Icon = alert.icon; return <article className="alert-card" key={alert.title}><span className={`alert-icon alert-icon--${alert.color}`}><Icon size={19} /></span><div><div><span className={`priority-tag priority-tag--${alert.level.toLowerCase()}`}>{alert.level}</span><small>Affidabilità {alert.confidence}</small></div><h3>{alert.title}</h3><p>{alert.detail}</p><button>Apri analisi <ArrowRight size={15} /></button></div></article>; })}</div>
-      </div><aside className="panel ai-rules"><div className="panel__head"><div className="panel-title"><span className="panel-icon"><ShieldCheck size={18} /></span><span><small>PRINCIPI</small><strong>Controllo umano</strong></span></div></div><div className="rule-list"><RuleItem title="Nessuna decisione autonoma" detail="CEO e responsabili mantengono sempre l'approvazione finale." /><RuleItem title="Motivazione visibile" detail="Ogni suggerimento indica dati, logica e affidabilità." /><RuleItem title="Permessi rispettati" detail="L'AI vede solo ciò che il ruolo è autorizzato a vedere." /><RuleItem title="Regole protette" detail="Nessuna regola aziendale cambia senza approvazione." /></div></aside></section>
-    </div>
-  );
+function AIView({ priorities, onNavigate }: { priorities: CeoPriority[]; onNavigate: (key: ViewKey) => void }) {
+  return <AIAlertCenter priorities={priorities} onNavigate={onNavigate} />;
 }
 
 function ReportsView() {
