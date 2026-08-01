@@ -48,6 +48,7 @@ import {
   TicketCheck,
   TrendingUp,
   Trash2,
+  User,
   UserCheck,
   UserCog,
   Users,
@@ -896,6 +897,7 @@ export default function Home() {
 
   const displayName = currentUser?.fullName?.split(" ")[0] || "Salvatore";
   const roleLabel = currentUser?.role === "manager" ? "Responsabile" : currentUser?.role === "operator" ? "Operatore" : "CEO";
+  const aiAlertCount = 5;
   const title = view === "dashboard"
     ? { ...pageTitles.dashboard, title: `Buongiorno ${displayName}` }
     : pageTitles[view];
@@ -971,19 +973,37 @@ export default function Home() {
             </button>
           </div>
           <div className="topbar__actions">
-            <div className="test-switch">
-              <span>Modalità test</span>
-              <button
-                className={classNames("switch", testMode && "switch--on")}
-                onClick={() => setTestMode((value) => !value)}
-                aria-label="Attiva o disattiva modalità test"
-              >
-                <span />
-              </button>
-            </div>
-            <button className="icon-button notification-button" aria-label="Notifiche" onClick={() => navigate("ai")}>
-              <Bell size={20} />
-              <span>5</span>
+            <button
+              className={classNames("topbar-pill topbar-ai-button", aiAlertCount > 0 && "topbar-ai-button--alert")}
+              onClick={() => navigate("ai")}
+              aria-label="Apri AI e alert"
+              title="Apri AI e alert"
+            >
+              <span className="topbar-pill__icon">
+                <Sparkles size={16} />
+              </span>
+              <span className="topbar-pill__label">AI &amp; Alert</span>
+              {aiAlertCount > 0 && <span className="topbar-ai-badge">{aiAlertCount}</span>}
+            </button>
+            <button
+              className={classNames("topbar-status-pill", testMode && "topbar-status-pill--demo")}
+              onClick={() => setTestMode((value) => !value)}
+              aria-label={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
+              title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
+            >
+              <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
+              <span className="topbar-status-pill__label">{testMode ? "Demo" : "Live"}</span>
+            </button>
+            <button
+              className="topbar-profile-button"
+              onClick={() => setToast(`Profilo ${roleLabel}: ${currentUser?.email || "utente"}`)}
+              aria-label={`Profilo ${displayName}`}
+              title={`Profilo ${displayName}`}
+            >
+              <span className="topbar-profile-button__avatar">
+                <User size={15} />
+              </span>
+              <span className="topbar-profile-button__label">{displayName}</span>
             </button>
             {currentUser?.role === "ceo" && (
               <button className="new-entry-button topbar-new-entry" onClick={() => setNewEntryOpen(true)}>
