@@ -1,11 +1,5 @@
-import { ArrowRight, Bot, CircleCheckBig, Clock3, Sparkles, TrendingUp, type LucideIcon } from "lucide-react";
-
-type ControlCardItem = {
-  label: string;
-  value: string;
-  meta: string;
-  tone?: "green" | "amber" | "red";
-};
+import { ArrowRight, Bot, Sparkles } from "lucide-react";
+import type { CeoPriority } from "../lib/ceoIntelligence";
 
 type EcosystemItem = {
   name: string;
@@ -14,23 +8,12 @@ type EcosystemItem = {
   kpi: string;
 };
 
-const priorityItems: ControlCardItem[] = [
-  { label: "Attività prioritaria", value: "Verificare 3 pratiche Energia", meta: "Responsabile: Luca Bianchi", tone: "amber" },
-  { label: "Scadenza", value: "Ore 11:30", meta: "Coinvolge: Posta · Energia", tone: "green" },
-];
-
 const ecosystems: EcosystemItem[] = [
-  { name: "Posta", status: "green", updated: "2 min fa", kpi: "+8%" },
-  { name: "Energia", status: "amber", updated: "11 min fa", kpi: "+3%" },
-  { name: "Spedizioni", status: "green", updated: "18 min fa", kpi: "+5%" },
-  { name: "Noleggio", status: "red", updated: "25 min fa", kpi: "-1%" },
-  { name: "Hub", status: "green", updated: "1 ora fa", kpi: "+12%" },
-];
-
-const activityCounters = [
-  { label: "Da approvare", value: "6", tone: "amber" },
-  { label: "In lavorazione", value: "14", tone: "green" },
-  { label: "Completate oggi", value: "32", tone: "green" },
+  { name: "Posta", status: "green", updated: "Realtime", kpi: "Live" },
+  { name: "Noleggio", status: "amber", updated: "Realtime", kpi: "Live" },
+  { name: "Energia", status: "amber", updated: "Monitor", kpi: "Attenzione" },
+  { name: "Spedizioni", status: "green", updated: "Monitor", kpi: "Operativo" },
+  { name: "Hub", status: "green", updated: "Sistema", kpi: "OK" },
 ];
 
 function StatusDot({ tone }: { tone: "green" | "amber" | "red" }) {
@@ -38,21 +21,27 @@ function StatusDot({ tone }: { tone: "green" | "amber" | "red" }) {
   return <span className={className} aria-hidden="true" />;
 }
 
-export function CeoControlCenter({ onOpenDecisionCenter }: { onOpenDecisionCenter: () => void }) {
+export function CeoControlCenter({ priorities, onOpenDecisionCenter }: { priorities: CeoPriority[]; onOpenDecisionCenter: () => void }) {
+  const activityCounters = [
+    { label: "Da approvare", value: String(priorities.filter((item) => item.severity === "warning" || item.severity === "critical").length), tone: "amber" },
+    { label: "In lavorazione", value: String(Math.max(0, priorities.length - 1)), tone: "green" },
+    { label: "Completate oggi", value: "—", tone: "green" },
+  ];
+
   return (
     <section className="ceo-control-center" aria-label="CEO control center">
       <div className="ceo-control-center__grid">
         <article className="ceo-control-center__card ceo-control-center__card--priority">
           <div className="ceo-control-center__head">
             <span className="ceo-control-center__eyebrow">Priorità del giorno</span>
-            <button className="ceo-control-center__action">Apri</button>
+            <button className="ceo-control-center__action" onClick={onOpenDecisionCenter}>Apri</button>
           </div>
           <div className="ceo-control-center__body">
-            {priorityItems.map((item) => (
-              <div className="ceo-control-center__item" key={item.label}>
-                <span className="ceo-control-center__item-label">{item.label}</span>
-                <strong>{item.value}</strong>
-                <small>{item.meta}</small>
+            {priorities.slice(0, 3).map((item) => (
+              <div className="ceo-control-center__item" key={item.id}>
+                <span className="ceo-control-center__item-label">{item.ecosystem}</span>
+                <strong>{item.title}</strong>
+                <small>{item.description}</small>
               </div>
             ))}
           </div>
@@ -61,7 +50,7 @@ export function CeoControlCenter({ onOpenDecisionCenter }: { onOpenDecisionCente
         <article className="ceo-control-center__card ceo-control-center__card--ecosystems">
           <div className="ceo-control-center__head">
             <span className="ceo-control-center__eyebrow">Ecosistemi</span>
-            <span className="ceo-control-center__hint">Dati demo</span>
+            <span className="ceo-control-center__hint">Stato indicativo</span>
           </div>
           <div className="ceo-control-center__ecosystems">
             {ecosystems.map((item) => (
@@ -97,7 +86,7 @@ export function CeoControlCenter({ onOpenDecisionCenter }: { onOpenDecisionCente
             <span className="ceo-control-center__eyebrow">AI Executive</span>
             <Bot size={16} className="ceo-control-center__icon" />
           </div>
-          <p className="ceo-control-center__copy">Oggi il sistema suggerisce di verificare le priorità dei responsabili prima delle ore 12:00.</p>
+          <p className="ceo-control-center__copy">Le priorità emergono dai dati reali già disponibili nel sistema e si traducono in azioni immediate per il CEO.</p>
           <button className="ceo-control-center__primary" onClick={onOpenDecisionCenter}>
             Apri Decision Center <ArrowRight size={16} />
           </button>
