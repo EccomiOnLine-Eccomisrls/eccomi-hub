@@ -193,6 +193,28 @@ type ApiErrorPayload = {
   message?: string;
 };
 
+type HubApiEnv = ImportMetaEnv & Record<string, string | undefined>;
+
+function getConfiguredHubApiBaseUrl(): string {
+  const env = import.meta.env as HubApiEnv;
+  const rawBaseUrl = [env.VITE_HUB_API_BASE_URL, env.HUB_API_BASE_URL]
+    .find((value): value is string => Boolean(value && value.trim()))
+    ?.trim();
+
+  return rawBaseUrl ? rawBaseUrl.replace(/\/+$/, "") : "";
+}
+
+function buildHubApiUrl(path: string): string {
+  const baseUrl = getConfiguredHubApiBaseUrl();
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  if (!baseUrl) {
+    return normalizedPath;
+  }
+
+  return `${baseUrl}${normalizedPath}`;
+}
+
 export class HubApiError extends Error {
   status: number;
 
@@ -207,9 +229,9 @@ async function apiRequest<T>(path: string, init: RequestInit): Promise<T> {
   let response: Response;
 
   try {
-    const apiBaseUrl = (import.meta.env.VITE_HUB_API_URL || "").replace(/\/$/, "");
+    const url = buildHubApiUrl(path);
 
-    response = await fetch(`${apiBaseUrl}${path}`, {
+    response = await fetch(url, {
       ...init,
       headers: {
         "Content-Type": "application/json",
