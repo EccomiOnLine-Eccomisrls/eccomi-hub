@@ -95,6 +95,7 @@ import {
 } from "./lib/hubApi";
 import {
   buildCeoPriorities,
+  buildExecutiveBriefing,
   getCeoGeneralState,
   getCeoGreeting,
   type CeoPriority,
@@ -1791,14 +1792,17 @@ function DashboardView({
         { label: "Opportunità", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: Target },
       ];
 
-  const statusLabel = postaLive && noleggioLive ? "Attenzione controllata" : postaLive ? "Posta in osservazione" : noleggioLive ? "Noleggio in osservazione" : "Ecosistema stabile";
-  const statusMessage = postaLive && noleggioLive
-    ? `${postaLive.summary.total} pratiche Posta e ${noleggioLive.summary.promotionsTotal} promozioni Noleggio lette dai sistemi reali.`
-    : postaLive
-      ? `${postaLive.summary.total} pratiche lette dal sistema reale, senza modificare l’operatività.`
-      : noleggioLive
-        ? `${noleggioLive.summary.promotionsTotal} promozioni e ${noleggioLive.summary.leadsTotal} lead letti dal sistema reale.`
-        : `${ecosystems.length} ecosistemi monitorati, con dati reali attivati progressivamente.`;
+  const openDecisionCount = decisions.filter(
+    (item) => item.status !== "Decisa",
+  ).length;
+
+  const executiveBriefing = buildExecutiveBriefing({
+    priorities,
+    postaSummary: postaLive,
+    noleggioSummary: noleggioLive,
+    openDecisionCount,
+  });
+
   const urgencyMap: Record<CeoPriority["severity"], string> = {
     critical: "Critico",
     warning: "Attenzione",
@@ -1811,11 +1815,12 @@ function DashboardView({
       <CeoToday
         displayName={displayName}
         greeting={greeting}
-        statusLabel={statusLabel}
-        statusMessage={statusMessage}
+        statusLabel={executiveBriefing.headline}
+        statusMessage={executiveBriefing.message}
         operatingEcosystems={ecosystems.length}
         activitiesToVerify={priorities.length}
         criticalIssues={priorities.filter((item) => item.severity === "critical").length}
+        objective={executiveBriefing.objective}
         dataModeLabel={
           testMode
             ? "Dati dimostrativi"
