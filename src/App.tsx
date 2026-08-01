@@ -57,6 +57,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -1029,6 +1030,7 @@ export default function Home() {
               postaState={postaState}
               noleggioSummary={noleggioSummary}
               noleggioState={noleggioState}
+              displayName={displayName}
               onNavigate={navigate}
               onSelectEcosystem={setSelectedEcosystem}
               onNewEntry={() => setNewEntryOpen(true)}
@@ -1643,6 +1645,7 @@ function DashboardView({
   postaState,
   noleggioSummary,
   noleggioState,
+  displayName,
   onNavigate,
   onSelectEcosystem,
   onNewEntry,
@@ -1653,6 +1656,7 @@ function DashboardView({
   postaState: "idle" | "loading" | "ready" | "error";
   noleggioSummary: NoleggioSummary | null;
   noleggioState: "idle" | "loading" | "ready" | "error";
+  displayName: string;
   onNavigate: (key: ViewKey) => void;
   onSelectEcosystem: (item: Ecosystem) => void;
   onNewEntry: () => void;
@@ -1682,22 +1686,26 @@ function DashboardView({
     { label: "Opportunità", value: "34", trend: "+€ 21,6K", trendType: "up", note: "Valore potenziale", icon: Target },
   ];
 
+  const statusLabel = postaLive && noleggioLive ? "Attenzione controllata" : postaLive ? "Posta in osservazione" : noleggioLive ? "Noleggio in osservazione" : "Ecosistema stabile";
+  const statusMessage = postaLive && noleggioLive
+    ? `${postaLive.summary.total} pratiche Posta e ${noleggioLive.summary.promotionsTotal} promozioni Noleggio lette dai sistemi reali.`
+    : postaLive
+      ? `${postaLive.summary.total} pratiche lette dal sistema reale, senza modificare l’operatività.`
+      : noleggioLive
+        ? `${noleggioLive.summary.promotionsTotal} promozioni e ${noleggioLive.summary.leadsTotal} lead letti dal sistema reale.`
+        : `${ecosystems.length} ecosistemi monitorati, con dati reali attivati progressivamente.`;
+
   return (
     <div className="dashboard-stack">
-      <section className="status-hero">
-        <div className="status-hero__signal"><span className="status-light status-light--amber" /><span><small>STATO GENERALE</small><strong>Attenzione controllata</strong></span></div>
-        <div className="status-hero__message">
-          <h2>{postaLive && noleggioLive ? "Eccomi Posta e Noleggio sono collegati." : postaLive ? "Eccomi Posta è collegata." : noleggioLive ? "Eccomi Noleggio è collegato." : "Eccomi è sotto controllo."}</h2>
-          <p>{postaLive && noleggioLive
-            ? `${postaLive.summary.total} pratiche Posta e ${noleggioLive.summary.promotionsTotal} promozioni Noleggio lette dai sistemi reali.`
-            : postaLive
-              ? `${postaLive.summary.total} pratiche lette dal sistema reale, senza modificare l’operatività.`
-              : noleggioLive
-                ? `${noleggioLive.summary.promotionsTotal} promozioni e ${noleggioLive.summary.leadsTotal} lead letti dal sistema reale.`
-                : `${ecosystems.length} ecosistemi monitorati, con dati reali attivati progressivamente.`}</p>
-        </div>
-        <button onClick={() => onNavigate("ai")}>Vedi le attenzioni <ArrowRight size={17} /></button>
-      </section>
+      <CeoToday
+        displayName={displayName}
+        statusLabel={statusLabel}
+        statusMessage={statusMessage}
+        operatingEcosystems={ecosystems.length}
+        activitiesToVerify={7}
+        criticalIssues={3}
+        onOpenPriorities={() => onNavigate("ai")}
+      />
 
       <section className="kpi-grid">
         {kpis.map((kpi) => {
