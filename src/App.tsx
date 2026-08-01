@@ -57,6 +57,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { CeoControlCenter } from "./components/CeoControlCenter";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1706,6 +1707,7 @@ function DashboardView({
         criticalIssues={3}
         onOpenPriorities={() => onNavigate("ai")}
       />
+      <CeoControlCenter onOpenDecisionCenter={() => onNavigate("decisions")} />
 
       <section className="kpi-grid">
         {kpis.map((kpi) => {
