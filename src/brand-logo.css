@@ -1,0 +1,39 @@
+/* ECCOMI · Logo ufficiale condiviso */
+.brand__mark,
+.login-brand .brand__mark {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: transparent url("/branding/logo-eccomi.svg") center / contain no-repeat;
+  box-shadow: none;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+}
+
+.sidebar .brand__mark {
+  width: 47px;
+  height: 47px;
+  border-radius: 13px;
+  filter: drop-shadow(0 7px 13px rgba(0, 0, 0, 0.16));
+}
+
+.login-brand .brand__mark {
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.2));
+}
+
+@media (max-width: 760px) {
+  .login-brand .brand__mark {
+    width: 56px;
+    height: 56px;
+  }
+}
