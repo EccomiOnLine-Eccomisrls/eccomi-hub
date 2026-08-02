@@ -1260,3 +1260,226 @@ font-weight:600;
     width: 100%;
   }
 }
+
+.command-center__examples button {
+  padding: 5px 8px;
+  color: #526173;
+  font-size: 11px;
+  font-family: inherit;
+  background: #f5f7fa;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.command-center__examples button:hover {
+  color: #6345c7;
+  background: #efeaff;
+}
+
+.command-footer-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.command-footer-button:hover:not(:disabled) {
+  color: #6345c7;
+}
+
+.command-footer-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+
+/* Command Bar — Executive polish */
+
+.command-center {
+  box-shadow:
+    0 28px 80px rgba(15, 23, 42, 0.22),
+    0 4px 18px rgba(15, 23, 42, 0.08);
+}
+
+.command-center__body {
+  padding: 22px 22px 24px;
+}
+
+.command-center__intro {
+  margin-bottom: 20px;
+}
+
+.command-center__intro p {
+  max-width: 540px;
+  line-height: 1.5;
+}
+
+.command-suggestion-grid button {
+  position: relative;
+  overflow: hidden;
+}
+
+.command-suggestion-grid button::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(109, 74, 255, 0.055),
+    transparent 80%
+  );
+  content: "";
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.command-suggestion-grid button:hover {
+  border-color: #c8baf8;
+  box-shadow: 0 9px 24px rgba(73, 53, 142, 0.11);
+  transform: translateX(2px);
+}
+
+.command-suggestion-grid button:hover::after {
+  opacity: 1;
+}
+
+.command-center__examples {
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 17px;
+}
+
+.command-center__examples button {
+  display: inline-flex !important;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 11px !important;
+  color: #5b6474 !important;
+  font-family: inherit !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  line-height: 1;
+  background: #f6f4fc !important;
+  border: 1px solid #e5defa !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.command-center__examples button:hover {
+  color: #6044c5 !important;
+  background: #eee9ff !important;
+  border-color: #d3c5ff !important;
+  transform: translateY(-1px);
+}
+
+.command-center .search-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 52px;
+  padding: 10px 18px;
+  background: #fbfcfe;
+  border-top: 1px solid #e9edf3;
+}
+
+.command-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.command-footer-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 4px 8px;
+  color: #637083;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.command-footer-button kbd {
+  display: grid;
+  min-width: 25px;
+  height: 22px;
+  padding: 0 5px;
+  color: #526173;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  background: #ffffff;
+  border: 1px solid #dce3eb;
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  place-items: center;
+}
+
+.command-footer-button:hover:not(:disabled) {
+  color: #593dbd;
+  background: #f2efff;
+  border-color: #dfd7fa;
+}
+
+.command-footer-button--primary:not(:disabled) {
+  color: #583cc1;
+}
+
+.command-footer-button:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.command-center .search-modal__footer em {
+  margin-left: auto;
+  color: #8a94a3;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 650px) {
+  .command-center .search-modal__footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .command-center .search-modal__footer em {
+    margin-left: 0;
+  }
+
+  .command-footer-actions {
+    width: 100%;
+  }
+
+  .command-footer-button {
+    justify-content: center;
+    flex: 1;
+  }
+}

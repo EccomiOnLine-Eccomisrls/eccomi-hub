@@ -2563,6 +2563,33 @@ function SearchModal({
     action: () => void;
   }>;
 }) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key === "Enter" && value.trim() && results.length > 0) {
+        event.preventDefault();
+        results[0].action();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose, results, value]);
+
+  const executeFirstResult = () => {
+    if (results.length > 0) {
+      results[0].action();
+    }
+  };
+
   const suggestions = [
     {
       label: "Cosa richiede attenzione?",
@@ -2616,6 +2643,19 @@ function SearchModal({
             autoFocus
             value={value}
             onChange={(event) => onChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+                onClose();
+                return;
+              }
+
+              if (event.key === "Enter") {
+                event.preventDefault();
+                executeFirstResult();
+              }
+            }}
             placeholder="Chiedimi qualsiasi cosa o dimmi cosa vuoi fare..."
           />
           <button
@@ -2637,7 +2677,8 @@ function SearchModal({
                 <small>ANTICIPATORE OPERATIVO</small>
                 <strong>Cosa vuoi fare adesso?</strong>
                 <p>
-                  Scrivi un comando oppure scegli una delle azioni suggerite.
+                  Posso aiutarti a decidere, trovare informazioni o aprire
+                  qualsiasi area di ECCOMI HUB.
                 </p>
               </div>
             </div>
@@ -2663,9 +2704,26 @@ function SearchModal({
 
             <div className="command-center__examples">
               <small>PUOI ANCHE SCRIVERE</small>
-              <span>“Cosa non va oggi?”</span>
-              <span>“Apri Eccomi Noleggio”</span>
-              <span>“Mostrami i clienti”</span>
+              <button
+                type="button"
+                onClick={() => onChange("Cosa non va oggi?")}
+              >
+                Cosa non va oggi?
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onChange("Apri Eccomi Noleggio")}
+              >
+                Apri Eccomi Noleggio
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onChange("Mostrami i clienti")}
+              >
+                Mostrami i clienti
+              </button>
             </div>
           </div>
         ) : (
@@ -2713,8 +2771,27 @@ function SearchModal({
         )}
 
         <div className="search-modal__footer">
-          <span><kbd>↵</kbd> Apri</span>
-          <span><kbd>ESC</kbd> Chiudi</span>
+          <div className="command-footer-actions">
+            <button
+              type="button"
+              className="command-footer-button command-footer-button--primary"
+              onClick={executeFirstResult}
+              disabled={!value.trim() || results.length === 0}
+            >
+              <kbd>↵</kbd>
+              <span>Apri risultato</span>
+            </button>
+
+            <button
+              type="button"
+              className="command-footer-button"
+              onClick={onClose}
+            >
+              <kbd>ESC</kbd>
+              <span>Chiudi</span>
+            </button>
+          </div>
+
           <em>ECCOMI Command Bar · V1</em>
         </div>
       </div>
