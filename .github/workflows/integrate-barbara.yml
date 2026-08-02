@@ -5,28 +5,16 @@ on:
   push:
     branches:
       - feature/barbara-command-center
-    paths:
-      - src/lib/eccomiOS.ts
-      - scripts/rename-barbara-to-eccomi-os.mjs
-      - .github/workflows/integrate-barbara.yml
   pull_request:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
-  integrate-and-build:
-    if: github.actor != 'github-actions[bot]'
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: feature/barbara-command-center
-          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -34,23 +22,8 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Apply ECCOMI OS naming
-        run: node scripts/rename-barbara-to-eccomi-os.mjs
-
       - name: Install dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
-
-      - name: Commit integration
-        run: |
-          if git diff --quiet -- src/App.tsx; then
-            echo "ECCOMI OS is already integrated."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/App.tsx
-          git commit -m "feat: rename command center to ECCOMI OS"
-          git push origin HEAD:feature/barbara-command-center
