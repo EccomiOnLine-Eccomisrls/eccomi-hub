@@ -1000,3 +1000,25 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; 
   .posta-config-modal .modal__actions { flex-direction: column-reverse; }
   .posta-config-modal .modal__actions button { width: 100%; }
 }
+
+
+.commandbar-hint{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+pointer-events:none;
+opacity:.65;
+font-size:.75rem;
+}
+
+.commandbar-hint kbd{
+padding:3px 7px;
+border-radius:8px;
+background:#eef3ff;
+border:1px solid #d8e2ff;
+font-family:inherit;
+font-size:.72rem;
+font-weight:600;
+}
+
