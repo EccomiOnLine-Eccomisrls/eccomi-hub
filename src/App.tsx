@@ -69,6 +69,7 @@ import { DataTrustPanel } from "./components/DataTrustPanel";
 import { ExecutiveHealth } from "./components/ExecutiveHealth";
 import { CeoMorningBrief } from "./components/CeoMorningBrief";
 import { WhatChanged } from "./components/WhatChanged";
+import { ExecutiveCopilot } from "./components/ExecutiveCopilot";
 import { SystemPulse } from "./components/SystemPulse";
 import {
   advanceHubEntryToEvaluation,
@@ -1924,6 +1925,14 @@ function DashboardView({
         openDecisionCount={openDecisionCount}
         onOpenPriorities={() => onNavigate("ai")}
         onOpenDecisions={() => onNavigate("decisions")}
+      />
+
+      <ExecutiveCopilot
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onNavigate={onNavigate}
       />
 
       <ExecutiveHealth
