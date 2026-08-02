@@ -97,6 +97,18 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 700; padding: 3px 6px; 
 .topbar-ai-badge { min-width: 20px; height: 20px; display: grid; place-items: center; padding: 0 6px; border-radius: 999px; background: var(--amber); color: white; font-size: 8px; font-weight: 800; }
 .topbar-ai-button--critical .topbar-ai-badge { background: var(--red); }
 .topbar-status-pill--demo { color: #8f6400; border-color: #f1d9a5; background: #fffaf0; }
+
+.topbar-status-pill--live {
+  color: #147a3b;
+  border-color: #bfe6cf;
+  background: #f1fbf5;
+}
+
+.topbar-status-pill--live .status-dot {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+}
+
 .topbar-status-pill .status-dot { width: 8px; height: 8px; flex: 0 0 auto; }
 .topbar-profile-button__avatar { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; background: var(--blue-light); color: var(--blue); }
 .icon-button { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); background: white; color: var(--muted); border-radius: 10px; transition: .16s ease; }
