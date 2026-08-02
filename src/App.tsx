@@ -1035,13 +1035,186 @@ export default function Home() {
       practice: "Pratica",
     };
 
-    return searchEccomiOS(searchTerm, candidates, 8).map((result) => ({
+    const normalizedSearch = searchTerm
+      .toLocaleLowerCase("it-IT")
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .trim();
+
+    const containsAny = (terms: string[]) =>
+      terms.some((term) => normalizedSearch.includes(term));
+
+    let scopedCandidates = candidates;
+
+    /*
+     * ECCOMI OS Intent Router
+     *
+     * Una richiesta esplicita viene prima classificata per area.
+     * Solo dopo viene applicato il motore di ranking.
+     * In questo modo "decisioni aperte" non restituisce ecosistemi
+     * generici soltanto perché condividono parole operative.
+     */
+
+    if (
+      containsAny([
+        "decision",
+        "approvaz",
+        "da decidere",
+        "da approvare",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-decisions" ||
+          item.kind === "decision",
+      );
+    } else if (
+      containsAny([
+        "posta",
+        "raccomand",
+        "telegram",
+        "pratiche posta",
+        "invii posta",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-posta" ||
+          item.kind === "practice" ||
+          item.id === "ecosystem-posta",
+      );
+    } else if (
+      containsAny([
+        "noleggio",
+        "offerta auto",
+        "promozione auto",
+        "lead noleggio",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-noleggio" ||
+          item.id === "ecosystem-noleggio",
+      );
+    } else if (
+      containsAny([
+        "nuova entry",
+        "crea entry",
+        "nuovo progetto",
+        "nuovo ecosistema",
+        "nuovo servizio",
+        "nuova idea",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-new-entry",
+      );
+    } else if (
+      containsAny([
+        "cliente",
+        "clienti",
+        "anagrafica",
+        "anagrafiche",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-clients" ||
+          item.kind === "client",
+      );
+    } else if (
+      containsAny([
+        "attenzione",
+        "critic",
+        "priorita",
+        "alert",
+        "cosa non va",
+        "problemi",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-alerts" ||
+          item.kind === "decision",
+      );
+    } else if (
+      containsAny([
+        "report",
+        "risultati",
+        "andamento",
+        "indicatori",
+        "kpi",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-reports",
+      );
+    } else if (
+      containsAny([
+        "responsabile",
+        "responsabili",
+        "team",
+        "ruoli",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-team",
+      );
+    } else if (
+      containsAny([
+        "operatore",
+        "operatori",
+        "attivita",
+        "assegnazioni",
+        "task",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-operations",
+      );
+    } else if (
+      containsAny([
+        "ecosistema",
+        "ecosistemi",
+        "app",
+        "moduli",
+        "verticali",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-ecosystems" ||
+          item.kind === "ecosystem",
+      );
+    } else if (
+      containsAny([
+        "dashboard",
+        "home",
+        "panoramica",
+        "situazione generale",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-dashboard",
+      );
+    }
+
+    return searchEccomiOS(
+      searchTerm,
+      scopedCandidates,
+      8,
+    ).map((result) => ({
       type: labels[result.kind],
       title: result.title,
       detail: result.subtitle,
       action: result.action,
     }));
-  }, [searchTerm, visibleEcosystems, decisions]);
+  }, [
+    searchTerm,
+    clients,
+    visibleEcosystems,
+    decisions,
+  ]);
 
   if (!authenticated) {
     return (
