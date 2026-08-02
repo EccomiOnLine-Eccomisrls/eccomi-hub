@@ -550,3 +550,270 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ECCOMI OS · Sprint 1 · Executive Intelligence */
+
+.executive-intelligence {
+  width: 100%;
+  margin: 0 0 24px;
+  padding: 26px;
+  border: 1px solid #dfe7f1;
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(105, 73, 220, 0.12),
+      transparent 35%
+    ),
+    #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 38, 70, 0.07);
+}
+
+.executive-intelligence * {
+  box-sizing: border-box;
+}
+
+.executive-intelligence__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.executive-intelligence__eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: #6949dc;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.executive-intelligence__head h2 {
+  margin: 0 0 7px;
+  color: #10233f;
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.executive-intelligence__head p {
+  max-width: 680px;
+  margin: 0;
+  color: #6b7a8f;
+  line-height: 1.5;
+}
+
+.executive-intelligence__badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 8px;
+  padding: 10px 13px;
+  border: 1px solid #ded6fb;
+  border-radius: 999px;
+  background: #f6f3ff;
+  color: #6546d7;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.executive-intelligence__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+  gap: 16px;
+}
+
+.executive-intelligence__signals {
+  display: grid;
+  gap: 11px;
+}
+
+.executive-intelligence__signal {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e2e8f1;
+  border-radius: 17px;
+  background: #ffffff;
+}
+
+.executive-intelligence__signal--critical {
+  border-left: 4px solid #dc4545;
+}
+
+.executive-intelligence__signal--warning {
+  border-left: 4px solid #e5a21a;
+}
+
+.executive-intelligence__signal--opportunity {
+  border-left: 4px solid #20a66e;
+}
+
+.executive-intelligence__signal--stable {
+  border-left: 4px solid #6546d7;
+}
+
+.executive-intelligence__icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 13px;
+  background: #f0ecff;
+  color: #6848dc;
+}
+
+.executive-intelligence__signal--critical
+  .executive-intelligence__icon {
+  background: #fff0f0;
+  color: #d74545;
+}
+
+.executive-intelligence__signal--warning
+  .executive-intelligence__icon {
+  background: #fff7e8;
+  color: #b87300;
+}
+
+.executive-intelligence__signal--opportunity
+  .executive-intelligence__icon {
+  background: #edf9f4;
+  color: #16835b;
+}
+
+.executive-intelligence__signal small {
+  display: block;
+  margin-bottom: 5px;
+  color: #7052db;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.executive-intelligence__signal strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #10233f;
+  font-size: 16px;
+}
+
+.executive-intelligence__signal p {
+  margin: 0 0 9px;
+  color: #6c7b90;
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.executive-intelligence__signal div > span {
+  color: #6546d7;
+  font-size: 12px;
+  font-weight: 780;
+}
+
+.executive-intelligence__summary {
+  display: flex;
+  flex-direction: column;
+  padding: 19px;
+  border: 1px solid #ded6fb;
+  border-radius: 19px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(246, 243, 255, 0.96),
+      rgba(255, 255, 255, 0.98)
+    );
+}
+
+.executive-intelligence__summary-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6546d7;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.executive-intelligence__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 19px 0;
+}
+
+.executive-intelligence__metrics div {
+  padding: 13px;
+  border: 1px solid rgba(105, 73, 220, 0.12);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.executive-intelligence__metrics strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #10233f;
+  font-size: 23px;
+}
+
+.executive-intelligence__metrics span {
+  color: #6c7b90;
+  font-size: 11px;
+}
+
+.executive-intelligence__summary > p {
+  margin: 0;
+  color: #6c7b90;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.executive-intelligence__actions {
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.executive-intelligence__actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 0 13px !important;
+  border: 1px solid #ded6fb !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #6546d7 !important;
+  font-weight: 750 !important;
+  cursor: pointer;
+}
+
+.executive-intelligence__actions button:first-child {
+  border-color: #6546d7 !important;
+  background: #6546d7 !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 960px) {
+  .executive-intelligence__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .executive-intelligence {
+    padding: 18px;
+  }
+
+  .executive-intelligence__head {
+    flex-direction: column;
+  }
+
+  .executive-intelligence__metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
