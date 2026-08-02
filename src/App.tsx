@@ -896,7 +896,167 @@ export default function Home() {
           setSearchTerm("");
         },
       }));
-    return [...clientResults, ...ecosystemResults, ...decisionResults].slice(0, 8);
+    const closeCommandBar = () => {
+      setSearchOpen(false);
+      setSearchTerm("");
+    };
+
+    const runNavigationCommand = (
+      target: ViewKey,
+      title: string,
+      detail: string,
+    ) => ({
+      type: "Comando",
+      title,
+      detail,
+      action: () => {
+        navigate(target);
+        closeCommandBar();
+      },
+    });
+
+    const commands: Array<{
+      matches: string[];
+      result: {
+        type: string;
+        title: string;
+        detail: string;
+        action: () => void;
+      };
+    }> = [
+      {
+        matches: ["dashboard", "home", "panoramica", "situazione generale"],
+        result: runNavigationCommand(
+          "dashboard",
+          "Apri Dashboard CEO",
+          "Vai alla cabina di comando principale",
+        ),
+      },
+      {
+        matches: ["decision", "approva", "approvazioni", "da decidere"],
+        result: runNavigationCommand(
+          "decisions",
+          "Apri Decision Center",
+          "Visualizza decisioni, approvazioni e attività bloccate",
+        ),
+      },
+      {
+        matches: ["posta", "raccomandate", "telegrammi", "pratiche posta"],
+        result: runNavigationCommand(
+          "posta",
+          "Apri Eccomi Posta",
+          "Controlla pratiche, invii e anomalie",
+        ),
+      },
+      {
+        matches: ["noleggio", "auto", "promozioni", "offerte noleggio"],
+        result: runNavigationCommand(
+          "noleggio",
+          "Apri Eccomi Noleggio",
+          "Controlla promozioni, lead e scadenze",
+        ),
+      },
+      {
+        matches: [
+          "attenzione",
+          "alert",
+          "criticità",
+          "cosa non va",
+          "cosa richiede",
+          "priorità",
+        ],
+        result: runNavigationCommand(
+          "ai",
+          "Mostra ciò che richiede attenzione",
+          "Apri AI & Alert con le priorità operative",
+        ),
+      },
+      {
+        matches: ["report", "risultati", "andamento", "kpi"],
+        result: runNavigationCommand(
+          "reports",
+          "Apri Report",
+          "Visualizza risultati e indicatori dell’ecosistema",
+        ),
+      },
+      {
+        matches: ["clienti", "cliente"],
+        result: runNavigationCommand(
+          "clients",
+          "Apri Clienti",
+          "Cerca anagrafiche, servizi e storico",
+        ),
+      },
+      {
+        matches: ["responsabili", "responsabile", "team"],
+        result: runNavigationCommand(
+          "team",
+          "Apri Responsabili",
+          "Visualizza ruoli e responsabilità",
+        ),
+      },
+      {
+        matches: ["operatori", "attività", "task"],
+        result: runNavigationCommand(
+          "operations",
+          "Apri Operatori e attività",
+          "Controlla attività operative e assegnazioni",
+        ),
+      },
+      {
+        matches: ["ecosistemi", "ecosistema"],
+        result: runNavigationCommand(
+          "ecosystems",
+          "Apri Ecosistemi",
+          "Visualizza tutti i verticali ECCOMI",
+        ),
+      },
+      {
+        matches: [
+          "nuova entry",
+          "nuovo progetto",
+          "nuovo ecosistema",
+          "crea eccomi",
+          "crea nuovo",
+        ],
+        result: {
+          type: "Azione",
+          title: "Crea una nuova entry",
+          detail: "Avvia la procedura per ecosistema, servizio, progetto o idea",
+          action: () => {
+            closeCommandBar();
+            setNewEntryOpen(true);
+          },
+        },
+      },
+    ];
+
+    const commandResults = commands
+      .filter(({ matches }) =>
+        matches.some(
+          (match) => term.includes(match) || match.includes(term),
+        ),
+      )
+      .map(({ result }) => result)
+      .slice(0, 4);
+
+    const combinedResults = [
+      ...commandResults,
+      ...clientResults,
+      ...ecosystemResults,
+      ...decisionResults,
+    ];
+
+    return combinedResults
+      .filter(
+        (result, index, list) =>
+          list.findIndex(
+            (candidate) =>
+              candidate.type === result.type &&
+              candidate.title === result.title,
+          ) === index,
+      )
+      .slice(0, 8);
   }, [searchTerm, visibleEcosystems, decisions]);
 
   if (!authenticated) {
@@ -998,7 +1158,7 @@ export default function Home() {
             </button>
             <button className="global-search" onClick={() => setSearchOpen(true)}>
               <Search size={18} />
-              <span>Cerca cliente, pratica, ordine o documento...</span>
+              <span>Chiedimi qualsiasi cosa o dimmi cosa vuoi fare...</span>
               <kbd>⌘ K</kbd>
             </button>
           </div>
@@ -2387,9 +2547,178 @@ function NewEntryModal({
   );
 }
 
-function SearchModal({ value, onChange, onClose, results }: { value: string; onChange: (value: string) => void; onClose: () => void; results: Array<{ type: string; title: string; detail: string; action: () => void }> }) {
+function SearchModal({
+  value,
+  onChange,
+  onClose,
+  results,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onClose: () => void;
+  results: Array<{
+    type: string;
+    title: string;
+    detail: string;
+    action: () => void;
+  }>;
+}) {
+  const suggestions = [
+    {
+      label: "Cosa richiede attenzione?",
+      query: "cosa richiede attenzione",
+      icon: AlertTriangle,
+    },
+    {
+      label: "Apri Decision Center",
+      query: "apri decision center",
+      icon: Gavel,
+    },
+    {
+      label: "Pratiche Eccomi Posta",
+      query: "pratiche posta",
+      icon: Mail,
+    },
+    {
+      label: "Offerte Eccomi Noleggio",
+      query: "offerte noleggio",
+      icon: CarFront,
+    },
+    {
+      label: "Crea una nuova entry",
+      query: "nuova entry",
+      icon: Plus,
+    },
+    {
+      label: "Report e risultati",
+      query: "apri report",
+      icon: BarChart3,
+    },
+  ];
+
   return (
-    <div className="modal-layer search-layer" role="dialog" aria-modal="true"><button className="modal-scrim" onClick={onClose} aria-label="Chiudi" /><div className="search-modal"><div className="search-modal__input"><Search size={21} /><input autoFocus value={value} onChange={(e) => onChange(e.target.value)} placeholder="Cerca in tutto ECCOMI HUB..." /><button className="icon-button" onClick={onClose}><X size={19} /></button></div>{!value ? <div className="search-hints"><small>RICERCHE RAPIDE</small><button onClick={() => onChange("Energia")}>Pratiche Energia</button><button onClick={() => onChange("EC-100")}>Clienti EC-ID</button><button onClick={() => onChange("PEC")}>Decisioni PEC</button></div> : <div className="search-results">{results.length ? results.map((result, index) => <button key={`${result.type}-${index}`} onClick={result.action}><span className="result-type">{result.type}</span><span><strong>{result.title}</strong><small>{result.detail}</small></span><ChevronRight size={17} /></button>) : <div className="empty-state"><Search size={23} /><strong>Nessun risultato</strong><span>Controlla il testo o prova con un altro termine.</span></div>}</div>}<div className="search-modal__footer"><span><kbd>↵</kbd> Apri</span><span><kbd>ESC</kbd> Chiudi</span><em>Ricerca globale EC-ID</em></div></div></div>
+    <div
+      className="modal-layer search-layer"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command Bar ECCOMI HUB"
+    >
+      <button
+        className="modal-scrim"
+        onClick={onClose}
+        aria-label="Chiudi"
+      />
+
+      <div className="search-modal command-center">
+        <div className="search-modal__input">
+          <Sparkles size={21} />
+          <input
+            autoFocus
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            placeholder="Chiedimi qualsiasi cosa o dimmi cosa vuoi fare..."
+          />
+          <button
+            className="icon-button"
+            onClick={onClose}
+            aria-label="Chiudi Command Bar"
+          >
+            <X size={19} />
+          </button>
+        </div>
+
+        {!value ? (
+          <div className="command-center__body">
+            <div className="command-center__intro">
+              <span className="panel-icon panel-icon--ai">
+                <Sparkles size={18} />
+              </span>
+              <div>
+                <small>ANTICIPATORE OPERATIVO</small>
+                <strong>Cosa vuoi fare adesso?</strong>
+                <p>
+                  Scrivi un comando oppure scegli una delle azioni suggerite.
+                </p>
+              </div>
+            </div>
+
+            <div className="command-suggestion-grid">
+              {suggestions.map((suggestion) => {
+                const Icon = suggestion.icon;
+
+                return (
+                  <button
+                    key={suggestion.query}
+                    onClick={() => onChange(suggestion.query)}
+                  >
+                    <span>
+                      <Icon size={17} />
+                    </span>
+                    <strong>{suggestion.label}</strong>
+                    <ChevronRight size={16} />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="command-center__examples">
+              <small>PUOI ANCHE SCRIVERE</small>
+              <span>“Cosa non va oggi?”</span>
+              <span>“Apri Eccomi Noleggio”</span>
+              <span>“Mostrami i clienti”</span>
+            </div>
+          </div>
+        ) : (
+          <div className="search-results command-results">
+            <div className="command-results__heading">
+              <small>ECCOMI HA CAPITO</small>
+              <strong>{results.length} azioni o risultati disponibili</strong>
+            </div>
+
+            {results.length ? (
+              results.map((result, index) => (
+                <button
+                  key={`${result.type}-${result.title}-${index}`}
+                  onClick={result.action}
+                >
+                  <span
+                    className={
+                      result.type === "Comando" ||
+                      result.type === "Azione"
+                        ? "result-type result-type--command"
+                        : "result-type"
+                    }
+                  >
+                    {result.type}
+                  </span>
+
+                  <span>
+                    <strong>{result.title}</strong>
+                    <small>{result.detail}</small>
+                  </span>
+
+                  <ChevronRight size={17} />
+                </button>
+              ))
+            ) : (
+              <div className="empty-state">
+                <Bot size={24} />
+                <strong>Non ho ancora capito la richiesta</strong>
+                <span>
+                  Prova con “Apri Decision Center”, “Posta” o “Nuova entry”.
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="search-modal__footer">
+          <span><kbd>↵</kbd> Apri</span>
+          <span><kbd>ESC</kbd> Chiudi</span>
+          <em>ECCOMI Command Bar · V1</em>
+        </div>
+      </div>
+    </div>
   );
 }
 
