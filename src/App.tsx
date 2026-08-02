@@ -67,6 +67,7 @@ import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
 import { DataTrustPanel } from "./components/DataTrustPanel";
 import { ExecutiveHealth } from "./components/ExecutiveHealth";
+import { SystemPulse } from "./components/SystemPulse";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -1918,6 +1919,15 @@ function DashboardView({
       />
 
       <DataTrustPanel />
+
+      <SystemPulse
+        postaState={postaState}
+        noleggioState={noleggioState}
+        openDecisionCount={openDecisionCount}
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+      />
 
       <div id="executive-section-snapshot" className="executive-section-anchor">
       <ExecutiveSnapshot
