@@ -100,6 +100,10 @@ import {
   getCeoGreeting,
   type CeoPriority,
 } from "./lib/ceoIntelligence";
+import {
+  searchBarbaraResults,
+  type BarbaraResult,
+} from "./lib/barbaraCommandCenter";
 
 type ViewKey =
   | "dashboard"
@@ -858,205 +862,176 @@ export default function Home() {
   };
 
   const searchResults = useMemo(() => {
-    if (!searchTerm.trim()) return [];
-    const term = searchTerm.toLowerCase();
-    const clientResults = clients
-      .filter((client) => `${client.id} ${client.name} ${client.services.join(" ")}`.toLowerCase().includes(term))
-      .map((client) => ({
-        type: "Cliente",
-        title: client.name,
-        detail: `${client.id} · ${client.services.join(", ")}`,
-        action: () => {
-          setSelectedClient(client);
-          setSearchOpen(false);
-          setSearchTerm("");
-        },
-      }));
-    const ecosystemResults = visibleEcosystems
-      .filter((item) => item.name.toLowerCase().includes(term))
-      .map((item) => ({
-        type: "Ecosistema",
-        title: item.name,
-        detail: `${item.status} · ${item.owner}`,
-        action: () => {
-          setSelectedEcosystem(item);
-          setSearchOpen(false);
-          setSearchTerm("");
-        },
-      }));
-    const decisionResults = decisions
-      .filter((item) => `${item.title} ${item.ecosystem}`.toLowerCase().includes(term))
-      .map((item) => ({
-        type: "Decisione",
-        title: item.title,
-        detail: `${item.ecosystem} · ${item.status}`,
-        action: () => {
-          navigate("decisions");
-          setSearchOpen(false);
-          setSearchTerm("");
-        },
-      }));
     const closeCommandBar = () => {
       setSearchOpen(false);
       setSearchTerm("");
     };
 
     const runNavigationCommand = (
+      id: string,
       target: ViewKey,
       title: string,
-      detail: string,
-    ) => ({
-      type: "Comando",
+      subtitle: string,
+      keywords: string[],
+      priority = 60,
+    ): BarbaraResult => ({
+      id,
+      kind: "command",
       title,
-      detail,
+      subtitle,
+      keywords,
+      priority,
       action: () => {
         navigate(target);
         closeCommandBar();
       },
     });
 
-    const commands: Array<{
-      matches: string[];
-      result: {
-        type: string;
-        title: string;
-        detail: string;
-        action: () => void;
-      };
-    }> = [
+    const candidates: BarbaraResult[] = [
+      runNavigationCommand(
+        "command-dashboard",
+        "dashboard",
+        "Apri Dashboard CEO",
+        "Vai alla cabina di comando principale",
+        ["dashboard", "home", "panoramica", "situazione generale", "cabina di comando"],
+        100,
+      ),
+      runNavigationCommand(
+        "command-decisions",
+        "decisions",
+        "Apri Decision Center",
+        "Visualizza decisioni, approvazioni e attività bloccate",
+        ["decision", "decisioni", "approva", "approvazioni", "da decidere", "bloccate"],
+        95,
+      ),
+      runNavigationCommand(
+        "command-posta",
+        "posta",
+        "Apri Eccomi Posta",
+        "Controlla pratiche, invii e anomalie",
+        ["posta", "raccomandate", "telegrammi", "pratiche posta", "invii"],
+        90,
+      ),
+      runNavigationCommand(
+        "command-noleggio",
+        "noleggio",
+        "Apri Eccomi Noleggio",
+        "Controlla promozioni, lead e scadenze",
+        ["noleggio", "auto", "promozioni", "offerte noleggio", "lead"],
+        88,
+      ),
+      runNavigationCommand(
+        "command-alerts",
+        "ai",
+        "Mostra ciò che richiede attenzione",
+        "Apri AI & Alert con le priorità operative",
+        ["attenzione", "alert", "criticita", "cosa non va", "cosa richiede", "priorita"],
+        86,
+      ),
+      runNavigationCommand(
+        "command-clients",
+        "clients",
+        "Apri Clienti",
+        "Cerca anagrafiche, servizi e storico",
+        ["clienti", "cliente", "anagrafiche", "storico"],
+        80,
+      ),
+      runNavigationCommand(
+        "command-ecosystems",
+        "ecosystems",
+        "Apri Ecosistemi",
+        "Visualizza tutti i verticali ECCOMI",
+        ["ecosistemi", "ecosistema", "verticali", "moduli"],
+        78,
+      ),
+      runNavigationCommand(
+        "command-reports",
+        "reports",
+        "Apri Report",
+        "Visualizza risultati e indicatori dell’ecosistema",
+        ["report", "risultati", "andamento", "kpi", "indicatori"],
+        76,
+      ),
+      runNavigationCommand(
+        "command-team",
+        "team",
+        "Apri Responsabili",
+        "Visualizza ruoli e responsabilità",
+        ["responsabili", "responsabile", "team", "ruoli"],
+        72,
+      ),
+      runNavigationCommand(
+        "command-operations",
+        "operations",
+        "Apri Operatori e attività",
+        "Controlla attività operative e assegnazioni",
+        ["operatori", "attivita", "task", "assegnazioni"],
+        70,
+      ),
       {
-        matches: ["dashboard", "home", "panoramica", "situazione generale"],
-        result: runNavigationCommand(
-          "dashboard",
-          "Apri Dashboard CEO",
-          "Vai alla cabina di comando principale",
-        ),
-      },
-      {
-        matches: ["decision", "approva", "approvazioni", "da decidere"],
-        result: runNavigationCommand(
-          "decisions",
-          "Apri Decision Center",
-          "Visualizza decisioni, approvazioni e attività bloccate",
-        ),
-      },
-      {
-        matches: ["posta", "raccomandate", "telegrammi", "pratiche posta"],
-        result: runNavigationCommand(
-          "posta",
-          "Apri Eccomi Posta",
-          "Controlla pratiche, invii e anomalie",
-        ),
-      },
-      {
-        matches: ["noleggio", "auto", "promozioni", "offerte noleggio"],
-        result: runNavigationCommand(
-          "noleggio",
-          "Apri Eccomi Noleggio",
-          "Controlla promozioni, lead e scadenze",
-        ),
-      },
-      {
-        matches: [
-          "attenzione",
-          "alert",
-          "criticità",
-          "cosa non va",
-          "cosa richiede",
-          "priorità",
-        ],
-        result: runNavigationCommand(
-          "ai",
-          "Mostra ciò che richiede attenzione",
-          "Apri AI & Alert con le priorità operative",
-        ),
-      },
-      {
-        matches: ["report", "risultati", "andamento", "kpi"],
-        result: runNavigationCommand(
-          "reports",
-          "Apri Report",
-          "Visualizza risultati e indicatori dell’ecosistema",
-        ),
-      },
-      {
-        matches: ["clienti", "cliente"],
-        result: runNavigationCommand(
-          "clients",
-          "Apri Clienti",
-          "Cerca anagrafiche, servizi e storico",
-        ),
-      },
-      {
-        matches: ["responsabili", "responsabile", "team"],
-        result: runNavigationCommand(
-          "team",
-          "Apri Responsabili",
-          "Visualizza ruoli e responsabilità",
-        ),
-      },
-      {
-        matches: ["operatori", "attività", "task"],
-        result: runNavigationCommand(
-          "operations",
-          "Apri Operatori e attività",
-          "Controlla attività operative e assegnazioni",
-        ),
-      },
-      {
-        matches: ["ecosistemi", "ecosistema"],
-        result: runNavigationCommand(
-          "ecosystems",
-          "Apri Ecosistemi",
-          "Visualizza tutti i verticali ECCOMI",
-        ),
-      },
-      {
-        matches: [
-          "nuova entry",
-          "nuovo progetto",
-          "nuovo ecosistema",
-          "crea eccomi",
-          "crea nuovo",
-        ],
-        result: {
-          type: "Azione",
-          title: "Crea una nuova entry",
-          detail: "Avvia la procedura per ecosistema, servizio, progetto o idea",
-          action: () => {
-            closeCommandBar();
-            setNewEntryOpen(true);
-          },
+        id: "command-new-entry",
+        kind: "command",
+        title: "Crea una nuova entry",
+        subtitle: "Avvia la procedura per ecosistema, servizio, progetto o idea",
+        keywords: ["nuova entry", "nuovo progetto", "nuovo ecosistema", "crea eccomi", "crea nuovo"],
+        priority: 92,
+        action: () => {
+          closeCommandBar();
+          setNewEntryOpen(true);
         },
       },
+      ...clients.map((client): BarbaraResult => ({
+        id: `client-${client.id}`,
+        kind: "client",
+        title: client.name,
+        subtitle: `${client.id} · ${client.services.join(", ")}`,
+        keywords: [client.id, client.name, client.kind, client.contact, ...client.services],
+        priority: 35,
+        action: () => {
+          setSelectedClient(client);
+          closeCommandBar();
+        },
+      })),
+      ...visibleEcosystems.map((item): BarbaraResult => ({
+        id: `ecosystem-${item.id}`,
+        kind: "ecosystem",
+        title: item.name,
+        subtitle: `${item.status} · ${item.owner}`,
+        keywords: [item.id, item.name, item.status, item.owner, item.entryType || ""],
+        priority: 45,
+        action: () => {
+          setSelectedEcosystem(item);
+          closeCommandBar();
+        },
+      })),
+      ...decisions.map((item): BarbaraResult => ({
+        id: `decision-${item.id}`,
+        kind: "decision",
+        title: item.title,
+        subtitle: `${item.ecosystem} · ${item.status}`,
+        keywords: [item.title, item.ecosystem, item.status, item.urgency, item.due],
+        priority: item.urgency === "Alta" ? 58 : item.urgency === "Media" ? 48 : 38,
+        action: () => {
+          navigate("decisions");
+          closeCommandBar();
+        },
+      })),
     ];
 
-    const commandResults = commands
-      .filter(({ matches }) =>
-        matches.some(
-          (match) => term.includes(match) || match.includes(term),
-        ),
-      )
-      .map(({ result }) => result)
-      .slice(0, 4);
+    const labels: Record<BarbaraResult["kind"], string> = {
+      command: "Comando",
+      client: "Cliente",
+      ecosystem: "Ecosistema",
+      decision: "Decisione",
+      practice: "Pratica",
+    };
 
-    const combinedResults = [
-      ...commandResults,
-      ...clientResults,
-      ...ecosystemResults,
-      ...decisionResults,
-    ];
-
-    return combinedResults
-      .filter(
-        (result, index, list) =>
-          list.findIndex(
-            (candidate) =>
-              candidate.type === result.type &&
-              candidate.title === result.title,
-          ) === index,
-      )
-      .slice(0, 8);
+    return searchBarbaraResults(searchTerm, candidates, 8).map((result) => ({
+      type: labels[result.kind],
+      title: result.title,
+      detail: result.subtitle,
+      action: result.action,
+    }));
   }, [searchTerm, visibleEcosystems, decisions]);
 
   if (!authenticated) {
