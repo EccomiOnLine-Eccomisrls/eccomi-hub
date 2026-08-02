@@ -4,6 +4,7 @@ import App from "./App";
 import "./index.css";
 import "./executive-home.css";
 import "./command-center-v2.css";
+import "./brand-logo.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
