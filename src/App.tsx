@@ -2090,34 +2090,6 @@ function DashboardView({
         </div>
       </section>
 
-      <section className="dashboard-columns dashboard-columns--lower">
-        <div className="panel activity-panel">
-          <div className="panel__head"><div className="panel-title"><span className="panel-icon"><Activity size={18} /></span><span><small>TIMELINE</small><strong>Attività recenti</strong></span></div><button className="text-button">Tutte <ArrowRight size={15} /></button></div>
-          <div className="activity-list">
-            {postaLive?.recent.length ? postaLive.recent.slice(0, 4).map((practice) => (
-              <ActivityRow
-                key={practice.id}
-                color={postaStatusColor(practice.status)}
-                title={`Pratica ${practice.orderName || practice.id.slice(0, 8)}`}
-                detail={`Eccomi Posta · ${formatPostaStatus(practice.status)}`}
-                time={formatRelativeDate(practice.updatedAt || practice.createdAt)}
-              />
-            )) : (
-              <>
-                <ActivityRow color="green" title="Pratica #PO-1827 conclusa" detail="Eccomi Posta · operazione completata" time="8 min" />
-                <ActivityRow color="blue" title="Nuovo cliente EC-100284" detail="Acquisito da Eccomi Energia" time="24 min" />
-                <ActivityRow color="amber" title="Ticket #TK-439 in attesa" detail="Richiesto documento al cliente" time="41 min" />
-                <ActivityRow color="purple" title="Decisione verificata" detail="Campagna Spedizioni · risultato +6,2%" time="1 ora" />
-              </>
-            )}
-          </div>
-        </div>
-        <div className="panel opportunity-panel">
-          <div className="panel__head"><div className="panel-title"><span className="panel-icon panel-icon--green"><TrendingUp size={18} /></span><span><small>OPPORTUNITÀ</small><strong>Valore potenziale</strong></span></div><button className="icon-button"><ArrowUpRight size={18} /></button></div>
-          <div className="opportunity-total"><strong>€ 21.640</strong><span>34 opportunità aperte</span></div>
-          <div className="opportunity-bars"><ProgressRow label="Energia" value="€ 9.800" width={82} color="#e5a000" /><ProgressRow label="Spedizioni" value="€ 6.240" width={62} color="#0f9f6e" /><ProgressRow label="PEC" value="€ 3.920" width={43} color="#7c3aed" /><ProgressRow label="Posta" value="€ 1.680" width={28} color="#2563eb" /></div>
-        </div>
-      </section>
     </div>
   );
 }
