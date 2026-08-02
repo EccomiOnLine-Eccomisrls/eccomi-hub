@@ -1156,5 +1156,107 @@ font-weight:600;
 
   .command-center__body {
     padding: 15px;
+/* Decision Intelligence Engine — WHY v1 */
+
+.alert-card__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.alert-card__why-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #f5f7fa !important;
+  color: #334155 !important;
+  border: 1px solid #dbe3ec !important;
+}
+
+.alert-card__chevron {
+  transition: transform 160ms ease;
+}
+
+.alert-card__chevron--open {
+  transform: rotate(180deg);
+}
+
+.decision-intelligence {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid #e1e8f0;
+  border-radius: 14px;
+}
+
+.decision-intelligence__item {
+  padding: 10px 12px;
+  background: #ffffff;
+  border-left: 3px solid #64748b;
+  border-radius: 9px;
+}
+
+.decision-intelligence__item--risk {
+  border-left-color: #d97706;
+  background: #fffaf0;
+}
+
+.decision-intelligence__item--benefit {
+  border-left-color: #0f9f6e;
+  background: #f2fbf7;
+}
+
+.decision-intelligence__item span,
+.decision-intelligence__recommendation span {
+  display: block;
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.decision-intelligence__item p {
+  margin: 0;
+  color: #243447;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.decision-intelligence__recommendation {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  color: #073f73;
+  background: #eaf3fb;
+  border: 1px solid #cfe3f4;
+  border-radius: 10px;
+}
+
+.decision-intelligence__recommendation svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.decision-intelligence__recommendation strong {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .alert-card__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .alert-card__actions button {
+    justify-content: center;
+    width: 100%;
   }
 }

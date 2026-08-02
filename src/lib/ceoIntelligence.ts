@@ -16,6 +16,103 @@ export type CeoPriority = {
   targetView: "dashboard" | "ai" | "decisions" | "posta" | "noleggio";
 };
 
+export type PriorityExplanation = {
+  why: string;
+  risk: string;
+  benefit: string;
+  recommendedAction: string;
+};
+
+export function explainCeoPriority(
+  priority: CeoPriority,
+): PriorityExplanation {
+  if (priority.targetView === "posta") {
+    if (priority.severity === "critical") {
+      return {
+        why: "Il collegamento con Eccomi Posta non sta restituendo dati affidabili.",
+        risk: "Il CEO potrebbe prendere decisioni utilizzando informazioni incomplete o non aggiornate.",
+        benefit: "Ripristinare il collegamento restituisce visibilità immediata su pratiche, anomalie e carichi operativi.",
+        recommendedAction: "Aprire Eccomi Posta e verificare configurazione, credenziali e stato del servizio.",
+      };
+    }
+
+    return {
+      why: priority.description,
+      risk: "Le pratiche aperte possono accumulare ritardo e aumentare il carico operativo.",
+      benefit: "Una verifica tempestiva riduce i tempi di lavorazione e previene pratiche bloccate.",
+      recommendedAction: "Aprire l’area Posta e controllare prima le pratiche ancora aperte.",
+    };
+  }
+
+  if (priority.targetView === "noleggio") {
+    if (priority.severity === "critical") {
+      return {
+        why: "I dati aggregati di Eccomi Noleggio non sono disponibili nell’HUB.",
+        risk: "Promozioni, lead o attività urgenti potrebbero non essere intercettati in tempo.",
+        benefit: "Il ripristino del collegamento consente di governare scadenze, promozioni e lead da un unico punto.",
+        recommendedAction: "Aprire Eccomi Noleggio e verificare il collegamento con HUB.",
+      };
+    }
+
+    return {
+      why: priority.description,
+      risk:
+        priority.severity === "warning"
+          ? "Una promozione o un’attività non gestita può perdere efficacia o superare la scadenza."
+          : "Un’opportunità non lavorata può ridurre la probabilità di conversione.",
+      benefit:
+        priority.severity === "warning"
+          ? "Intervenire ora protegge la continuità commerciale delle offerte."
+          : "Lavorare rapidamente i lead aumenta la possibilità di trasformarli in trattative.",
+      recommendedAction: "Aprire l’area Noleggio e lavorare gli elementi con maggiore urgenza.",
+    };
+  }
+
+  if (priority.targetView === "decisions") {
+    return {
+      why: priority.description,
+      risk: "Rimandare una decisione urgente può bloccare attività, responsabili o opportunità collegate.",
+      benefit: "Una decisione tempestiva sblocca il flusso operativo e chiarisce le responsabilità.",
+      recommendedAction: "Aprire il Decision Center e completare prima le decisioni ad alta urgenza.",
+    };
+  }
+
+  if (priority.severity === "critical") {
+    return {
+      why: priority.description,
+      risk: "La criticità può produrre un impatto operativo crescente se non viene gestita.",
+      benefit: "Un intervento immediato limita il rischio e ripristina il controllo.",
+      recommendedAction: priority.actionLabel,
+    };
+  }
+
+  if (priority.severity === "warning") {
+    return {
+      why: priority.description,
+      risk: "La situazione può diventare critica se resta senza responsabile o senza azione.",
+      benefit: "Gestirla oggi mantiene il sistema sotto controllo.",
+      recommendedAction: priority.actionLabel,
+    };
+  }
+
+  if (priority.severity === "opportunity") {
+    return {
+      why: priority.description,
+      risk: "Rinviare può ridurre il valore o la probabilità di conversione dell’opportunità.",
+      benefit: "Intervenire rapidamente può generare crescita commerciale o operativa.",
+      recommendedAction: priority.actionLabel,
+    };
+  }
+
+  return {
+    why: priority.description,
+    risk: "Nessun rischio immediato rilevato.",
+    benefit: "Mantenere il monitoraggio garantisce continuità e controllo.",
+    recommendedAction: "Continuare il monitoraggio.",
+  };
+}
+
+
 export type CeoPriorityParams = {
   postaSummary: PostaSummary | null;
   postaState: "idle" | "loading" | "ready" | "error";
