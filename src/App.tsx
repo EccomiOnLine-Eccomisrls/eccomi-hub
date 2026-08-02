@@ -61,6 +61,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
 import { CeoControlCenter } from "./components/CeoControlCenter";
 import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
+import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1977,6 +1978,11 @@ function DashboardView({
         onOpenDecisions={() => onNavigate("decisions")}
         onOpenPosta={() => onNavigate("posta")}
         onOpenNoleggio={() => onNavigate("noleggio")}
+      />
+
+      <ExecutiveTimeline
+        priorities={priorities}
+        onNavigate={onNavigate}
       />
 
       <section className="kpi-grid">
