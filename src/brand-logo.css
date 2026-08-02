@@ -9,8 +9,12 @@
   padding: 0;
   overflow: hidden;
   border: 0;
-  border-radius: 14px;
-  background: transparent url("/branding/logo-eccomi.svg") center / contain no-repeat;
+  border-radius: 50%;
+  background-color: #eeeeee;
+  background-image: url("/branding/logo-eccomi.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 128%;
   box-shadow: none;
   color: transparent;
   font-size: 0;
@@ -18,22 +22,26 @@
 }
 
 .sidebar .brand__mark {
-  width: 47px;
-  height: 47px;
-  border-radius: 13px;
-  filter: drop-shadow(0 7px 13px rgba(0, 0, 0, 0.16));
+  width: 49px;
+  height: 49px;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  background-size: 132%;
+  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
 }
 
 .login-brand .brand__mark {
-  width: 68px;
-  height: 68px;
-  border-radius: 20px;
-  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.2));
+  width: 72px;
+  height: 72px;
+  border: 3px solid rgba(255, 255, 255, 0.94);
+  border-radius: 50%;
+  background-size: 126%;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.24));
 }
 
 @media (max-width: 760px) {
   .login-brand .brand__mark {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
   }
 }
