@@ -70,6 +70,7 @@ import { ExecutiveHealth } from "./components/ExecutiveHealth";
 import { CeoMorningBrief } from "./components/CeoMorningBrief";
 import { WhatChanged } from "./components/WhatChanged";
 import { ExecutiveCopilot } from "./components/ExecutiveCopilot";
+import { DecisionAssistant } from "./components/DecisionAssistant";
 import { SystemPulse } from "./components/SystemPulse";
 import {
   advanceHubEntryToEvaluation,
@@ -2106,6 +2107,11 @@ function DashboardView({
         postaState={postaState}
         noleggioState={noleggioState}
         onNavigate={onNavigate}
+      />
+
+      <DecisionAssistant
+        decisions={decisions}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
       />
 
       <ExecutiveHealth
