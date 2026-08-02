@@ -2767,7 +2767,7 @@ function SearchModal({
             </button>
           </div>
 
-          <em>ECCOMI Command Bar · V1</em>
+          <em>ECCOMI OS · 0.1 Origins</em>
         </div>
       </div>
     </div>
