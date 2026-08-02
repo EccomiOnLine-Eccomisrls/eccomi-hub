@@ -8,9 +8,17 @@ on:
     paths:
       - scripts/integrate-barbara-command-center.mjs
       - .github/workflows/integrate-barbara.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - src/lib/barbaraCommandCenter.ts
+      - scripts/integrate-barbara-command-center.mjs
+      - .github/workflows/integrate-barbara.yml
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   integrate-and-build:
