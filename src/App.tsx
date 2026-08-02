@@ -66,6 +66,7 @@ import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
 import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
 import { DataTrustPanel } from "./components/DataTrustPanel";
+import { ExecutiveHealth } from "./components/ExecutiveHealth";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -1906,6 +1907,15 @@ function DashboardView({
     <div className="dashboard-stack">
 
       <ExecutiveNavigator />
+
+      <ExecutiveHealth
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onOpenPriorities={() => onNavigate("ai")}
+        onOpenDecisions={() => onNavigate("decisions")}
+      />
 
       <DataTrustPanel />
 

@@ -1458,3 +1458,222 @@
     overflow-x: auto;
   }
 }
+
+/* ECCOMI OS · Sprint 1 · Executive Health */
+
+.executive-health {
+  display: grid;
+  grid-template-columns:
+    minmax(360px, 1.35fr)
+    minmax(330px, 0.85fr)
+    auto;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  margin: 0 0 22px;
+  padding: 20px;
+  border: 1px solid #dfe7f1;
+  border-radius: 21px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(105, 73, 220, 0.10),
+      transparent 38%
+    ),
+    #ffffff;
+  box-shadow: 0 15px 38px rgba(15, 38, 70, 0.065);
+}
+
+.executive-health * {
+  box-sizing: border-box;
+}
+
+.executive-health__score {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+}
+
+.executive-health__ring {
+  --health-score: 360deg;
+
+  display: grid;
+  flex: 0 0 auto;
+  width: 82px;
+  height: 82px;
+  padding: 7px;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      #6546d7 var(--health-score),
+      #e8edf4 0
+    );
+}
+
+.executive-health__ring > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #10233f;
+}
+
+.executive-health__ring strong {
+  align-self: center;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.executive-health__ring small {
+  align-self: center;
+  margin-top: 8px;
+  color: #8592a4;
+  font-size: 10px;
+}
+
+.executive-health__score > div > small {
+  display: block;
+  margin-bottom: 5px;
+  color: #6949dc;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.executive-health__score h2 {
+  margin: 0 0 5px;
+  color: #10233f;
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+.executive-health__score p {
+  max-width: 520px;
+  margin: 0;
+  color: #6c7b90;
+  font-size: 12px;
+  line-height: 1.48;
+}
+
+.executive-health__signals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(95px, 1fr));
+  gap: 8px;
+}
+
+.executive-health__signals > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #e3e9f1;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #6546d7;
+}
+
+.executive-health__signals span {
+  display: grid;
+  gap: 2px;
+  color: #788699;
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.executive-health__signals strong {
+  color: #10233f;
+  font-size: 17px;
+}
+
+.executive-health__actions {
+  display: grid;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.executive-health__actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 9px !important;
+  min-height: 40px !important;
+  padding: 0 13px !important;
+  border: 1px solid #ded6fb !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  color: #6546d7 !important;
+  font-size: 12px !important;
+  font-weight: 760 !important;
+  cursor: pointer;
+}
+
+.executive-health__actions button:first-child {
+  border-color: #6546d7 !important;
+  background: #6546d7 !important;
+  color: #ffffff !important;
+}
+
+.executive-health--excellent .executive-health__ring {
+  background:
+    conic-gradient(
+      #20a66e var(--health-score),
+      #e8edf4 0
+    );
+}
+
+.executive-health--stable .executive-health__ring {
+  background:
+    conic-gradient(
+      #6546d7 var(--health-score),
+      #e8edf4 0
+    );
+}
+
+.executive-health--attention .executive-health__ring {
+  background:
+    conic-gradient(
+      #e5a21a var(--health-score),
+      #e8edf4 0
+    );
+}
+
+.executive-health--critical .executive-health__ring {
+  background:
+    conic-gradient(
+      #dc4545 var(--health-score),
+      #e8edf4 0
+    );
+}
+
+@media (max-width: 1120px) {
+  .executive-health {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .executive-health__actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .executive-health {
+    grid-template-columns: 1fr;
+    padding: 17px;
+  }
+
+  .executive-health__signals {
+    grid-template-columns: 1fr;
+  }
+
+  .executive-health__actions {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+}
