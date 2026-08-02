@@ -64,6 +64,7 @@ import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
 import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
 import { AppRegistry } from "./components/AppRegistry";
 import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
+import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1998,6 +1999,13 @@ function DashboardView({
         openDecisionCount={openDecisionCount}
         onOpenDecisionCenter={() => onNavigate("decisions")}
         onOpenAI={() => onNavigate("ai")}
+      />
+
+      <ExecutiveActionQueue
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onNavigate={onNavigate}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
       />
 
       <section className="kpi-grid">
