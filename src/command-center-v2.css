@@ -574,3 +574,101 @@
     padding: 12px 9px !important;
   }
 }
+
+/* Command Center V2 · Footer interattivo */
+
+.command-v2__footer-actions {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+}
+
+.command-v2__footer-control {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-height: 31px !important;
+  padding: 0 8px !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: #718096 !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+
+.command-v2__footer-control:hover:not(:disabled) {
+  border-color: #ded6fb !important;
+  background: #f5f2ff !important;
+  color: #6546d7 !important;
+}
+
+.command-v2__footer-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.command-v2__footer-control kbd,
+.command-v2__footer-hint kbd {
+  display: inline-grid !important;
+  min-width: 23px !important;
+  height: 23px !important;
+  padding: 0 5px !important;
+  place-items: center !important;
+  border: 1px solid #dfe5ed !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #5f6e82 !important;
+  font-family: inherit !important;
+  font-size: 9px !important;
+  box-shadow: 0 1px 2px rgba(15, 38, 70, 0.05);
+}
+
+.command-v2__footer-hint {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 0 4px;
+  color: #8995a5 !important;
+  font-size: 9px !important;
+}
+
+.command-v2__execute {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  padding: 0 13px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: #6546d7 !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 780 !important;
+  cursor: pointer;
+}
+
+.command-v2__execute:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+@media (max-width: 680px) {
+  .command-v2__footer-actions {
+    gap: 4px !important;
+  }
+
+  .command-v2__footer-control {
+    padding: 0 5px !important;
+  }
+
+  .command-v2__footer-hint {
+    display: none !important;
+  }
+
+  .command-v2__footer-control span {
+    display: none;
+  }
+}

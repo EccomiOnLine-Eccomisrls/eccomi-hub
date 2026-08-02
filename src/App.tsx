@@ -2722,6 +2722,16 @@ function SearchModal({
     results[selectedIndex]?.action();
   };
 
+  const goBack = () => {
+    if (value.trim()) {
+      onChange("");
+      setSelectedIndex(0);
+      return;
+    }
+
+    onClose();
+  };
+
   const resultMessage =
     results.length === 1
       ? "1 risultato disponibile"
@@ -2912,28 +2922,47 @@ function SearchModal({
         )}
 
         <footer className="command-v2__footer">
-          <div>
-            <span>
+          <div className="command-v2__footer-actions">
+            <button
+              type="button"
+              className="command-v2__footer-control"
+              onClick={goBack}
+            >
+              <kbd>←</kbd>
+              <span>Indietro</span>
+            </button>
+
+            <span className="command-v2__footer-hint">
               <kbd>↑</kbd>
               <kbd>↓</kbd>
               Seleziona
             </span>
 
-            <span>
+            <button
+              type="button"
+              className="command-v2__footer-control"
+              onClick={executeSelectedResult}
+              disabled={!value.trim() || !results.length}
+            >
               <kbd>↵</kbd>
-              Apri
-            </span>
+              <span>Apri</span>
+            </button>
 
-            <span>
+            <button
+              type="button"
+              className="command-v2__footer-control"
+              onClick={onClose}
+            >
               <kbd>ESC</kbd>
-              Chiudi
-            </span>
+              <span>Chiudi</span>
+            </button>
           </div>
 
           <strong>ECCOMI OS · Command Center V2</strong>
 
           <button
             type="button"
+            className="command-v2__execute"
             onClick={executeSelectedResult}
             disabled={!value.trim() || !results.length}
           >
