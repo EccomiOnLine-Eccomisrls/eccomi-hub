@@ -67,6 +67,7 @@ import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
 import { DataTrustPanel } from "./components/DataTrustPanel";
 import { ExecutiveHealth } from "./components/ExecutiveHealth";
+import { CeoMorningBrief } from "./components/CeoMorningBrief";
 import { SystemPulse } from "./components/SystemPulse";
 import {
   advanceHubEntryToEvaluation,
@@ -1908,6 +1909,14 @@ function DashboardView({
     <div className="dashboard-stack">
 
       <ExecutiveNavigator />
+
+      <CeoMorningBrief
+        displayName={displayName}
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onNavigate={onNavigate}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+      />
 
       <ExecutiveHealth
         priorities={priorities}
