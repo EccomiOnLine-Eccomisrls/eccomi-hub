@@ -1,4 +1,4 @@
-name: Integrate Barbara Command Center
+name: Build ECCOMI OS Command Center
 
 on:
   workflow_dispatch:
@@ -6,15 +6,12 @@ on:
     branches:
       - feature/barbara-command-center
     paths:
-      - scripts/integrate-barbara-command-center.mjs
+      - src/lib/eccomiOS.ts
+      - scripts/rename-barbara-to-eccomi-os.mjs
       - .github/workflows/integrate-barbara.yml
   pull_request:
     branches:
       - main
-    paths:
-      - src/lib/barbaraCommandCenter.ts
-      - scripts/integrate-barbara-command-center.mjs
-      - .github/workflows/integrate-barbara.yml
 
 permissions:
   contents: write
@@ -37,8 +34,8 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Integrate Barbara
-        run: node scripts/integrate-barbara-command-center.mjs
+      - name: Apply ECCOMI OS naming
+        run: node scripts/rename-barbara-to-eccomi-os.mjs
 
       - name: Install dependencies
         run: npm ci
@@ -49,11 +46,11 @@ jobs:
       - name: Commit integration
         run: |
           if git diff --quiet -- src/App.tsx; then
-            echo "Barbara is already integrated."
+            echo "ECCOMI OS is already integrated."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/App.tsx
-          git commit -m "feat: integrate Barbara command center"
+          git commit -m "feat: rename command center to ECCOMI OS"
           git push origin HEAD:feature/barbara-command-center
