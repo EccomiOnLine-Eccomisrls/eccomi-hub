@@ -2655,6 +2655,18 @@ function SearchModal({
 }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const moveSelection = (direction: "previous" | "next") => {
+    if (!results.length) return;
+
+    setSelectedIndex((current) => {
+      if (direction === "next") {
+        return current >= results.length - 1 ? 0 : current + 1;
+      }
+
+      return current <= 0 ? results.length - 1 : current - 1;
+    });
+  };
+
   const commands = [
     "Cosa richiede attenzione?",
     "Mostrami le decisioni aperte",
@@ -2682,21 +2694,13 @@ function SearchModal({
 
       if (event.key === "ArrowDown") {
         event.preventDefault();
-
-        setSelectedIndex((current) =>
-          current >= results.length - 1 ? 0 : current + 1,
-        );
-
+        moveSelection("next");
         return;
       }
 
       if (event.key === "ArrowUp") {
         event.preventDefault();
-
-        setSelectedIndex((current) =>
-          current <= 0 ? results.length - 1 : current - 1,
-        );
-
+        moveSelection("previous");
         return;
       }
 
@@ -2932,11 +2936,31 @@ function SearchModal({
               <span>Indietro</span>
             </button>
 
-            <span className="command-v2__footer-hint">
-              <kbd>↑</kbd>
-              <kbd>↓</kbd>
-              Seleziona
-            </span>
+            <div className="command-v2__footer-arrows">
+              <button
+                type="button"
+                className="command-v2__footer-control"
+                onClick={() => moveSelection("previous")}
+                disabled={!value.trim() || !results.length}
+                aria-label="Seleziona il risultato precedente"
+                title="Risultato precedente"
+              >
+                <kbd>↑</kbd>
+              </button>
+
+              <button
+                type="button"
+                className="command-v2__footer-control"
+                onClick={() => moveSelection("next")}
+                disabled={!value.trim() || !results.length}
+                aria-label="Seleziona il risultato successivo"
+                title="Risultato successivo"
+              >
+                <kbd>↓</kbd>
+              </button>
+
+              <span>Seleziona</span>
+            </div>
 
             <button
               type="button"

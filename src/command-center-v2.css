@@ -672,3 +672,38 @@
     display: none;
   }
 }
+
+/* Command Center V2 · Frecce interattive */
+
+.command-v2__footer-arrows {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  color: #8995a5;
+  font-size: 9px;
+}
+
+.command-v2__footer-arrows .command-v2__footer-control {
+  min-width: 31px !important;
+  padding: 0 3px !important;
+  justify-content: center !important;
+}
+
+.command-v2__footer-arrows > span {
+  margin-left: 3px;
+  color: #8995a5 !important;
+  font-size: 9px !important;
+}
+
+.command-v2__footer-arrows
+  .command-v2__footer-control:hover:not(:disabled) kbd {
+  border-color: #bfb1f3 !important;
+  background: #f5f2ff !important;
+  color: #6546d7 !important;
+}
+
+@media (max-width: 680px) {
+  .command-v2__footer-arrows > span {
+    display: none;
+  }
+}
