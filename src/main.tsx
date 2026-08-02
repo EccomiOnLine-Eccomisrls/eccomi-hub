@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./executive-home.css";
+import "./command-center-v2.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

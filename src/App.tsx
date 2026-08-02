@@ -59,8 +59,19 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
-import { CeoControlCenter } from "./components/CeoControlCenter";
-import { CeoToday } from "./components/CeoToday";
+import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
+import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
+import { AppRegistry } from "./components/AppRegistry";
+import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
+import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
+import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
+import { DataTrustPanel } from "./components/DataTrustPanel";
+import { ExecutiveHealth } from "./components/ExecutiveHealth";
+import { CeoMorningBrief } from "./components/CeoMorningBrief";
+import { WhatChanged } from "./components/WhatChanged";
+import { ExecutiveCopilot } from "./components/ExecutiveCopilot";
+import { DecisionAssistant } from "./components/DecisionAssistant";
+import { SystemPulse } from "./components/SystemPulse";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -95,7 +106,6 @@ import {
 } from "./lib/hubApi";
 import {
   buildCeoPriorities,
-  buildExecutiveBriefing,
   getCeoGeneralState,
   getCeoGreeting,
   type CeoPriority,
@@ -1026,13 +1036,186 @@ export default function Home() {
       practice: "Pratica",
     };
 
-    return searchEccomiOS(searchTerm, candidates, 8).map((result) => ({
+    const normalizedSearch = searchTerm
+      .toLocaleLowerCase("it-IT")
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .trim();
+
+    const containsAny = (terms: string[]) =>
+      terms.some((term) => normalizedSearch.includes(term));
+
+    let scopedCandidates = candidates;
+
+    /*
+     * ECCOMI OS Intent Router
+     *
+     * Una richiesta esplicita viene prima classificata per area.
+     * Solo dopo viene applicato il motore di ranking.
+     * In questo modo "decisioni aperte" non restituisce ecosistemi
+     * generici soltanto perché condividono parole operative.
+     */
+
+    if (
+      containsAny([
+        "decision",
+        "approvaz",
+        "da decidere",
+        "da approvare",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-decisions" ||
+          item.kind === "decision",
+      );
+    } else if (
+      containsAny([
+        "posta",
+        "raccomand",
+        "telegram",
+        "pratiche posta",
+        "invii posta",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-posta" ||
+          item.kind === "practice" ||
+          item.id === "ecosystem-posta",
+      );
+    } else if (
+      containsAny([
+        "noleggio",
+        "offerta auto",
+        "promozione auto",
+        "lead noleggio",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-noleggio" ||
+          item.id === "ecosystem-noleggio",
+      );
+    } else if (
+      containsAny([
+        "nuova entry",
+        "crea entry",
+        "nuovo progetto",
+        "nuovo ecosistema",
+        "nuovo servizio",
+        "nuova idea",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-new-entry",
+      );
+    } else if (
+      containsAny([
+        "cliente",
+        "clienti",
+        "anagrafica",
+        "anagrafiche",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-clients" ||
+          item.kind === "client",
+      );
+    } else if (
+      containsAny([
+        "attenzione",
+        "critic",
+        "priorita",
+        "alert",
+        "cosa non va",
+        "problemi",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-alerts" ||
+          item.kind === "decision",
+      );
+    } else if (
+      containsAny([
+        "report",
+        "risultati",
+        "andamento",
+        "indicatori",
+        "kpi",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-reports",
+      );
+    } else if (
+      containsAny([
+        "responsabile",
+        "responsabili",
+        "team",
+        "ruoli",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-team",
+      );
+    } else if (
+      containsAny([
+        "operatore",
+        "operatori",
+        "attivita",
+        "assegnazioni",
+        "task",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-operations",
+      );
+    } else if (
+      containsAny([
+        "ecosistema",
+        "ecosistemi",
+        "app",
+        "moduli",
+        "verticali",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) =>
+          item.id === "command-ecosystems" ||
+          item.kind === "ecosystem",
+      );
+    } else if (
+      containsAny([
+        "dashboard",
+        "home",
+        "panoramica",
+        "situazione generale",
+      ])
+    ) {
+      scopedCandidates = candidates.filter(
+        (item) => item.id === "command-dashboard",
+      );
+    }
+
+    return searchEccomiOS(
+      searchTerm,
+      scopedCandidates,
+      8,
+    ).map((result) => ({
       type: labels[result.kind],
       title: result.title,
       detail: result.subtitle,
       action: result.action,
     }));
-  }, [searchTerm, visibleEcosystems, decisions]);
+  }, [
+    searchTerm,
+    clients,
+    visibleEcosystems,
+    decisions,
+  ]);
 
   if (!authenticated) {
     return (
@@ -1111,7 +1294,7 @@ export default function Home() {
             <ChevronRight size={16} />
           </button>
           <button className="sidebar-logout" onClick={signOut}>
-            <LogOut size={16} /> Esci da ECCOMI HUB
+            <LogOut size={16} /> Esci da ECCOMI OS
           </button>
           <div className="system-state">
             <span className="status-dot status-dot--green" />
@@ -1164,7 +1347,7 @@ export default function Home() {
                 title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
               >
                 <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
-                <span className="topbar-status-pill__label">{testMode ? "Demo" : "Live"}</span>
+                <span className="topbar-status-pill__label">{testMode ? "Live" : "Live"}</span>
               </button>
               {livePopoverOpen && (
                 <div className="topbar-popover">
@@ -1331,7 +1514,7 @@ export default function Home() {
 
             setEcosystems((current) => [...current.filter((item) => item.id !== entry.id), entry]);
             setNewEntryOpen(false);
-            setToast(`${entry.name} salvata in ECCOMI HUB nello stato “Da valutare”`);
+            setToast(`${entry.name} salvata in ECCOMI OS nello stato “Da valutare”`);
             navigate("ecosystems");
           }}
         />
@@ -1599,7 +1782,7 @@ function LoginScreen({
           </span>
         </div>
         <div className="login-message">
-          <span className="login-kicker">ECCOMI HUB</span>
+          <span className="login-kicker">ECCOMI OS</span>
           <h1>Un solo accesso.<br />Tutto Eccomi sotto controllo.</h1>
           <p>La cabina di governo che collega clienti, persone, decisioni e ogni ecosistema operativo.</p>
         </div>
@@ -1641,14 +1824,14 @@ function LoginScreen({
               </label>
               {error && <div className="login-alert" role="alert"><AlertTriangle size={17} /><span>{error}</span></div>}
               <button className="login-primary" onClick={onEnter} disabled={code.length !== 6 || loading}>
-                {loading ? "Verifica in corso..." : "Accedi a ECCOMI HUB"} <ArrowRight size={18} />
+                {loading ? "Verifica in corso..." : "Accedi a ECCOMI OS"} <ArrowRight size={18} />
               </button>
             </>
           ) : (
             <>
               <span className="eyebrow">Identità verificata</span>
               <h2>Accesso in attesa di autorizzazione</h2>
-              <p>L’indirizzo <strong>{email}</strong> è stato verificato, ma non ha ancora un ruolo attivo in ECCOMI HUB.</p>
+              <p>L’indirizzo <strong>{email}</strong> è stato verificato, ma non ha ancora un ruolo attivo in ECCOMI OS.</p>
               <div className="login-pending-status" role="status">
                 <Clock3 size={19} />
                 <span>Nessun dato o area operativa è accessibile finché il CEO non assegna un ruolo.</span>
@@ -1893,174 +2076,112 @@ function DashboardView({
 }) {
   const postaLive = postaState === "ready" ? postaSummary : null;
   const noleggioLive = noleggioState === "ready" ? noleggioSummary : null;
-  const unavailableNote = "Dato amministrativo non ancora collegato";
-
-  const kpis = testMode
-    ? [
-        { label: "Ricavi del mese", value: "€ 48.320", trend: "+12,4%", trendType: "up", note: "Dato dimostrativo", icon: CircleDollarSign },
-        { label: "Margine", value: "€ 14.870", trend: "+8,1%", trendType: "up", note: "Dato dimostrativo", icon: WalletCards },
-        { label: "Clienti attivi", value: "1.284", trend: "+5,2%", trendType: "up", note: "Dato dimostrativo", icon: UserCheck },
-        { label: "Pratiche aperte", value: "86", trend: "12 oggi", trendType: "neutral", note: "Dato dimostrativo", icon: FolderKanban },
-        { label: "Pratiche critiche", value: "7", trend: "−2", trendType: "down", note: "Dato dimostrativo", icon: AlertTriangle },
-        { label: "Opportunità", value: "34", trend: "+€ 21,6K", trendType: "up", note: "Dato dimostrativo", icon: Target },
-      ]
-    : [
-        { label: "Ricavi del mese", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: CircleDollarSign },
-        { label: "Margine", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: WalletCards },
-        { label: "Clienti attivi", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: UserCheck },
-        {
-          label: "Posta · da lavorare",
-          value: postaLive ? String(postaLive.summary.open) : "—",
-          trend: postaLive ? `${postaLive.summary.createdToday} oggi` : "—",
-          trendType: "neutral",
-          note: postaLive ? `${postaLive.summary.sent} inviate a Poste` : "Dato reale non disponibile",
-          icon: FolderKanban,
-        },
-        {
-          label: "Posta · anomalie",
-          value: postaLive ? String(postaLive.summary.errors) : "—",
-          trend: postaLive ? `${postaLive.summary.manual} manuali` : "—",
-          trendType: postaLive?.summary.errors ? "neutral" : "down",
-          note: postaLive ? "Fonte reale in sola lettura" : "Dato reale non disponibile",
-          icon: AlertTriangle,
-        },
-        { label: "Opportunità", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: Target },
-      ];
-
   const openDecisionCount = decisions.filter(
+
     (item) => item.status !== "Decisa",
   ).length;
 
-  const executiveBriefing = buildExecutiveBriefing({
-    priorities,
-    postaSummary: postaLive,
-    noleggioSummary: noleggioLive,
-    openDecisionCount,
-  });
-
-  const urgencyMap: Record<CeoPriority["severity"], string> = {
-    critical: "Critico",
-    warning: "Attenzione",
-    opportunity: "Opportunità",
-    info: "Info",
-  };
-
   return (
     <div className="dashboard-stack">
-      <CeoToday
+
+      <ExecutiveNavigator />
+
+      <CeoMorningBrief
         displayName={displayName}
-        greeting={greeting}
-        statusLabel={executiveBriefing.headline}
-        statusMessage={executiveBriefing.message}
-        operatingEcosystems={ecosystems.length}
-        activitiesToVerify={priorities.length}
-        criticalIssues={priorities.filter((item) => item.severity === "critical").length}
-        objective={executiveBriefing.objective}
-        dataModeLabel={
-          testMode
-            ? "Dati dimostrativi"
-            : postaLive || noleggioLive
-              ? "Dati reali attivi"
-              : "Dati reali non disponibili"
-        }
-        onOpenPriorities={() => onNavigate("ai")}
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onNavigate={onNavigate}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
       />
-      <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
 
-      <section className="kpi-grid">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <button className="kpi-card" key={kpi.label} onClick={() => onNavigate("reports")}>
-              <div className="kpi-card__top"><span>{kpi.label}</span><span className="kpi-icon"><Icon size={18} /></span></div>
-              <strong>{kpi.value}</strong>
-              <div className="kpi-card__bottom">
-                <em className={`trend trend--${kpi.trendType}`}>{kpi.trend}</em>
-                <span>{kpi.note}</span>
-              </div>
-            </button>
-          );
-        })}
-      </section>
+      <WhatChanged
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onOpenPriorities={() => onNavigate("ai")}
+        onOpenDecisions={() => onNavigate("decisions")}
+      />
 
-      <section className="section-block">
-        <div className="section-heading">
-          <div><span className="eyebrow">Ecosistemi</span><h2>Vista globale</h2></div>
-          <button className="text-button" onClick={() => onNavigate("ecosystems")}>Vedi tutti <ArrowRight size={16} /></button>
-        </div>
-        <div className="ecosystem-grid ecosystem-grid--dashboard">
-          {ecosystems.slice(0, 5).map((item) => <EcosystemCard key={item.id} item={item} onClick={() => onSelectEcosystem(item)} />)}
-          <button className="new-ecosystem-card" onClick={onNewEntry}><span><Plus size={24} /></span><strong>Aggiungi una new entry</strong><small>Ecosistema, servizio, progetto o idea</small></button>
-        </div>
-      </section>
+      <ExecutiveCopilot
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onNavigate={onNavigate}
+      />
 
-      <section className="dashboard-columns">
-        <div className="panel ai-priority-panel">
-          <div className="panel__head">
-            <div className="panel-title"><span className="panel-icon panel-icon--ai"><Sparkles size={18} /></span><span><small>ASSISTENTE AI</small><strong>Le 3 cose più importanti oggi</strong></span></div>
-            <button className="icon-button" onClick={() => onNavigate("ai")}><ArrowUpRight size={18} /></button>
-          </div>
-          <div className="priority-list">
-            {priorities.slice(0, 3).map((priority, index) => (
-              <PriorityItem
-                key={priority.id}
-                number={`0${index + 1}`}
-                urgency={urgencyMap[priority.severity]}
-                title={priority.title}
-                detail={priority.description}
-                action={() => onNavigate(priority.targetView)}
-              />
-            ))}
-          </div>
-          <div className="ai-explanation"><Bot size={17} /><span>Priorità calcolate su urgenza, impatto economico, rischio cliente e scadenze.</span></div>
-        </div>
+      <DecisionAssistant
+        decisions={decisions}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+      />
 
-        <div className="panel decision-preview-panel">
-          <div className="panel__head">
-            <div className="panel-title"><span className="panel-icon"><Gavel size={18} /></span><span><small>DECISION CENTER</small><strong>Richiedono la tua attenzione</strong></span></div>
-            <button className="text-button" onClick={() => onNavigate("decisions")}>Apri <ArrowRight size={15} /></button>
-          </div>
-          <div className="decision-mini-list">
-            {decisions.slice(0, 3).map((decision) => (
-              <button key={decision.id} onClick={() => onNavigate("decisions")}>
-                <span className={`urgency-dot urgency-dot--${decision.urgency.toLowerCase()}`} />
-                <span><strong>{decision.title}</strong><small>{decision.ecosystem} · {decision.due}</small></span>
-                <ChevronRight size={17} />
-              </button>
-            ))}
-          </div>
-          <div className="decision-summary"><span><strong>{decisions.filter((d) => d.status !== "Decisa").length}</strong> da decidere</span><span><strong>{decisions.filter((d) => d.assignedTo).length}</strong> in esecuzione</span><span><strong>{decisions.filter((d) => d.status === "Decisa").length}</strong> verificate</span></div>
-        </div>
-      </section>
+      <ExecutiveHealth
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onOpenPriorities={() => onNavigate("ai")}
+        onOpenDecisions={() => onNavigate("decisions")}
+      />
 
-      <section className="dashboard-columns dashboard-columns--lower">
-        <div className="panel activity-panel">
-          <div className="panel__head"><div className="panel-title"><span className="panel-icon"><Activity size={18} /></span><span><small>TIMELINE</small><strong>Attività recenti</strong></span></div><button className="text-button">Tutte <ArrowRight size={15} /></button></div>
-          <div className="activity-list">
-            {postaLive?.recent.length ? postaLive.recent.slice(0, 4).map((practice) => (
-              <ActivityRow
-                key={practice.id}
-                color={postaStatusColor(practice.status)}
-                title={`Pratica ${practice.orderName || practice.id.slice(0, 8)}`}
-                detail={`Eccomi Posta · ${formatPostaStatus(practice.status)}`}
-                time={formatRelativeDate(practice.updatedAt || practice.createdAt)}
-              />
-            )) : (
-              <>
-                <ActivityRow color="green" title="Pratica #PO-1827 conclusa" detail="Eccomi Posta · operazione completata" time="8 min" />
-                <ActivityRow color="blue" title="Nuovo cliente EC-100284" detail="Acquisito da Eccomi Energia" time="24 min" />
-                <ActivityRow color="amber" title="Ticket #TK-439 in attesa" detail="Richiesto documento al cliente" time="41 min" />
-                <ActivityRow color="purple" title="Decisione verificata" detail="Campagna Spedizioni · risultato +6,2%" time="1 ora" />
-              </>
-            )}
-          </div>
-        </div>
-        <div className="panel opportunity-panel">
-          <div className="panel__head"><div className="panel-title"><span className="panel-icon panel-icon--green"><TrendingUp size={18} /></span><span><small>OPPORTUNITÀ</small><strong>Valore potenziale</strong></span></div><button className="icon-button"><ArrowUpRight size={18} /></button></div>
-          <div className="opportunity-total"><strong>€ 21.640</strong><span>34 opportunità aperte</span></div>
-          <div className="opportunity-bars"><ProgressRow label="Energia" value="€ 9.800" width={82} color="#e5a000" /><ProgressRow label="Spedizioni" value="€ 6.240" width={62} color="#0f9f6e" /><ProgressRow label="PEC" value="€ 3.920" width={43} color="#7c3aed" /><ProgressRow label="Posta" value="€ 1.680" width={28} color="#2563eb" /></div>
-        </div>
-      </section>
+      <DataTrustPanel />
+
+      <SystemPulse
+        postaState={postaState}
+        noleggioState={noleggioState}
+        openDecisionCount={openDecisionCount}
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+      />
+
+      <div id="executive-section-snapshot" className="executive-section-anchor">
+      <ExecutiveSnapshot
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onOpenPriorities={() => onNavigate("ai")}
+        onOpenDecisions={() => onNavigate("decisions")}
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+      />
+      </div>
+
+      <div id="executive-section-timeline" className="executive-section-anchor">
+      <ExecutiveTimeline
+        priorities={priorities}
+        onNavigate={onNavigate}
+      />
+      </div>
+
+      <div id="executive-section-apps" className="executive-section-anchor">
+      <AppRegistry
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+        onOpenEcosystems={() => onNavigate("ecosystems")}
+      />
+      </div>
+
+      <div id="executive-section-intelligence" className="executive-section-anchor">
+      <ExecutiveIntelligence
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+        onOpenAI={() => onNavigate("ai")}
+      />
+      </div>
+
+      <div id="executive-section-actions" className="executive-section-anchor">
+      <ExecutiveActionQueue
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        onNavigate={onNavigate}
+        onOpenDecisionCenter={() => onNavigate("decisions")}
+      />
+      </div>
+
+
+
     </div>
   );
 }
@@ -2305,7 +2426,7 @@ function SettingsView() {
     <div className="view-stack">
       <section className="settings-grid"><SettingsCard icon={ShieldCheck} title="Ruoli e permessi" description="CEO, responsabili, operatori e limiti di accesso." value="Struttura pronta" /><SettingsCard icon={Network} title="Integrazioni" description="Servizi disponibili e collegamenti ancora da attivare." value="3 disponibili" /><SettingsCard icon={Bell} title="Regole e notifiche" description="Soglie, escalation e canali di avviso." value="Da configurare" /><SettingsCard icon={FileText} title="Audit e sicurezza" description="Accessi, modifiche, esportazioni e storico." value="Predisposto" /></section>
       <section className="panel integration-panel"><div className="panel__head"><div className="panel-title"><span className="panel-icon"><Network size={18} /></span><span><small>COLLEGAMENTI</small><strong>Stato dei sistemi</strong></span></div><button className="secondary-button"><Plus size={16} /> Nuovo collegamento</button></div>
-        <div className="integration-list"><IntegrationRow name="EccomiOnline · Shopify" detail="Negozio e punto unico di ingresso già esistenti" state="Disponibile" updated="Verificato" icon={Building2} /><IntegrationRow name="Resend" detail="Dominio email e invii automatici già attivi" state="Connesso" updated="OTP operativo" icon={Mail} /><IntegrationRow name="OpenAI API" detail="Account API e credito già disponibili" state="Disponibile" updated="Verificato" icon={Bot} /><IntegrationRow name="Supabase · ECCOMI HUB" detail="Identità, ruoli e accesso CEO collegati" state="Connesso" updated="Accesso attivo" icon={ShieldCheck} /><IntegrationRow name="Render · HUB API" detail="Backend separato per i futuri collegamenti verticali" state="Da configurare" updated="Fase successiva" icon={Activity} /></div>
+        <div className="integration-list"><IntegrationRow name="EccomiOnline · Shopify" detail="Negozio e punto unico di ingresso già esistenti" state="Disponibile" updated="Verificato" icon={Building2} /><IntegrationRow name="Resend" detail="Dominio email e invii automatici già attivi" state="Connesso" updated="OTP operativo" icon={Mail} /><IntegrationRow name="OpenAI API" detail="Account API e credito già disponibili" state="Disponibile" updated="Verificato" icon={Bot} /><IntegrationRow name="Supabase · ECCOMI OS" detail="Identità, ruoli e accesso CEO collegati" state="Connesso" updated="Accesso attivo" icon={ShieldCheck} /><IntegrationRow name="Render · HUB API" detail="Backend separato per i futuri collegamenti verticali" state="Da configurare" updated="Fase successiva" icon={Activity} /></div>
       </section>
       <section className="security-note"><LockKeyhole size={21} /><div><strong>Accesso reale protetto e operativo</strong><p>Le credenziali restano negli ambienti protetti. Ruolo CEO e permessi vengono verificati anche dal database.</p></div></section>
     </div>
@@ -2496,7 +2617,7 @@ function NewEntryModal({
               {storageState === "real" ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
               <span>
                 <strong>{storageState === "real" ? "Salvataggio reale" : storageState === "pending" ? "Archivio da attivare" : "Modalità dimostrativa"}</strong>
-                <small>{storageState === "real" ? "La new entry sarà registrata nell’archivio centrale ECCOMI HUB." : storageState === "pending" ? "Completa l’attivazione Supabase prima di registrare la prima new entry." : "Questa prova non verrà registrata nell’archivio centrale."}</small>
+                <small>{storageState === "real" ? "La new entry sarà registrata nell’archivio centrale ECCOMI OS." : storageState === "pending" ? "Completa l’attivazione Supabase prima di registrare la prima new entry." : "Questa prova non verrà registrata nell’archivio centrale."}</small>
               </span>
             </div>
           </div>
@@ -2538,6 +2659,33 @@ function SearchModal({
     action: () => void;
   }>;
 }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const moveSelection = (direction: "previous" | "next") => {
+    if (!results.length) return;
+
+    setSelectedIndex((current) => {
+      if (direction === "next") {
+        return current >= results.length - 1 ? 0 : current + 1;
+      }
+
+      return current <= 0 ? results.length - 1 : current - 1;
+    });
+  };
+
+  const commands = [
+    "Cosa richiede attenzione?",
+    "Mostrami le decisioni aperte",
+    "Apri Eccomi Posta",
+    "Apri Eccomi Noleggio",
+    "Cerca un cliente",
+    "Crea una nuova entry",
+  ];
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [value, results.length]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -2546,9 +2694,25 @@ function SearchModal({
         return;
       }
 
-      if (event.key === "Enter" && value.trim() && results.length > 0) {
+      if (!results.length) {
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
         event.preventDefault();
-        results[0].action();
+        moveSelection("next");
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        moveSelection("previous");
+        return;
+      }
+
+      if (event.key === "Enter" && value.trim()) {
+        event.preventDefault();
+        results[selectedIndex]?.action();
       }
     };
 
@@ -2557,209 +2721,266 @@ function SearchModal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose, results, value]);
+  }, [
+    onClose,
+    results,
+    selectedIndex,
+    value,
+  ]);
 
-  const executeFirstResult = () => {
-    if (results.length > 0) {
-      results[0].action();
-    }
+  const executeSelectedResult = () => {
+    results[selectedIndex]?.action();
   };
 
-  const suggestions = [
-    {
-      label: "Cosa richiede attenzione?",
-      query: "cosa richiede attenzione",
-      icon: AlertTriangle,
-    },
-    {
-      label: "Apri Decision Center",
-      query: "apri decision center",
-      icon: Gavel,
-    },
-    {
-      label: "Pratiche Eccomi Posta",
-      query: "pratiche posta",
-      icon: Mail,
-    },
-    {
-      label: "Offerte Eccomi Noleggio",
-      query: "offerte noleggio",
-      icon: CarFront,
-    },
-    {
-      label: "Crea una nuova entry",
-      query: "nuova entry",
-      icon: Plus,
-    },
-    {
-      label: "Report e risultati",
-      query: "apri report",
-      icon: BarChart3,
-    },
-  ];
+  const goBack = () => {
+    if (value.trim()) {
+      onChange("");
+      setSelectedIndex(0);
+      return;
+    }
+
+    onClose();
+  };
+
+  const resultMessage =
+    results.length === 1
+      ? "1 risultato disponibile"
+      : `${results.length} risultati disponibili`;
 
   return (
     <div
       className="modal-layer search-layer"
       role="dialog"
       aria-modal="true"
-      aria-label="Command Bar ECCOMI HUB"
+      aria-label="ECCOMI OS Command Center"
     >
       <button
         className="modal-scrim"
         onClick={onClose}
-        aria-label="Chiudi"
+        aria-label="Chiudi ECCOMI OS Command Center"
       />
 
-      <div className="search-modal command-center">
-        <div className="search-modal__input">
+      <div className="search-modal command-center command-center--v2">
+        <header className="command-v2__header">
+          <div className="command-v2__brand">
+            <span>
+              <Sparkles size={20} />
+            </span>
+
+            <div>
+              <small>ECCOMI OS</small>
+              <strong>Command Center</strong>
+            </div>
+          </div>
+
+          <div className="command-v2__status">
+            <i />
+            AI Executive
+          </div>
+
+          <button
+            type="button"
+            className="command-v2__close"
+            onClick={onClose}
+            aria-label="Chiudi Command Center"
+          >
+            <X size={18} />
+          </button>
+        </header>
+
+        <div className="command-v2__input">
           <Sparkles size={21} />
+
           <input
             autoFocus
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                event.stopPropagation();
-                onClose();
-                return;
-              }
-
-              if (event.key === "Enter") {
-                event.preventDefault();
-                executeFirstResult();
-              }
-            }}
-            placeholder="Chiedi a ECCOMI OS cosa vuoi fare..."
+            placeholder="Chiedi, cerca oppure impartisci un comando..."
+            aria-label="Comando per ECCOMI OS"
           />
-          <button
-            className="icon-button"
-            onClick={onClose}
-            aria-label="Chiudi Command Bar"
-          >
-            <X size={19} />
-          </button>
+
+          {value && (
+            <button
+              type="button"
+              onClick={() => onChange("")}
+              aria-label="Cancella il comando"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
-        {!value ? (
-          <div className="command-center__body">
-            <div className="command-center__intro">
-              <span className="panel-icon panel-icon--ai">
-                <Sparkles size={18} />
+        {!value.trim() ? (
+          <div className="command-v2__welcome">
+            <div className="command-v2__hero">
+              <span>
+                <Bot size={24} />
               </span>
+
               <div>
-                <small>ANTICIPATORE OPERATIVO</small>
-                <strong>Cosa vuoi fare adesso?</strong>
+                <small>CENTRO DI COMANDO</small>
+                <strong>Cosa deve fare ECCOMI OS?</strong>
+
                 <p>
-                  Posso aiutarti a decidere, trovare informazioni o aprire
-                  qualsiasi area di ECCOMI HUB.
+                  Scrivi una richiesta in linguaggio naturale. Posso cercare,
+                  interpretare i segnali disponibili e aprire direttamente
+                  l’area corretta.
                 </p>
               </div>
             </div>
 
-            <div className="command-suggestion-grid">
-              {suggestions.map((suggestion) => {
-                const Icon = suggestion.icon;
+            <div className="command-v2__suggestions">
+              <small>COMANDI SUGGERITI</small>
 
-                return (
+              <div>
+                {commands.map((command) => (
                   <button
-                    key={suggestion.query}
-                    onClick={() => onChange(suggestion.query)}
+                    type="button"
+                    key={command}
+                    onClick={() => onChange(command)}
                   >
-                    <span>
-                      <Icon size={17} />
-                    </span>
-                    <strong>{suggestion.label}</strong>
-                    <ChevronRight size={16} />
+                    <span>{command}</span>
+                    <ChevronRight size={15} />
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
 
-            <div className="command-center__examples">
-              <small>PUOI ANCHE SCRIVERE</small>
-              <button
-                type="button"
-                onClick={() => onChange("Cosa non va oggi?")}
-              >
-                Cosa non va oggi?
-              </button>
+            <div className="command-v2__capabilities">
+              <span>
+                <strong>Cerca</strong>
+                clienti, pratiche ed ecosistemi
+              </span>
 
-              <button
-                type="button"
-                onClick={() => onChange("Apri Eccomi Noleggio")}
-              >
-                Apri Eccomi Noleggio
-              </button>
+              <span>
+                <strong>Comprende</strong>
+                richieste e comandi operativi
+              </span>
 
-              <button
-                type="button"
-                onClick={() => onChange("Mostrami i clienti")}
-              >
-                Mostrami i clienti
-              </button>
+              <span>
+                <strong>Agisce</strong>
+                aprendo l’area corretta
+              </span>
             </div>
           </div>
         ) : (
-          <div className="search-results command-results">
-            <div className="command-results__heading">
-              <small>ECCOMI HA CAPITO</small>
-              <strong>{results.length} azioni o risultati disponibili</strong>
+          <div className="command-v2__results">
+            <div className="command-v2__results-head">
+              <div>
+                <small>INTERPRETAZIONE OPERATIVA</small>
+                <strong>{resultMessage}</strong>
+              </div>
+
+              <span>
+                Usa ↑ ↓ e premi Invio
+              </span>
             </div>
 
             {results.length ? (
-              results.map((result, index) => (
-                <button
-                  key={`${result.type}-${result.title}-${index}`}
-                  onClick={result.action}
-                >
-                  <span
+              <div className="command-v2__result-list">
+                {results.map((result, index) => (
+                  <button
+                    type="button"
+                    key={`${result.type}-${result.title}-${index}`}
                     className={
-                      result.type === "Comando" ||
-                      result.type === "Azione"
-                        ? "result-type result-type--command"
-                        : "result-type"
+                      index === selectedIndex
+                        ? "command-v2__result command-v2__result--selected"
+                        : "command-v2__result"
                     }
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    onClick={result.action}
                   >
-                    {result.type}
-                  </span>
+                    <span className="command-v2__result-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
 
-                  <span>
-                    <strong>{result.title}</strong>
-                    <small>{result.detail}</small>
-                  </span>
+                    <span className="command-v2__result-content">
+                      <small>{result.type}</small>
+                      <strong>{result.title}</strong>
+                      <p>{result.detail}</p>
+                    </span>
 
-                  <ChevronRight size={17} />
-                </button>
-              ))
+                    <span className="command-v2__result-action">
+                      Apri
+                      <ChevronRight size={16} />
+                    </span>
+                  </button>
+                ))}
+              </div>
             ) : (
-              <div className="empty-state">
-                <Bot size={24} />
-                <strong>Non ho ancora capito la richiesta</strong>
-                <span>
-                  Prova con “Apri Decision Center”, “Posta” o “Nuova entry”.
-                </span>
+              <div className="command-v2__empty">
+                <Bot size={26} />
+
+                <div>
+                  <strong>Richiesta non ancora riconosciuta</strong>
+
+                  <p>
+                    Prova a indicare un’area, una pratica, un cliente,
+                    una decisione o un’attività da eseguire.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onChange("")}
+                >
+                  Mostra i comandi suggeriti
+                </button>
               </div>
             )}
           </div>
         )}
 
-        <div className="search-modal__footer">
-          <div className="command-footer-actions">
+        <footer className="command-v2__footer">
+          <div className="command-v2__footer-actions">
             <button
               type="button"
-              className="command-footer-button command-footer-button--primary"
-              onClick={executeFirstResult}
-              disabled={!value.trim() || results.length === 0}
+              className="command-v2__footer-control"
+              onClick={goBack}
+            >
+              <kbd>←</kbd>
+              <span>Indietro</span>
+            </button>
+
+            <div className="command-v2__footer-arrows">
+              <button
+                type="button"
+                className="command-v2__footer-control"
+                onClick={() => moveSelection("previous")}
+                disabled={!value.trim() || !results.length}
+                aria-label="Seleziona il risultato precedente"
+                title="Risultato precedente"
+              >
+                <kbd>↑</kbd>
+              </button>
+
+              <button
+                type="button"
+                className="command-v2__footer-control"
+                onClick={() => moveSelection("next")}
+                disabled={!value.trim() || !results.length}
+                aria-label="Seleziona il risultato successivo"
+                title="Risultato successivo"
+              >
+                <kbd>↓</kbd>
+              </button>
+
+              <span>Seleziona</span>
+            </div>
+
+            <button
+              type="button"
+              className="command-v2__footer-control"
+              onClick={executeSelectedResult}
+              disabled={!value.trim() || !results.length}
             >
               <kbd>↵</kbd>
-              <span>Apri risultato</span>
+              <span>Apri</span>
             </button>
 
             <button
               type="button"
-              className="command-footer-button"
+              className="command-v2__footer-control"
               onClick={onClose}
             >
               <kbd>ESC</kbd>
@@ -2767,8 +2988,18 @@ function SearchModal({
             </button>
           </div>
 
-          <em>ECCOMI OS · 0.1 Origins</em>
-        </div>
+          <strong>ECCOMI OS · 0.1 Origins</strong>
+
+          <button
+            type="button"
+            className="command-v2__execute"
+            onClick={executeSelectedResult}
+            disabled={!value.trim() || !results.length}
+          >
+            Esegui comando
+            <ChevronRight size={15} />
+          </button>
+        </footer>
       </div>
     </div>
   );
