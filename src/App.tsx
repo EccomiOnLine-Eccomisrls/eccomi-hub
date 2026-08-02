@@ -2024,71 +2024,7 @@ function DashboardView({
       />
       </div>
 
-      <section className="kpi-grid">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <button className="kpi-card" key={kpi.label} onClick={() => onNavigate("reports")}>
-              <div className="kpi-card__top"><span>{kpi.label}</span><span className="kpi-icon"><Icon size={18} /></span></div>
-              <strong>{kpi.value}</strong>
-              <div className="kpi-card__bottom">
-                <em className={`trend trend--${kpi.trendType}`}>{kpi.trend}</em>
-                <span>{kpi.note}</span>
-              </div>
-            </button>
-          );
-        })}
-      </section>
 
-      <section className="section-block">
-        <div className="section-heading">
-          <div><span className="eyebrow">Ecosistemi</span><h2>Vista globale</h2></div>
-          <button className="text-button" onClick={() => onNavigate("ecosystems")}>Vedi tutti <ArrowRight size={16} /></button>
-        </div>
-        <div className="ecosystem-grid ecosystem-grid--dashboard">
-          {ecosystems.slice(0, 5).map((item) => <EcosystemCard key={item.id} item={item} onClick={() => onSelectEcosystem(item)} />)}
-          <button className="new-ecosystem-card" onClick={onNewEntry}><span><Plus size={24} /></span><strong>Aggiungi una new entry</strong><small>Ecosistema, servizio, progetto o idea</small></button>
-        </div>
-      </section>
-
-      <section className="dashboard-columns">
-        <div className="panel ai-priority-panel">
-          <div className="panel__head">
-            <div className="panel-title"><span className="panel-icon panel-icon--ai"><Sparkles size={18} /></span><span><small>ASSISTENTE AI</small><strong>Le 3 cose più importanti oggi</strong></span></div>
-            <button className="icon-button" onClick={() => onNavigate("ai")}><ArrowUpRight size={18} /></button>
-          </div>
-          <div className="priority-list">
-            {priorities.slice(0, 3).map((priority, index) => (
-              <PriorityItem
-                key={priority.id}
-                number={`0${index + 1}`}
-                urgency={urgencyMap[priority.severity]}
-                title={priority.title}
-                detail={priority.description}
-                action={() => onNavigate(priority.targetView)}
-              />
-            ))}
-          </div>
-          <div className="ai-explanation"><Bot size={17} /><span>Priorità calcolate su urgenza, impatto economico, rischio cliente e scadenze.</span></div>
-        </div>
-
-        <div className="panel decision-preview-panel">
-          <div className="panel__head">
-            <div className="panel-title"><span className="panel-icon"><Gavel size={18} /></span><span><small>DECISION CENTER</small><strong>Richiedono la tua attenzione</strong></span></div>
-            <button className="text-button" onClick={() => onNavigate("decisions")}>Apri <ArrowRight size={15} /></button>
-          </div>
-          <div className="decision-mini-list">
-            {decisions.slice(0, 3).map((decision) => (
-              <button key={decision.id} onClick={() => onNavigate("decisions")}>
-                <span className={`urgency-dot urgency-dot--${decision.urgency.toLowerCase()}`} />
-                <span><strong>{decision.title}</strong><small>{decision.ecosystem} · {decision.due}</small></span>
-                <ChevronRight size={17} />
-              </button>
-            ))}
-          </div>
-          <div className="decision-summary"><span><strong>{decisions.filter((d) => d.status !== "Decisa").length}</strong> da decidere</span><span><strong>{decisions.filter((d) => d.assignedTo).length}</strong> in esecuzione</span><span><strong>{decisions.filter((d) => d.status === "Decisa").length}</strong> verificate</span></div>
-        </div>
-      </section>
 
     </div>
   );
