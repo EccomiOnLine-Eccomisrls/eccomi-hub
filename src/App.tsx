@@ -101,9 +101,9 @@ import {
   type CeoPriority,
 } from "./lib/ceoIntelligence";
 import {
-  searchBarbaraResults,
-  type BarbaraResult,
-} from "./lib/barbaraCommandCenter";
+  searchEccomiOS,
+  type EccomiOSResult,
+} from "./lib/eccomiOS";
 
 type ViewKey =
   | "dashboard"
@@ -874,7 +874,7 @@ export default function Home() {
       subtitle: string,
       keywords: string[],
       priority = 60,
-    ): BarbaraResult => ({
+    ): EccomiOSResult => ({
       id,
       kind: "command",
       title,
@@ -887,7 +887,7 @@ export default function Home() {
       },
     });
 
-    const candidates: BarbaraResult[] = [
+    const candidates: EccomiOSResult[] = [
       runNavigationCommand(
         "command-dashboard",
         "dashboard",
@@ -980,7 +980,7 @@ export default function Home() {
           setNewEntryOpen(true);
         },
       },
-      ...clients.map((client): BarbaraResult => ({
+      ...clients.map((client): EccomiOSResult => ({
         id: `client-${client.id}`,
         kind: "client",
         title: client.name,
@@ -992,7 +992,7 @@ export default function Home() {
           closeCommandBar();
         },
       })),
-      ...visibleEcosystems.map((item): BarbaraResult => ({
+      ...visibleEcosystems.map((item): EccomiOSResult => ({
         id: `ecosystem-${item.id}`,
         kind: "ecosystem",
         title: item.name,
@@ -1004,7 +1004,7 @@ export default function Home() {
           closeCommandBar();
         },
       })),
-      ...decisions.map((item): BarbaraResult => ({
+      ...decisions.map((item): EccomiOSResult => ({
         id: `decision-${item.id}`,
         kind: "decision",
         title: item.title,
@@ -1018,7 +1018,7 @@ export default function Home() {
       })),
     ];
 
-    const labels: Record<BarbaraResult["kind"], string> = {
+    const labels: Record<EccomiOSResult["kind"], string> = {
       command: "Comando",
       client: "Cliente",
       ecosystem: "Ecosistema",
@@ -1026,7 +1026,7 @@ export default function Home() {
       practice: "Pratica",
     };
 
-    return searchBarbaraResults(searchTerm, candidates, 8).map((result) => ({
+    return searchEccomiOS(searchTerm, candidates, 8).map((result) => ({
       type: labels[result.kind],
       title: result.title,
       detail: result.subtitle,
@@ -1133,7 +1133,7 @@ export default function Home() {
             </button>
             <button className="global-search" onClick={() => setSearchOpen(true)}>
               <Search size={18} />
-              <span>Chiedimi qualsiasi cosa o dimmi cosa vuoi fare...</span>
+              <span>Chiedi a ECCOMI OS cosa vuoi fare...</span>
               <kbd>⌘ K</kbd>
             </button>
           </div>
@@ -2631,7 +2631,7 @@ function SearchModal({
                 executeFirstResult();
               }
             }}
-            placeholder="Chiedimi qualsiasi cosa o dimmi cosa vuoi fare..."
+            placeholder="Chiedi a ECCOMI OS cosa vuoi fare..."
           />
           <button
             className="icon-button"
