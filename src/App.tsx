@@ -2480,6 +2480,21 @@ function SearchModal({
     action: () => void;
   }>;
 }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const commands = [
+    "Cosa richiede attenzione?",
+    "Mostrami le decisioni aperte",
+    "Apri Eccomi Posta",
+    "Apri Eccomi Noleggio",
+    "Cerca un cliente",
+    "Crea una nuova entry",
+  ];
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [value, results.length]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -2488,9 +2503,33 @@ function SearchModal({
         return;
       }
 
-      if (event.key === "Enter" && value.trim() && results.length > 0) {
+      if (!results.length) {
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
         event.preventDefault();
-        results[0].action();
+
+        setSelectedIndex((current) =>
+          current >= results.length - 1 ? 0 : current + 1,
+        );
+
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+
+        setSelectedIndex((current) =>
+          current <= 0 ? results.length - 1 : current - 1,
+        );
+
+        return;
+      }
+
+      if (event.key === "Enter" && value.trim()) {
+        event.preventDefault();
+        results[selectedIndex]?.action();
       }
     };
 
@@ -2499,218 +2538,236 @@ function SearchModal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose, results, value]);
+  }, [
+    onClose,
+    results,
+    selectedIndex,
+    value,
+  ]);
 
-  const executeFirstResult = () => {
-    if (results.length > 0) {
-      results[0].action();
-    }
+  const executeSelectedResult = () => {
+    results[selectedIndex]?.action();
   };
 
-  const suggestions = [
-    {
-      label: "Cosa richiede attenzione?",
-      query: "cosa richiede attenzione",
-      icon: AlertTriangle,
-    },
-    {
-      label: "Apri Decision Center",
-      query: "apri decision center",
-      icon: Gavel,
-    },
-    {
-      label: "Pratiche Eccomi Posta",
-      query: "pratiche posta",
-      icon: Mail,
-    },
-    {
-      label: "Offerte Eccomi Noleggio",
-      query: "offerte noleggio",
-      icon: CarFront,
-    },
-    {
-      label: "Crea una nuova entry",
-      query: "nuova entry",
-      icon: Plus,
-    },
-    {
-      label: "Report e risultati",
-      query: "apri report",
-      icon: BarChart3,
-    },
-  ];
+  const resultMessage =
+    results.length === 1
+      ? "1 risultato disponibile"
+      : `${results.length} risultati disponibili`;
 
   return (
     <div
       className="modal-layer search-layer"
       role="dialog"
       aria-modal="true"
-      aria-label="Command Bar ECCOMI OS"
+      aria-label="ECCOMI OS Command Center"
     >
       <button
         className="modal-scrim"
         onClick={onClose}
-        aria-label="Chiudi"
+        aria-label="Chiudi ECCOMI OS Command Center"
       />
 
-      <div className="search-modal command-center">
-        <div className="search-modal__input">
+      <div className="search-modal command-center command-center--v2">
+        <header className="command-v2__header">
+          <div className="command-v2__brand">
+            <span>
+              <Sparkles size={20} />
+            </span>
+
+            <div>
+              <small>ECCOMI OS</small>
+              <strong>Command Center</strong>
+            </div>
+          </div>
+
+          <div className="command-v2__status">
+            <i />
+            AI Executive
+          </div>
+
+          <button
+            type="button"
+            className="command-v2__close"
+            onClick={onClose}
+            aria-label="Chiudi Command Center"
+          >
+            <X size={18} />
+          </button>
+        </header>
+
+        <div className="command-v2__input">
           <Sparkles size={21} />
+
           <input
             autoFocus
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                event.stopPropagation();
-                onClose();
-                return;
-              }
-
-              if (event.key === "Enter") {
-                event.preventDefault();
-                executeFirstResult();
-              }
-            }}
-            placeholder="Chiedi a ECCOMI OS cosa vuoi fare..."
+            placeholder="Chiedi, cerca oppure impartisci un comando..."
+            aria-label="Comando per ECCOMI OS"
           />
-          <button
-            className="icon-button"
-            onClick={onClose}
-            aria-label="Chiudi Command Bar"
-          >
-            <X size={19} />
-          </button>
+
+          {value && (
+            <button
+              type="button"
+              onClick={() => onChange("")}
+              aria-label="Cancella il comando"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
-        {!value ? (
-          <div className="command-center__body">
-            <div className="command-center__intro">
-              <span className="panel-icon panel-icon--ai">
-                <Sparkles size={18} />
+        {!value.trim() ? (
+          <div className="command-v2__welcome">
+            <div className="command-v2__hero">
+              <span>
+                <Bot size={24} />
               </span>
+
               <div>
-                <small>ANTICIPATORE OPERATIVO</small>
-                <strong>Cosa vuoi fare adesso?</strong>
+                <small>CENTRO DI COMANDO</small>
+                <strong>Cosa deve fare ECCOMI OS?</strong>
+
                 <p>
-                  Posso aiutarti a decidere, trovare informazioni o aprire
-                  qualsiasi area di ECCOMI OS.
+                  Scrivi una richiesta in linguaggio naturale. Posso cercare,
+                  interpretare i segnali disponibili e aprire direttamente
+                  l’area corretta.
                 </p>
               </div>
             </div>
 
-            <div className="command-suggestion-grid">
-              {suggestions.map((suggestion) => {
-                const Icon = suggestion.icon;
+            <div className="command-v2__suggestions">
+              <small>COMANDI SUGGERITI</small>
 
-                return (
+              <div>
+                {commands.map((command) => (
                   <button
-                    key={suggestion.query}
-                    onClick={() => onChange(suggestion.query)}
+                    type="button"
+                    key={command}
+                    onClick={() => onChange(command)}
                   >
-                    <span>
-                      <Icon size={17} />
-                    </span>
-                    <strong>{suggestion.label}</strong>
-                    <ChevronRight size={16} />
+                    <span>{command}</span>
+                    <ChevronRight size={15} />
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
 
-            <div className="command-center__examples">
-              <small>PUOI ANCHE SCRIVERE</small>
-              <button
-                type="button"
-                onClick={() => onChange("Cosa non va oggi?")}
-              >
-                Cosa non va oggi?
-              </button>
+            <div className="command-v2__capabilities">
+              <span>
+                <strong>Cerca</strong>
+                clienti, pratiche ed ecosistemi
+              </span>
 
-              <button
-                type="button"
-                onClick={() => onChange("Apri Eccomi Noleggio")}
-              >
-                Apri Eccomi Noleggio
-              </button>
+              <span>
+                <strong>Comprende</strong>
+                richieste e comandi operativi
+              </span>
 
-              <button
-                type="button"
-                onClick={() => onChange("Mostrami i clienti")}
-              >
-                Mostrami i clienti
-              </button>
+              <span>
+                <strong>Agisce</strong>
+                aprendo l’area corretta
+              </span>
             </div>
           </div>
         ) : (
-          <div className="search-results command-results">
-            <div className="command-results__heading">
-              <small>ECCOMI HA CAPITO</small>
-              <strong>{results.length} azioni o risultati disponibili</strong>
+          <div className="command-v2__results">
+            <div className="command-v2__results-head">
+              <div>
+                <small>INTERPRETAZIONE OPERATIVA</small>
+                <strong>{resultMessage}</strong>
+              </div>
+
+              <span>
+                Usa ↑ ↓ e premi Invio
+              </span>
             </div>
 
             {results.length ? (
-              results.map((result, index) => (
-                <button
-                  key={`${result.type}-${result.title}-${index}`}
-                  onClick={result.action}
-                >
-                  <span
+              <div className="command-v2__result-list">
+                {results.map((result, index) => (
+                  <button
+                    type="button"
+                    key={`${result.type}-${result.title}-${index}`}
                     className={
-                      result.type === "Comando" ||
-                      result.type === "Azione"
-                        ? "result-type result-type--command"
-                        : "result-type"
+                      index === selectedIndex
+                        ? "command-v2__result command-v2__result--selected"
+                        : "command-v2__result"
                     }
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    onClick={result.action}
                   >
-                    {result.type}
-                  </span>
+                    <span className="command-v2__result-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
 
-                  <span>
-                    <strong>{result.title}</strong>
-                    <small>{result.detail}</small>
-                  </span>
+                    <span className="command-v2__result-content">
+                      <small>{result.type}</small>
+                      <strong>{result.title}</strong>
+                      <p>{result.detail}</p>
+                    </span>
 
-                  <ChevronRight size={17} />
-                </button>
-              ))
+                    <span className="command-v2__result-action">
+                      Apri
+                      <ChevronRight size={16} />
+                    </span>
+                  </button>
+                ))}
+              </div>
             ) : (
-              <div className="empty-state">
-                <Bot size={24} />
-                <strong>Non ho ancora capito la richiesta</strong>
-                <span>
-                  Prova con “Apri Decision Center”, “Posta” o “Nuova entry”.
-                </span>
+              <div className="command-v2__empty">
+                <Bot size={26} />
+
+                <div>
+                  <strong>Richiesta non ancora riconosciuta</strong>
+
+                  <p>
+                    Prova a indicare un’area, una pratica, un cliente,
+                    una decisione o un’attività da eseguire.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onChange("")}
+                >
+                  Mostra i comandi suggeriti
+                </button>
               </div>
             )}
           </div>
         )}
 
-        <div className="search-modal__footer">
-          <div className="command-footer-actions">
-            <button
-              type="button"
-              className="command-footer-button command-footer-button--primary"
-              onClick={executeFirstResult}
-              disabled={!value.trim() || results.length === 0}
-            >
-              <kbd>↵</kbd>
-              <span>Apri risultato</span>
-            </button>
+        <footer className="command-v2__footer">
+          <div>
+            <span>
+              <kbd>↑</kbd>
+              <kbd>↓</kbd>
+              Seleziona
+            </span>
 
-            <button
-              type="button"
-              className="command-footer-button"
-              onClick={onClose}
-            >
+            <span>
+              <kbd>↵</kbd>
+              Apri
+            </span>
+
+            <span>
               <kbd>ESC</kbd>
-              <span>Chiudi</span>
-            </button>
+              Chiudi
+            </span>
           </div>
 
-          <em>ECCOMI Command Bar · V1</em>
-        </div>
+          <strong>ECCOMI OS · Command Center V2</strong>
+
+          <button
+            type="button"
+            onClick={executeSelectedResult}
+            disabled={!value.trim() || !results.length}
+          >
+            Esegui comando
+            <ChevronRight size={15} />
+          </button>
+        </footer>
       </div>
     </div>
   );

@@ -1831,13 +1831,9 @@ button.system-pulse__item:hover {
 }
 
 .system-pulse__spin {
-  animation: system-pulse-spin 700ms linear infinite;
-}
-
-@keyframes system-pulse-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  opacity: 0.55;
+  transform: rotate(180deg);
+  transition: transform 180ms ease, opacity 180ms ease;
 }
 
 @media (max-width: 1050px) {
