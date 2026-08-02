@@ -59,7 +59,6 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
-import { CeoControlCenter } from "./components/CeoControlCenter";
 import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
 import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
 import { AppRegistry } from "./components/AppRegistry";
@@ -67,7 +66,6 @@ import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
 import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
 import { DataTrustPanel } from "./components/DataTrustPanel";
-import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -102,7 +100,6 @@ import {
 } from "./lib/hubApi";
 import {
   buildCeoPriorities,
-  buildExecutiveBriefing,
   getCeoGeneralState,
   getCeoGreeting,
   type CeoPriority,
@@ -1900,79 +1897,13 @@ function DashboardView({
 }) {
   const postaLive = postaState === "ready" ? postaSummary : null;
   const noleggioLive = noleggioState === "ready" ? noleggioSummary : null;
-  const unavailableNote = "Dato amministrativo non ancora collegato";
-
-  const kpis = testMode
-    ? [
-        { label: "Ricavi del mese", value: "€ 48.320", trend: "+12,4%", trendType: "up", note: "Dato dimostrativo", icon: CircleDollarSign },
-        { label: "Margine", value: "€ 14.870", trend: "+8,1%", trendType: "up", note: "Dato dimostrativo", icon: WalletCards },
-        { label: "Clienti attivi", value: "1.284", trend: "+5,2%", trendType: "up", note: "Dato dimostrativo", icon: UserCheck },
-        { label: "Pratiche aperte", value: "86", trend: "12 oggi", trendType: "neutral", note: "Dato dimostrativo", icon: FolderKanban },
-        { label: "Pratiche critiche", value: "7", trend: "−2", trendType: "down", note: "Dato dimostrativo", icon: AlertTriangle },
-        { label: "Opportunità", value: "34", trend: "+€ 21,6K", trendType: "up", note: "Dato dimostrativo", icon: Target },
-      ]
-    : [
-        { label: "Ricavi del mese", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: CircleDollarSign },
-        { label: "Margine", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: WalletCards },
-        { label: "Clienti attivi", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: UserCheck },
-        {
-          label: "Posta · da lavorare",
-          value: postaLive ? String(postaLive.summary.open) : "—",
-          trend: postaLive ? `${postaLive.summary.createdToday} oggi` : "—",
-          trendType: "neutral",
-          note: postaLive ? `${postaLive.summary.sent} inviate a Poste` : "Dato reale non disponibile",
-          icon: FolderKanban,
-        },
-        {
-          label: "Posta · anomalie",
-          value: postaLive ? String(postaLive.summary.errors) : "—",
-          trend: postaLive ? `${postaLive.summary.manual} manuali` : "—",
-          trendType: postaLive?.summary.errors ? "neutral" : "down",
-          note: postaLive ? "Fonte reale in sola lettura" : "Dato reale non disponibile",
-          icon: AlertTriangle,
-        },
-        { label: "Opportunità", value: "—", trend: "—", trendType: "neutral", note: unavailableNote, icon: Target },
-      ];
-
   const openDecisionCount = decisions.filter(
+
     (item) => item.status !== "Decisa",
   ).length;
 
-  const executiveBriefing = buildExecutiveBriefing({
-    priorities,
-    postaSummary: postaLive,
-    noleggioSummary: noleggioLive,
-    openDecisionCount,
-  });
-
-  const urgencyMap: Record<CeoPriority["severity"], string> = {
-    critical: "Critico",
-    warning: "Attenzione",
-    opportunity: "Opportunità",
-    info: "Info",
-  };
-
   return (
     <div className="dashboard-stack">
-      <CeoToday
-        displayName={displayName}
-        greeting={greeting}
-        statusLabel={executiveBriefing.headline}
-        statusMessage={executiveBriefing.message}
-        operatingEcosystems={ecosystems.length}
-        activitiesToVerify={priorities.length}
-        criticalIssues={priorities.filter((item) => item.severity === "critical").length}
-        objective={executiveBriefing.objective}
-        dataModeLabel={
-          testMode
-            ? "Dati dimostrativi"
-            : postaLive || noleggioLive
-              ? "Dati reali attivi"
-              : "Dati reali non disponibili"
-        }
-        onOpenPriorities={() => onNavigate("ai")}
-      />
-      <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
 
       <ExecutiveNavigator />
 
