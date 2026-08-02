@@ -66,6 +66,7 @@ import { AppRegistry } from "./components/AppRegistry";
 import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
 import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
+import { DataTrustPanel } from "./components/DataTrustPanel";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1974,6 +1975,8 @@ function DashboardView({
       <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
 
       <ExecutiveNavigator />
+
+      <DataTrustPanel />
 
       <div id="executive-section-snapshot" className="executive-section-anchor">
       <ExecutiveSnapshot
