@@ -65,6 +65,7 @@ import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
 import { AppRegistry } from "./components/AppRegistry";
 import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
 import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
+import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1972,6 +1973,9 @@ function DashboardView({
       />
       <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
 
+      <ExecutiveNavigator />
+
+      <div id="executive-section-snapshot" className="executive-section-anchor">
       <ExecutiveSnapshot
         priorities={priorities}
         openDecisionCount={openDecisionCount}
@@ -1982,31 +1986,40 @@ function DashboardView({
         onOpenPosta={() => onNavigate("posta")}
         onOpenNoleggio={() => onNavigate("noleggio")}
       />
+      </div>
 
+      <div id="executive-section-timeline" className="executive-section-anchor">
       <ExecutiveTimeline
         priorities={priorities}
         onNavigate={onNavigate}
       />
+      </div>
 
+      <div id="executive-section-apps" className="executive-section-anchor">
       <AppRegistry
         onOpenPosta={() => onNavigate("posta")}
         onOpenNoleggio={() => onNavigate("noleggio")}
         onOpenEcosystems={() => onNavigate("ecosystems")}
       />
+      </div>
 
+      <div id="executive-section-intelligence" className="executive-section-anchor">
       <ExecutiveIntelligence
         priorities={priorities}
         openDecisionCount={openDecisionCount}
         onOpenDecisionCenter={() => onNavigate("decisions")}
         onOpenAI={() => onNavigate("ai")}
       />
+      </div>
 
+      <div id="executive-section-actions" className="executive-section-anchor">
       <ExecutiveActionQueue
         priorities={priorities}
         openDecisionCount={openDecisionCount}
         onNavigate={onNavigate}
         onOpenDecisionCenter={() => onNavigate("decisions")}
       />
+      </div>
 
       <section className="kpi-grid">
         {kpis.map((kpi) => {
