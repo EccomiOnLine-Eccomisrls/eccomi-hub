@@ -62,6 +62,7 @@ import { AIAlertCenter } from "./components/AIAlertCenter";
 import { CeoControlCenter } from "./components/CeoControlCenter";
 import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
 import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
+import { AppRegistry } from "./components/AppRegistry";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1983,6 +1984,12 @@ function DashboardView({
       <ExecutiveTimeline
         priorities={priorities}
         onNavigate={onNavigate}
+      />
+
+      <AppRegistry
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+        onOpenEcosystems={() => onNavigate("ecosystems")}
       />
 
       <section className="kpi-grid">
