@@ -60,6 +60,7 @@ import {
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
 import { CeoControlCenter } from "./components/CeoControlCenter";
+import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
 import { CeoToday } from "./components/CeoToday";
 import {
   advanceHubEntryToEvaluation,
@@ -1966,6 +1967,17 @@ function DashboardView({
         onOpenPriorities={() => onNavigate("ai")}
       />
       <CeoControlCenter priorities={priorities} onOpenDecisionCenter={() => onNavigate("decisions")} />
+
+      <ExecutiveSnapshot
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        postaState={postaState}
+        noleggioState={noleggioState}
+        onOpenPriorities={() => onNavigate("ai")}
+        onOpenDecisions={() => onNavigate("decisions")}
+        onOpenPosta={() => onNavigate("posta")}
+        onOpenNoleggio={() => onNavigate("noleggio")}
+      />
 
       <section className="kpi-grid">
         {kpis.map((kpi) => {
