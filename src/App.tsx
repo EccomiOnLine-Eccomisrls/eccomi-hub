@@ -584,7 +584,7 @@ export default function Home() {
   const [noleggioRefreshKey, setNoleggioRefreshKey] = useState(0);
   const [decisions, setDecisions] = useState<Decision[]>(initialDecisions);
   const [toast, setToast] = useState<string | null>(null);
-  const [testMode, setTestMode] = useState(true);
+  const [testMode, setTestMode] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -1337,7 +1337,12 @@ export default function Home() {
             </div>
             <div className="topbar-actions__group">
               <button
-                className={classNames("topbar-status-pill", testMode && "topbar-status-pill--demo")}
+                className={classNames(
+                  "topbar-status-pill",
+                  testMode
+                    ? "topbar-status-pill--demo"
+                    : "topbar-status-pill--live",
+                )}
                 onClick={() => {
                   setLivePopoverOpen((value) => !value);
                   setProfileMenuOpen(false);
@@ -1347,7 +1352,9 @@ export default function Home() {
                 title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
               >
                 <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
-                <span className="topbar-status-pill__label">{testMode ? "Live" : "Live"}</span>
+                <span className="topbar-status-pill__label">
+                  {testMode ? "Demo" : "Live"}
+                </span>
               </button>
               {livePopoverOpen && (
                 <div className="topbar-popover">
