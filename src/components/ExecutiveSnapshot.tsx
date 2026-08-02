@@ -150,7 +150,7 @@ export function ExecutiveSnapshot({
 
         <span>
           <CheckCircle2 size={16} />
-          Executive Home in costruzione
+          Executive Home
         </span>
       </div>
     </section>

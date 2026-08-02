@@ -1113,7 +1113,7 @@ export default function Home() {
             <ChevronRight size={16} />
           </button>
           <button className="sidebar-logout" onClick={signOut}>
-            <LogOut size={16} /> Esci da ECCOMI HUB
+            <LogOut size={16} /> Esci da ECCOMI OS
           </button>
           <div className="system-state">
             <span className="status-dot status-dot--green" />
@@ -1166,7 +1166,7 @@ export default function Home() {
                 title={testMode ? "Passa ai dati live" : "Passa ai dati demo"}
               >
                 <span className={classNames("status-dot", testMode ? "status-dot--amber" : "status-dot--green")} />
-                <span className="topbar-status-pill__label">{testMode ? "Demo" : "Live"}</span>
+                <span className="topbar-status-pill__label">{testMode ? "Live" : "Live"}</span>
               </button>
               {livePopoverOpen && (
                 <div className="topbar-popover">
@@ -1333,7 +1333,7 @@ export default function Home() {
 
             setEcosystems((current) => [...current.filter((item) => item.id !== entry.id), entry]);
             setNewEntryOpen(false);
-            setToast(`${entry.name} salvata in ECCOMI HUB nello stato “Da valutare”`);
+            setToast(`${entry.name} salvata in ECCOMI OS nello stato “Da valutare”`);
             navigate("ecosystems");
           }}
         />
@@ -1601,7 +1601,7 @@ function LoginScreen({
           </span>
         </div>
         <div className="login-message">
-          <span className="login-kicker">ECCOMI HUB</span>
+          <span className="login-kicker">ECCOMI OS</span>
           <h1>Un solo accesso.<br />Tutto Eccomi sotto controllo.</h1>
           <p>La cabina di governo che collega clienti, persone, decisioni e ogni ecosistema operativo.</p>
         </div>
@@ -1643,14 +1643,14 @@ function LoginScreen({
               </label>
               {error && <div className="login-alert" role="alert"><AlertTriangle size={17} /><span>{error}</span></div>}
               <button className="login-primary" onClick={onEnter} disabled={code.length !== 6 || loading}>
-                {loading ? "Verifica in corso..." : "Accedi a ECCOMI HUB"} <ArrowRight size={18} />
+                {loading ? "Verifica in corso..." : "Accedi a ECCOMI OS"} <ArrowRight size={18} />
               </button>
             </>
           ) : (
             <>
               <span className="eyebrow">Identità verificata</span>
               <h2>Accesso in attesa di autorizzazione</h2>
-              <p>L’indirizzo <strong>{email}</strong> è stato verificato, ma non ha ancora un ruolo attivo in ECCOMI HUB.</p>
+              <p>L’indirizzo <strong>{email}</strong> è stato verificato, ma non ha ancora un ruolo attivo in ECCOMI OS.</p>
               <div className="login-pending-status" role="status">
                 <Clock3 size={19} />
                 <span>Nessun dato o area operativa è accessibile finché il CEO non assegna un ruolo.</span>
@@ -2323,7 +2323,7 @@ function SettingsView() {
     <div className="view-stack">
       <section className="settings-grid"><SettingsCard icon={ShieldCheck} title="Ruoli e permessi" description="CEO, responsabili, operatori e limiti di accesso." value="Struttura pronta" /><SettingsCard icon={Network} title="Integrazioni" description="Servizi disponibili e collegamenti ancora da attivare." value="3 disponibili" /><SettingsCard icon={Bell} title="Regole e notifiche" description="Soglie, escalation e canali di avviso." value="Da configurare" /><SettingsCard icon={FileText} title="Audit e sicurezza" description="Accessi, modifiche, esportazioni e storico." value="Predisposto" /></section>
       <section className="panel integration-panel"><div className="panel__head"><div className="panel-title"><span className="panel-icon"><Network size={18} /></span><span><small>COLLEGAMENTI</small><strong>Stato dei sistemi</strong></span></div><button className="secondary-button"><Plus size={16} /> Nuovo collegamento</button></div>
-        <div className="integration-list"><IntegrationRow name="EccomiOnline · Shopify" detail="Negozio e punto unico di ingresso già esistenti" state="Disponibile" updated="Verificato" icon={Building2} /><IntegrationRow name="Resend" detail="Dominio email e invii automatici già attivi" state="Connesso" updated="OTP operativo" icon={Mail} /><IntegrationRow name="OpenAI API" detail="Account API e credito già disponibili" state="Disponibile" updated="Verificato" icon={Bot} /><IntegrationRow name="Supabase · ECCOMI HUB" detail="Identità, ruoli e accesso CEO collegati" state="Connesso" updated="Accesso attivo" icon={ShieldCheck} /><IntegrationRow name="Render · HUB API" detail="Backend separato per i futuri collegamenti verticali" state="Da configurare" updated="Fase successiva" icon={Activity} /></div>
+        <div className="integration-list"><IntegrationRow name="EccomiOnline · Shopify" detail="Negozio e punto unico di ingresso già esistenti" state="Disponibile" updated="Verificato" icon={Building2} /><IntegrationRow name="Resend" detail="Dominio email e invii automatici già attivi" state="Connesso" updated="OTP operativo" icon={Mail} /><IntegrationRow name="OpenAI API" detail="Account API e credito già disponibili" state="Disponibile" updated="Verificato" icon={Bot} /><IntegrationRow name="Supabase · ECCOMI OS" detail="Identità, ruoli e accesso CEO collegati" state="Connesso" updated="Accesso attivo" icon={ShieldCheck} /><IntegrationRow name="Render · HUB API" detail="Backend separato per i futuri collegamenti verticali" state="Da configurare" updated="Fase successiva" icon={Activity} /></div>
       </section>
       <section className="security-note"><LockKeyhole size={21} /><div><strong>Accesso reale protetto e operativo</strong><p>Le credenziali restano negli ambienti protetti. Ruolo CEO e permessi vengono verificati anche dal database.</p></div></section>
     </div>
@@ -2514,7 +2514,7 @@ function NewEntryModal({
               {storageState === "real" ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
               <span>
                 <strong>{storageState === "real" ? "Salvataggio reale" : storageState === "pending" ? "Archivio da attivare" : "Modalità dimostrativa"}</strong>
-                <small>{storageState === "real" ? "La new entry sarà registrata nell’archivio centrale ECCOMI HUB." : storageState === "pending" ? "Completa l’attivazione Supabase prima di registrare la prima new entry." : "Questa prova non verrà registrata nell’archivio centrale."}</small>
+                <small>{storageState === "real" ? "La new entry sarà registrata nell’archivio centrale ECCOMI OS." : storageState === "pending" ? "Completa l’attivazione Supabase prima di registrare la prima new entry." : "Questa prova non verrà registrata nell’archivio centrale."}</small>
               </span>
             </div>
           </div>
@@ -2621,7 +2621,7 @@ function SearchModal({
       className="modal-layer search-layer"
       role="dialog"
       aria-modal="true"
-      aria-label="Command Bar ECCOMI HUB"
+      aria-label="Command Bar ECCOMI OS"
     >
       <button
         className="modal-scrim"
@@ -2671,7 +2671,7 @@ function SearchModal({
                 <strong>Cosa vuoi fare adesso?</strong>
                 <p>
                   Posso aiutarti a decidere, trovare informazioni o aprire
-                  qualsiasi area di ECCOMI HUB.
+                  qualsiasi area di ECCOMI OS.
                 </p>
               </div>
             </div>
