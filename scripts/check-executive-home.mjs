@@ -25,30 +25,12 @@ const executiveCss = read("src/executive-home.css");
 
 const requiredComponents = [
   "ExecutiveNavigator",
-  "CeoMorningBrief",
-  "WhatChanged",
-  "ExecutiveHealth",
-  "DataTrustPanel",
-  "SystemPulse",
-  "ExecutiveSnapshot",
-  "ExecutiveTimeline",
-  "AppRegistry",
-  "ExecutiveIntelligence",
-  "ExecutiveActionQueue",
+  "ExecutiveHomeOs2",
 ];
 
 const requiredFiles = [
   "src/components/ExecutiveNavigator.tsx",
-  "src/components/CeoMorningBrief.tsx",
-  "src/components/WhatChanged.tsx",
-  "src/components/ExecutiveHealth.tsx",
-  "src/components/DataTrustPanel.tsx",
-  "src/components/SystemPulse.tsx",
-  "src/components/ExecutiveSnapshot.tsx",
-  "src/components/ExecutiveTimeline.tsx",
-  "src/components/AppRegistry.tsx",
-  "src/components/ExecutiveIntelligence.tsx",
-  "src/components/ExecutiveActionQueue.tsx",
+  "src/components/ExecutiveHomeOs2.tsx",
 ];
 
 for (const file of requiredFiles) {
@@ -67,22 +49,17 @@ for (const component of requiredComponents) {
 
 assert(
   main.includes('import "./executive-home.css";'),
-  "executive-home.css non è importato dopo index.css",
+  "executive-home.css non è importato",
+);
+
+assert(
+  main.includes('import "./eccomi-os-2.css";'),
+  "eccomi-os-2.css non è importato",
 );
 
 assert(
   executiveCss.includes(".executive-navigator"),
   "Stili Executive Navigator mancanti",
-);
-
-assert(
-  executiveCss.includes(".executive-snapshot"),
-  "Stili Executive Snapshot mancanti",
-);
-
-assert(
-  executiveCss.includes(".executive-action-queue"),
-  "Stili Executive Action Queue mancanti",
 );
 
 const forbiddenPatterns = [
@@ -156,7 +133,7 @@ if (backupFiles.length) {
 
 console.log("");
 console.log("✅ Executive Home verificata");
-console.log(`✅ ${requiredComponents.length} componenti montati`);
+console.log("✅ Executive Home OS 2 montata");
 console.log("✅ Nessun pannello legacy rilevato");
 console.log("✅ Nessun valore dimostrativo vietato rilevato");
 console.log("✅ CSS dedicato correttamente importato");

@@ -1,0 +1,3114 @@
+/* =========================================================
+   ECCOMI OS 2.0
+   HUB RENAISSANCE · NOLEGGIO DESIGN LANGUAGE
+   ========================================================= */
+
+:root {
+  --os2-navy-950: #06182b;
+  --os2-navy-900: #08243f;
+  --os2-navy-800: #0a355d;
+
+  --os2-brand-700: #075392;
+  --os2-brand-600: #0967b2;
+  --os2-brand-500: #147bd1;
+  --os2-brand-100: #e6f2fb;
+  --os2-brand-50: #f3f9fd;
+
+  --os2-ink: #10253e;
+  --os2-muted: #66768a;
+  --os2-soft: #f5f7fa;
+  --os2-line: #e4eaf0;
+  --os2-white: #ffffff;
+
+  --os2-green: #1ba66a;
+  --os2-green-soft: #e8f7f0;
+  --os2-amber: #d89214;
+  --os2-amber-soft: #fff6df;
+  --os2-violet: #7058c8;
+  --os2-violet-soft: #f1edff;
+
+  --os2-radius-sm: 12px;
+  --os2-radius-md: 18px;
+  --os2-radius-lg: 22px;
+  --os2-radius-xl: 28px;
+
+  --os2-shadow-sm: 0 2px 8px rgba(16, 37, 62, 0.04);
+  --os2-shadow-md: 0 14px 38px rgba(16, 37, 62, 0.08);
+  --os2-shadow-lg: 0 24px 70px rgba(8, 36, 63, 0.14);
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(20, 123, 209, 0.1),
+      transparent 32rem
+    ),
+    #f5f8fb;
+  color: var(--os2-ink);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+
+.app-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 88% 2%,
+      rgba(20, 123, 209, 0.08),
+      transparent 34rem
+    ),
+    #f5f8fb;
+}
+
+.main {
+  background: transparent;
+}
+
+.content {
+  width: min(100%, 1540px);
+  margin: 0 auto;
+  padding:
+    clamp(24px, 3vw, 42px)
+    clamp(20px, 3.2vw, 50px)
+    70px;
+}
+
+/* =========================================================
+   SIDEBAR · STILE NOLEGGIO
+   ========================================================= */
+
+.sidebar {
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(20, 123, 209, 0.19),
+      transparent 18rem
+    ),
+    linear-gradient(
+      180deg,
+      #06182b 0%,
+      #08243f 52%,
+      #061c32 100%
+    );
+  box-shadow: 15px 0 45px rgba(6, 24, 43, 0.1);
+}
+
+.sidebar__top {
+  min-height: 91px;
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.brand {
+  gap: 12px;
+}
+
+.sidebar .brand__mark {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  background-color: #ffffff;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.22),
+    0 0 0 5px rgba(255, 255, 255, 0.045);
+}
+
+.brand__text strong {
+  color: #ffffff;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
+
+.brand__text small {
+  margin-top: 3px;
+  color: #7fc8f6;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+
+.nav {
+  gap: 4px;
+  padding: 22px 13px;
+}
+
+.nav__label {
+  margin: 0 10px 9px;
+  color: rgba(190, 216, 235, 0.52);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.nav__item {
+  min-height: 45px;
+  padding: 0 13px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #b8cce0;
+  font-size: 11px;
+  font-weight: 720;
+}
+
+.nav__item svg {
+  color: #79b5dd;
+}
+
+.nav__item:hover {
+  border-color: rgba(127, 200, 246, 0.12);
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.nav__item--active {
+  border-color: rgba(127, 200, 246, 0.18);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(20, 123, 209, 0.28),
+      rgba(9, 103, 178, 0.13)
+    );
+  color: #ffffff;
+  box-shadow:
+    inset 3px 0 0 #4fb2ee,
+    0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.nav__item--active svg {
+  color: #7fc8f6;
+}
+
+.nav__item em {
+  color: #dff4ff;
+  background: rgba(20, 123, 209, 0.34);
+}
+
+.sidebar__footer {
+  padding: 15px 13px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.ceo-profile {
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.ceo-profile:hover {
+  border-color: rgba(127, 200, 246, 0.18);
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.system-state {
+  border-color: rgba(91, 212, 155, 0.15);
+  background: rgba(27, 166, 106, 0.075);
+}
+
+/* =========================================================
+   TOPBAR · LEGGERA E PREMIUM
+   ========================================================= */
+
+.topbar {
+  min-height: 78px;
+  padding: 0 clamp(20px, 3.2vw, 50px);
+  border-bottom: 1px solid rgba(222, 232, 240, 0.9);
+  background: rgba(248, 251, 253, 0.88);
+  box-shadow: 0 6px 20px rgba(16, 37, 62, 0.035);
+  backdrop-filter: blur(18px);
+}
+
+.global-search {
+  min-height: 43px;
+  border: 1px solid #dce7ef;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--os2-shadow-sm);
+}
+
+.global-search:hover {
+  border-color: #b9d7eb;
+  background: #ffffff;
+  box-shadow: 0 9px 24px rgba(16, 37, 62, 0.07);
+}
+
+.global-search svg {
+  color: var(--os2-brand-600);
+}
+
+.topbar-pill,
+.topbar-status-pill,
+.topbar-profile-button {
+  min-height: 40px;
+  border-color: #dce7ef;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--os2-shadow-sm);
+}
+
+.new-entry-button {
+  min-height: 41px;
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      135deg,
+      var(--os2-brand-500),
+      var(--os2-brand-700)
+    );
+  box-shadow: 0 11px 26px rgba(7, 83, 146, 0.23);
+}
+
+/* =========================================================
+   HERO / PAGE HEADING
+   ========================================================= */
+
+.page-heading {
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  margin-bottom: 26px;
+  padding:
+    clamp(25px, 3.4vw, 42px)
+    clamp(24px, 4vw, 52px);
+  border: 0;
+  border-radius: var(--os2-radius-xl);
+  background:
+    radial-gradient(
+      circle at 82% 4%,
+      rgba(44, 151, 231, 0.25),
+      transparent 24rem
+    ),
+    linear-gradient(
+      135deg,
+      #071d33 0%,
+      #082f52 48%,
+      #0a3d69 100%
+    );
+  color: #ffffff;
+  box-shadow: var(--os2-shadow-lg);
+}
+
+.page-heading::after {
+  position: absolute;
+  right: -110px;
+  bottom: -150px;
+  width: 340px;
+  height: 340px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 55px rgba(255, 255, 255, 0.018),
+    0 0 0 110px rgba(255, 255, 255, 0.012);
+  content: "";
+  pointer-events: none;
+}
+
+.page-heading > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-heading .eyebrow {
+  color: #7fc8f6;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.page-heading h1 {
+  margin-top: 9px;
+  color: #ffffff;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+
+.page-heading p {
+  max-width: 710px;
+  margin-top: 11px;
+  color: #b8cce0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.heading-actions {
+  align-self: center;
+}
+
+.page-heading .today-pill,
+.page-heading .live-pill,
+.page-heading .demo-pill {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.085);
+  color: #d9eaf5;
+  backdrop-filter: blur(8px);
+}
+
+.page-heading .live-pill {
+  color: #7ce0ac;
+}
+
+/* =========================================================
+   CARD SYSTEM
+   ========================================================= */
+
+.panel,
+.executive-snapshot,
+.executive-timeline,
+.app-registry,
+.executive-intelligence,
+.executive-action-queue,
+.executive-health,
+.system-pulse,
+.ceo-morning-brief,
+.what-changed,
+.executive-copilot,
+.decision-assistant {
+  border-color: #dfe8ef !important;
+  border-radius: var(--os2-radius-lg) !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 15px 42px rgba(16, 37, 62, 0.07) !important;
+}
+
+.panel:hover,
+.executive-snapshot:hover,
+.executive-timeline:hover,
+.app-registry:hover,
+.executive-health:hover,
+.system-pulse:hover {
+  border-color: #cbdde9 !important;
+}
+
+/* =========================================================
+   MORNING BRIEF · HERO INTELLIGENTE
+   ========================================================= */
+
+.ceo-morning-brief {
+  padding: clamp(22px, 3vw, 32px) !important;
+  background:
+    radial-gradient(
+      circle at 94% 0%,
+      rgba(20, 123, 209, 0.08),
+      transparent 24rem
+    ),
+    #ffffff !important;
+}
+
+.ceo-morning-brief__sun {
+  background:
+    linear-gradient(
+      135deg,
+      var(--os2-brand-100),
+      #f4f9fd
+    );
+  color: var(--os2-brand-600);
+}
+
+.ceo-morning-brief__identity small {
+  color: var(--os2-brand-600);
+}
+
+.ceo-morning-brief__identity h2 {
+  color: var(--os2-navy-900);
+}
+
+.ceo-morning-brief__head > button {
+  border-color: #cfe3f1 !important;
+  background: var(--os2-brand-50) !important;
+  color: var(--os2-brand-700) !important;
+}
+
+.ceo-morning-brief__executive-summary {
+  border: 1px solid rgba(127, 200, 246, 0.15);
+  background:
+    radial-gradient(
+      circle at 86% 0%,
+      rgba(44, 151, 231, 0.18),
+      transparent 17rem
+    ),
+    linear-gradient(
+      135deg,
+      #071d33,
+      #0a3d69
+    );
+  box-shadow: 0 18px 38px rgba(8, 36, 63, 0.17);
+}
+
+.ceo-morning-brief__item {
+  border-color: #dfe8ef !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 22px rgba(16, 37, 62, 0.045);
+}
+
+.ceo-morning-brief__item:hover {
+  border-color: #bcd7e9 !important;
+  box-shadow: 0 16px 34px rgba(16, 37, 62, 0.09);
+}
+
+/* =========================================================
+   ECOSYSTEM CARDS
+   ========================================================= */
+
+.ecosystem-grid {
+  gap: 20px;
+}
+
+.ecosystem-card {
+  overflow: hidden;
+  border: 1px solid #dfe8ef;
+  border-radius: 21px;
+  background: #ffffff;
+  box-shadow: 0 13px 36px rgba(16, 37, 62, 0.065);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.ecosystem-card:hover {
+  border-color: #bfd8e8;
+  box-shadow: 0 20px 46px rgba(16, 37, 62, 0.11);
+  transform: translateY(-3px);
+}
+
+.ecosystem-logo {
+  border-radius: 13px;
+}
+
+.ecosystem-card h3 {
+  color: var(--os2-navy-900);
+}
+
+.ecosystem-card__metrics {
+  border-color: #edf2f6;
+  background: #f8fafc;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.primary-button,
+.approve-button {
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      135deg,
+      var(--os2-brand-500),
+      var(--os2-brand-700)
+    );
+  box-shadow: 0 9px 22px rgba(7, 83, 146, 0.2);
+}
+
+.primary-button:hover,
+.new-entry-button:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  border-color: #d7e3eb;
+  border-radius: 11px;
+  background: #ffffff;
+  color: var(--os2-navy-900);
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.status-badge,
+.live-badge,
+.sync-badge {
+  border-radius: 999px;
+}
+
+.live-badge,
+.topbar-status-pill--live {
+  color: #147a4d;
+  border-color: #bde5cf;
+  background: #edf9f3;
+}
+
+/* =========================================================
+   MODALS / DRAWERS
+   ========================================================= */
+
+.modal,
+.drawer {
+  border-color: #dce6ee;
+  background: #ffffff;
+  box-shadow: 0 30px 90px rgba(6, 24, 43, 0.23);
+}
+
+.modal {
+  border-radius: 23px;
+}
+
+.drawer {
+  box-shadow: -24px 0 70px rgba(6, 24, 43, 0.18);
+}
+
+.modal__head,
+.drawer__head {
+  border-bottom-color: #e8eef3;
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(20, 123, 209, 0.07),
+      transparent 17rem
+    ),
+    #ffffff;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .content {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .topbar {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 760px) {
+  .content {
+    padding:
+      18px
+      14px
+      54px;
+  }
+
+  .topbar {
+    min-height: 68px;
+    padding: 0 14px;
+  }
+
+  .page-heading {
+    margin-bottom: 18px;
+    padding: 23px 20px;
+    border-radius: 22px;
+  }
+
+  .page-heading h1 {
+    font-size: 30px;
+  }
+
+  .page-heading p {
+    font-size: 12px;
+  }
+
+  .heading-actions {
+    width: 100%;
+  }
+
+  .ceo-morning-brief {
+    padding: 19px !important;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · HUB RENAISSANCE · DASHBOARD STRUCTURE
+   ========================================================= */
+
+.dashboard-stack--os2 {
+  display: grid;
+  gap: 26px;
+}
+
+.dashboard-stack--os2 > * {
+  min-width: 0;
+}
+
+.os2-dashboard-overview {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 25px 29px;
+  border: 1px solid #dce7ef;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(20, 123, 209, 0.12),
+      transparent 19rem
+    ),
+    #ffffff;
+  box-shadow: 0 14px 38px rgba(16, 37, 62, 0.065);
+}
+
+.os2-dashboard-overview::after {
+  position: absolute;
+  right: -65px;
+  bottom: -115px;
+  width: 230px;
+  height: 230px;
+  border: 1px solid rgba(20, 123, 209, 0.08);
+  border-radius: 999px;
+  content: "";
+  pointer-events: none;
+}
+
+.os2-dashboard-overview__copy,
+.os2-dashboard-overview__status {
+  position: relative;
+  z-index: 1;
+}
+
+.os2-dashboard-overview__eyebrow {
+  display: block;
+  color: var(--os2-brand-600);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+}
+
+.os2-dashboard-overview h2 {
+  margin: 7px 0 5px;
+  color: var(--os2-navy-900);
+  font-size: clamp(23px, 3vw, 31px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.os2-dashboard-overview p {
+  max-width: 690px;
+  margin: 0;
+  color: var(--os2-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.os2-dashboard-overview__status {
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: end;
+  gap: 7px;
+}
+
+.os2-dashboard-overview__status small {
+  color: #8391a0;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.os2-dashboard-overview__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.os2-dashboard-overview__mode i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+}
+
+.os2-dashboard-overview__mode--live {
+  border-color: #bde5cf;
+  background: #edf9f3;
+  color: #147a4d;
+}
+
+.os2-dashboard-overview__mode--live i {
+  background: #1ba66a;
+  box-shadow: 0 0 0 4px rgba(27, 166, 106, 0.12);
+}
+
+.os2-dashboard-overview__mode--demo {
+  border-color: #f0d89f;
+  background: #fff8e8;
+  color: #976300;
+}
+
+.os2-dashboard-overview__mode--demo i {
+  background: #d89214;
+  box-shadow: 0 0 0 4px rgba(216, 146, 20, 0.12);
+}
+
+/* KPI premium */
+
+.os2-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.os2-kpi-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  min-width: 0;
+  min-height: 155px;
+  align-content: start;
+  justify-items: start;
+  gap: 7px;
+  padding: 21px;
+  border: 1px solid #dfe8ef;
+  border-radius: 20px;
+  background: #ffffff;
+  color: var(--os2-ink);
+  text-align: left;
+  box-shadow: 0 13px 34px rgba(16, 37, 62, 0.06);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.os2-kpi-card::after {
+  position: absolute;
+  top: -52px;
+  right: -49px;
+  width: 130px;
+  height: 130px;
+  border-radius: 999px;
+  background: var(--os2-kpi-soft);
+  content: "";
+  pointer-events: none;
+}
+
+.os2-kpi-card:hover {
+  border-color: #bdd7e8;
+  box-shadow: 0 19px 42px rgba(16, 37, 62, 0.105);
+  transform: translateY(-3px);
+}
+
+.os2-kpi-card__label {
+  position: relative;
+  z-index: 1;
+  color: #6b7b8d;
+  font-size: 9px;
+  font-weight: 820;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+.os2-kpi-card strong {
+  position: relative;
+  z-index: 1;
+  margin-top: 5px;
+  color: var(--os2-kpi-color);
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.os2-kpi-card small {
+  position: relative;
+  z-index: 1;
+  max-width: 210px;
+  margin-top: auto;
+  color: #758496;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.os2-kpi-card--blue {
+  --os2-kpi-color: #0967b2;
+  --os2-kpi-soft: rgba(20, 123, 209, 0.09);
+}
+
+.os2-kpi-card--violet {
+  --os2-kpi-color: #7058c8;
+  --os2-kpi-soft: rgba(112, 88, 200, 0.09);
+}
+
+.os2-kpi-card--amber {
+  --os2-kpi-color: #c9830d;
+  --os2-kpi-soft: rgba(216, 146, 20, 0.1);
+}
+
+.os2-kpi-card--green {
+  --os2-kpi-color: #168b59;
+  --os2-kpi-soft: rgba(27, 166, 106, 0.09);
+}
+
+/* Sezioni */
+
+.os2-dashboard-section {
+  display: grid;
+  gap: 16px;
+}
+
+.os2-dashboard-section__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 0 3px;
+}
+
+.os2-dashboard-section__heading > div > span {
+  display: block;
+  color: var(--os2-brand-600);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+}
+
+.os2-dashboard-section__heading h2 {
+  margin: 5px 0 0;
+  color: var(--os2-navy-900);
+  font-size: 23px;
+  letter-spacing: -0.035em;
+}
+
+.os2-dashboard-section__heading > p {
+  max-width: 430px;
+  margin: 0;
+  color: #7b8998;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.os2-dashboard-section--technical {
+  padding-top: 7px;
+}
+
+/* Griglie */
+
+.os2-dashboard-grid {
+  display: grid;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.os2-dashboard-grid > *,
+.os2-dashboard-grid .executive-section-anchor {
+  min-width: 0;
+  height: 100%;
+}
+
+.os2-dashboard-grid .executive-section-anchor > * {
+  height: 100%;
+}
+
+.os2-dashboard-grid--balanced {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.os2-dashboard-grid--intelligence {
+  grid-template-columns:
+    minmax(0, 1.22fr)
+    minmax(370px, 0.78fr);
+}
+
+.os2-dashboard-grid--technical {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+/* Normalizzazione margini dei componenti nella nuova griglia */
+
+.dashboard-stack--os2 .ceo-morning-brief,
+.dashboard-stack--os2 .what-changed,
+.dashboard-stack--os2 .executive-copilot,
+.dashboard-stack--os2 .decision-assistant,
+.dashboard-stack--os2 .executive-health,
+.dashboard-stack--os2 .system-pulse,
+.dashboard-stack--os2 .executive-snapshot,
+.dashboard-stack--os2 .executive-timeline,
+.dashboard-stack--os2 .app-registry,
+.dashboard-stack--os2 .executive-intelligence,
+.dashboard-stack--os2 .executive-action-queue {
+  margin: 0 !important;
+}
+
+.dashboard-stack--os2 .ceo-morning-brief {
+  width: 100%;
+}
+
+/* Responsive */
+
+@media (max-width: 1280px) {
+  .os2-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-dashboard-grid--technical {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-dashboard-grid--technical > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1050px) {
+  .os2-dashboard-grid--intelligence {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-dashboard-grid--balanced {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-stack--os2 {
+    gap: 20px;
+  }
+
+  .os2-dashboard-overview {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 21px;
+  }
+
+  .os2-dashboard-overview__status {
+    justify-items: start;
+  }
+
+  .os2-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .os2-kpi-card {
+    min-height: 132px;
+  }
+
+  .os2-dashboard-section__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .os2-dashboard-section__heading > p {
+    text-align: left;
+  }
+
+  .os2-dashboard-grid--technical {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-dashboard-grid--technical > :last-child {
+    grid-column: auto;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · EXECUTIVE HOME OPERATIVA
+   ========================================================= */
+
+.os2-operational-home {
+  display: grid;
+  gap: 26px;
+}
+
+.os2-primary-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.os2-primary-kpi {
+  --kpi-color: #0967b2;
+  --kpi-soft: #e8f3fc;
+
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 15px;
+  min-height: 145px;
+  padding: 20px;
+  border: 1px solid #dfe8ef;
+  border-left: 3px solid var(--kpi-color);
+  border-radius: 20px;
+  background: #ffffff;
+  color: #10253e;
+  text-align: left;
+  box-shadow: 0 12px 32px rgba(16, 37, 62, 0.065);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.os2-primary-kpi:hover {
+  box-shadow: 0 18px 42px rgba(16, 37, 62, 0.11);
+  transform: translateY(-3px);
+}
+
+.os2-primary-kpi > span {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--kpi-soft);
+  color: var(--kpi-color);
+}
+
+.os2-primary-kpi small {
+  display: block;
+  color: var(--kpi-color);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.os2-primary-kpi strong {
+  display: block;
+  margin-top: 7px;
+  color: #08243f;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.os2-primary-kpi p {
+  margin: 8px 0 0;
+  color: #6b7b8d;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.os2-primary-kpi--violet {
+  --kpi-color: #6d4ed1;
+  --kpi-soft: #f1edff;
+}
+
+.os2-primary-kpi--orange {
+  --kpi-color: #d87612;
+  --kpi-soft: #fff1e3;
+}
+
+.os2-primary-kpi--green {
+  --kpi-color: #12925c;
+  --kpi-soft: #e8f7f0;
+}
+
+.os2-section-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #173da7;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.os2-executive-main-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.65fr)
+    minmax(260px, 0.82fr)
+    minmax(260px, 0.82fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.os2-executive-main-grid > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.os2-morning-hero {
+  flex: 1;
+  padding: 20px;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(20, 123, 209, 0.23),
+      transparent 18rem
+    ),
+    linear-gradient(135deg, #06182b, #0a3d69);
+  color: #ffffff;
+  box-shadow: 0 20px 48px rgba(6, 24, 43, 0.2);
+}
+
+.os2-morning-hero__intro {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 15px;
+}
+
+.os2-morning-hero__sun {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 999px;
+  background: #147bd1;
+  color: #ffd25a;
+}
+
+.os2-morning-hero__intro strong {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.os2-morning-hero__intro p {
+  margin: 8px 0 0;
+  color: #b8cce0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.os2-morning-hero__intro > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 35px;
+  padding: 0 11px;
+  border: 1px solid rgba(127, 200, 246, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.os2-morning-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin: 17px 0;
+  padding-left: 73px;
+}
+
+.os2-morning-hero__stats span {
+  padding: 11px;
+  border: 1px solid rgba(127, 200, 246, 0.13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.os2-morning-hero__stats strong {
+  display: block;
+  font-size: 21px;
+}
+
+.os2-morning-hero__stats small {
+  display: block;
+  margin-top: 4px;
+  color: #c7d8e7;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.os2-morning-hero__priorities > small {
+  display: block;
+  margin-bottom: 8px;
+  color: #d9e8f4;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.os2-priority-row {
+  --priority-color: #0967b2;
+  --priority-soft: #eef6fc;
+
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  margin-top: 7px;
+  padding: 10px 11px;
+  border: 1px solid #dfe7ee;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #10253e;
+  text-align: left;
+}
+
+.os2-priority-row > span {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--priority-soft);
+  color: var(--priority-color);
+}
+
+.os2-priority-row strong {
+  display: block;
+  color: var(--priority-color);
+  font-size: 10px;
+}
+
+.os2-priority-row p {
+  margin: 3px 0 0;
+  color: #718092;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.os2-priority-row em {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #173da7;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.os2-priority-row--critical {
+  --priority-color: #c93b3b;
+  --priority-soft: #fff0f0;
+}
+
+.os2-priority-row--warning {
+  --priority-color: #bc7310;
+  --priority-soft: #fff5e7;
+}
+
+.os2-priority-row--opportunity {
+  --priority-color: #168b59;
+  --priority-soft: #ecf9f3;
+}
+
+.os2-change-card,
+.os2-timeline-card {
+  flex: 1;
+  padding: 16px;
+  border: 1px solid #dfe8ef;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(16, 37, 62, 0.06);
+}
+
+.os2-change-row {
+  --change-color: #168b59;
+  --change-soft: #eaf8f1;
+
+  display: grid;
+  grid-template-columns: 37px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 78px;
+  border-bottom: 1px solid #edf1f5;
+}
+
+.os2-change-row:last-child {
+  border-bottom: 0;
+}
+
+.os2-change-row > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--change-soft);
+  color: var(--change-color);
+}
+
+.os2-change-row strong {
+  color: var(--change-color);
+  font-size: 14px;
+}
+
+.os2-change-row p {
+  margin: 3px 0 0;
+  color: #68788a;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.os2-change-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  color: #173da7;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.os2-change-row--orange {
+  --change-color: #d87612;
+  --change-soft: #fff1e3;
+}
+
+.os2-change-row--violet {
+  --change-color: #6d4ed1;
+  --change-soft: #f1edff;
+}
+
+.os2-timeline-card {
+  position: relative;
+}
+
+.os2-timeline-card > button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 16px 27px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 78px;
+  border: 0;
+  border-bottom: 1px solid #edf1f5;
+  background: transparent;
+  color: #10253e;
+  text-align: left;
+}
+
+.os2-timeline-card > button:last-child {
+  border-bottom: 0;
+}
+
+.os2-timeline-card__rail {
+  position: relative;
+  display: grid;
+  height: 100%;
+  place-items: center;
+}
+
+.os2-timeline-card__rail::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #aac6f0;
+  content: "";
+}
+
+.os2-timeline-card__rail i {
+  position: relative;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #184db5;
+}
+
+.os2-timeline-card small {
+  color: #184db5;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.os2-timeline-card strong {
+  display: block;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.os2-timeline-card p {
+  margin: 3px 0 0;
+  color: #718092;
+  font-size: 8px;
+}
+
+.os2-summary-section {
+  display: grid;
+}
+
+.os2-tool-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.os2-tool-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.os2-tool-card {
+  --tool-color: #0967b2;
+  --tool-soft: #e8f3fc;
+
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 150px;
+  padding: 17px;
+  border: 1px solid #dfe8ef;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(16, 37, 62, 0.055);
+}
+
+.os2-tool-card__icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--tool-soft);
+  color: var(--tool-color);
+}
+
+.os2-tool-card__copy small {
+  display: block;
+  color: var(--tool-color);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.os2-tool-card__copy strong {
+  display: block;
+  margin-top: 6px;
+  color: #10253e;
+  font-size: 12px;
+}
+
+.os2-tool-card__copy p {
+  margin: 6px 0 0;
+  color: #6b7b8d;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.os2-tool-card > button {
+  grid-column: 2;
+  justify-self: end;
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+  padding: 0 10px;
+  border: 1px solid #d8e3eb;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #173da7;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.os2-tool-card--violet {
+  --tool-color: #5e35ce;
+  --tool-soft: #f1edff;
+}
+
+.os2-tool-card--navy {
+  --tool-color: #08243f;
+  --tool-soft: #e8edf2;
+}
+
+.os2-tool-card--green {
+  --tool-color: #12925c;
+  --tool-soft: #e8f7f0;
+}
+
+.os2-tool-card--orange {
+  --tool-color: #e67800;
+  --tool-soft: #fff1df;
+}
+
+.os2-tool-card--teal {
+  --tool-color: #0984a7;
+  --tool-soft: #e4f6fa;
+}
+
+.os2-bottom-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.9fr)
+    minmax(0, 1.1fr);
+  gap: 18px;
+}
+
+@media (max-width: 1250px) {
+  .os2-primary-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .os2-executive-main-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 850px) {
+  .os2-executive-main-grid,
+  .os2-tool-grid--two,
+  .os2-tool-grid--three {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-morning-hero__intro {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .os2-morning-hero__intro > button {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .os2-morning-hero__stats {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .os2-primary-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-primary-kpi {
+    min-height: 125px;
+  }
+
+  .os2-morning-hero__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-priority-row {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .os2-priority-row em {
+    grid-column: 2;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · FINAL EXECUTIVE HOME ALIGNMENT
+   Riferimento grafico approvato
+   ========================================================= */
+
+/* Area centrale più larga e più vicina al riferimento */
+
+.content {
+  width: 100%;
+  max-width: none;
+  padding:
+    20px
+    clamp(24px, 2.5vw, 42px)
+    60px;
+}
+
+.dashboard-stack--os2 {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+/* Navigator Executive */
+
+.dashboard-stack--os2 > .executive-navigator {
+  margin: 0 0 2px;
+  border: 1px solid #dfe7ee;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(16, 37, 62, 0.055);
+}
+
+/* KPI: più larghi, leggibili e bassi */
+
+.os2-primary-kpis {
+  gap: 14px;
+}
+
+.os2-primary-kpi {
+  grid-template-columns: 66px minmax(0, 1fr);
+  min-height: 142px;
+  padding: 20px 18px;
+  border-radius: 18px;
+}
+
+.os2-primary-kpi > span {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+}
+
+.os2-primary-kpi small {
+  font-size: 10px;
+}
+
+.os2-primary-kpi strong {
+  margin-top: 8px;
+  font-size: 38px;
+}
+
+.os2-primary-kpi p {
+  max-width: 190px;
+  font-size: 10px;
+}
+
+/* Griglia principale identica al blueprint */
+
+.os2-executive-main-grid {
+  grid-template-columns:
+    minmax(520px, 1.75fr)
+    minmax(260px, 0.82fr)
+    minmax(260px, 0.82fr);
+  gap: 16px;
+}
+
+.os2-executive-main-grid > div {
+  min-height: 430px;
+}
+
+.os2-section-label {
+  min-height: 18px;
+  margin-bottom: 9px;
+  font-size: 10px;
+}
+
+/* Morning Brief */
+
+.os2-morning-hero {
+  min-height: 402px;
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.os2-morning-hero__intro {
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+}
+
+.os2-morning-hero__intro strong {
+  font-size: 17px;
+}
+
+.os2-morning-hero__intro p {
+  max-width: 320px;
+  font-size: 10px;
+}
+
+.os2-morning-hero__stats {
+  margin: 14px 0;
+}
+
+.os2-morning-hero__stats span {
+  min-height: 72px;
+}
+
+.os2-morning-hero__stats strong {
+  font-size: 24px;
+}
+
+.os2-priority-row {
+  min-height: 60px;
+  margin-top: 6px;
+  padding: 9px 11px;
+}
+
+.os2-priority-row strong {
+  font-size: 10px;
+}
+
+.os2-priority-row p {
+  max-width: 370px;
+  font-size: 8px;
+}
+
+/* Cosa è cambiato e Timeline stessa altezza */
+
+.os2-change-card,
+.os2-timeline-card {
+  min-height: 402px;
+  padding: 15px;
+  border-radius: 19px;
+}
+
+.os2-change-row {
+  min-height: 118px;
+}
+
+.os2-change-row strong {
+  font-size: 17px;
+}
+
+.os2-change-row p {
+  font-size: 9px;
+}
+
+.os2-timeline-card > button {
+  min-height: 118px;
+}
+
+.os2-timeline-card strong {
+  font-size: 10px;
+}
+
+.os2-timeline-card p {
+  font-size: 9px;
+}
+
+/* Sezioni inferiori */
+
+.os2-summary-section,
+.os2-bottom-grid > div {
+  min-width: 0;
+}
+
+.os2-tool-grid {
+  gap: 12px;
+}
+
+.os2-tool-card {
+  min-height: 134px;
+  padding: 16px;
+  border-radius: 17px;
+}
+
+.os2-tool-card__copy small {
+  font-size: 8px;
+}
+
+.os2-tool-card__copy strong {
+  font-size: 12px;
+}
+
+.os2-tool-card__copy p {
+  max-width: 320px;
+  font-size: 9px;
+}
+
+.os2-tool-card > button {
+  min-height: 32px;
+  font-size: 8px;
+}
+
+/* Le sezioni inferiori diventano due colonne parallele */
+
+.os2-bottom-grid {
+  grid-template-columns:
+    minmax(0, 0.98fr)
+    minmax(0, 1.02fr);
+  gap: 16px;
+}
+
+/* Sistema e collegamenti compatto */
+
+.os2-bottom-grid .os2-tool-grid--three .os2-tool-card {
+  min-height: 166px;
+  grid-template-columns: 40px minmax(0, 1fr);
+}
+
+.os2-bottom-grid .os2-tool-grid--three .os2-tool-card__copy strong {
+  font-size: 11px;
+}
+
+/* Hover uniformi */
+
+.os2-primary-kpi,
+.os2-priority-row,
+.os2-change-row button,
+.os2-timeline-card > button,
+.os2-tool-card,
+.os2-tool-card > button {
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.os2-priority-row:hover,
+.os2-tool-card:hover {
+  border-color: #bfd6e7;
+  box-shadow: 0 14px 32px rgba(16, 37, 62, 0.09);
+  transform: translateY(-2px);
+}
+
+.os2-timeline-card > button:hover,
+.os2-change-row:hover {
+  background: #f8fbfd;
+}
+
+/* Sidebar proporzionata come blueprint */
+
+.sidebar {
+  width: 238px;
+}
+
+.main {
+  margin-left: 238px;
+}
+
+.sidebar__top {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* Topbar */
+
+.topbar {
+  min-height: 72px;
+}
+
+.global-search {
+  width: min(520px, 48vw);
+}
+
+/* Desktop medio / MacBook Air */
+
+@media (max-width: 1380px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main {
+    margin-left: 220px;
+  }
+
+  .content {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns:
+      minmax(470px, 1.6fr)
+      minmax(225px, 0.8fr)
+      minmax(225px, 0.8fr);
+  }
+
+  .os2-primary-kpi {
+    grid-template-columns: 54px minmax(0, 1fr);
+    padding: 17px 14px;
+  }
+
+  .os2-primary-kpi > span {
+    width: 50px;
+    height: 50px;
+  }
+
+  .os2-primary-kpi strong {
+    font-size: 32px;
+  }
+}
+
+/* iPad orizzontale */
+
+@media (max-width: 1120px) {
+  .os2-primary-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .os2-executive-main-grid > div {
+    min-height: auto;
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet e mobile */
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: min(290px, 86vw);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding:
+      16px
+      14px
+      50px;
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-executive-main-grid > div:first-child {
+    grid-column: auto;
+  }
+
+  .os2-change-card,
+  .os2-timeline-card,
+  .os2-morning-hero {
+    min-height: auto;
+  }
+}
+
+.executive-navigator__identity small {
+  display: block;
+  margin-top: 3px;
+  color: #728195;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · LOWER EXECUTIVE HOME
+   Allineamento definitivo al blueprint approvato
+   ========================================================= */
+
+/* Riduce gli spazi verticali dopo la griglia principale */
+
+.os2-operational-home {
+  gap: 18px;
+}
+
+.os2-summary-section {
+  gap: 0;
+  margin: 0;
+}
+
+.os2-bottom-grid {
+  align-items: start;
+  gap: 14px;
+  margin: 0;
+}
+
+/* Titoli delle sezioni inferiori */
+
+.os2-summary-section > .os2-section-label,
+.os2-bottom-grid > div > .os2-section-label {
+  min-height: auto;
+  margin: 0 0 8px;
+  color: #173da7;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0.11em;
+}
+
+/* =========================================================
+   INTELLIGENZA OPERATIVA E CONTROLLO ESECUTIVO
+   Due card orizzontali compatte
+   ========================================================= */
+
+.os2-summary-section .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.os2-summary-section .os2-tool-card {
+  position: relative;
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: auto 34px;
+  min-height: 128px;
+  padding: 15px;
+  border: 1px solid #dfe7ee;
+  border-radius: 17px;
+  background: #ffffff;
+  box-shadow: 0 9px 25px rgba(16, 37, 62, 0.055);
+}
+
+.os2-summary-section .os2-tool-card__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+}
+
+.os2-summary-section .os2-tool-card__copy {
+  min-width: 0;
+  padding-right: 4px;
+}
+
+.os2-summary-section .os2-tool-card__copy small {
+  margin-bottom: 4px;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.os2-summary-section .os2-tool-card__copy strong {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.os2-summary-section .os2-tool-card__copy p {
+  max-width: 390px;
+  margin: 5px 0 0;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.os2-summary-section .os2-tool-card > button {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  min-height: 30px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ULTIMA RIGA
+   Intelligence e azioni 2 card
+   Sistema e collegamenti 3 card
+   ========================================================= */
+
+.os2-bottom-grid {
+  grid-template-columns:
+    minmax(0, 0.96fr)
+    minmax(0, 1.04fr);
+}
+
+.os2-bottom-grid .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.os2-bottom-grid .os2-tool-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* Card finali più compatte */
+
+.os2-bottom-grid .os2-tool-card {
+  grid-template-columns: 38px minmax(0, 1fr);
+  grid-template-rows: auto 32px;
+  min-height: 148px;
+  padding: 14px;
+  border: 1px solid #dfe7ee;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 23px rgba(16, 37, 62, 0.05);
+}
+
+.os2-bottom-grid .os2-tool-card__icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 11px;
+}
+
+.os2-bottom-grid .os2-tool-card__copy {
+  min-width: 0;
+}
+
+.os2-bottom-grid .os2-tool-card__copy small {
+  margin-bottom: 4px;
+  font-size: 7px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+}
+
+.os2-bottom-grid .os2-tool-card__copy strong {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.os2-bottom-grid .os2-tool-card__copy p {
+  margin: 5px 0 0;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.os2-bottom-grid .os2-tool-card > button {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  min-height: 28px;
+  padding: 0 9px;
+  font-size: 7px;
+  white-space: nowrap;
+}
+
+/* Le tre card sistema devono restare strette e ordinate */
+
+.os2-bottom-grid .os2-tool-grid--three .os2-tool-card {
+  min-width: 0;
+  min-height: 148px;
+}
+
+.os2-bottom-grid
+  .os2-tool-grid--three
+  .os2-tool-card__copy
+  strong {
+  font-size: 10px;
+}
+
+.os2-bottom-grid
+  .os2-tool-grid--three
+  .os2-tool-card__copy
+  p {
+  font-size: 7.5px;
+}
+
+/* Hover uniforme */
+
+.os2-summary-section .os2-tool-card:hover,
+.os2-bottom-grid .os2-tool-card:hover {
+  border-color: #bdd5e5;
+  box-shadow: 0 14px 30px rgba(16, 37, 62, 0.09);
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   MACBOOK AIR
+   ========================================================= */
+
+@media (max-width: 1380px) {
+  .os2-summary-section .os2-tool-card {
+    min-height: 120px;
+    padding: 13px;
+  }
+
+  .os2-bottom-grid .os2-tool-card {
+    min-height: 137px;
+    padding: 12px;
+  }
+
+  .os2-bottom-grid .os2-tool-card__copy strong {
+    font-size: 9px;
+  }
+
+  .os2-bottom-grid .os2-tool-card__copy p {
+    font-size: 7px;
+  }
+
+  .os2-bottom-grid .os2-tool-card > button {
+    padding: 0 7px;
+  }
+}
+
+/* =========================================================
+   IPAD
+   ========================================================= */
+
+@media (max-width: 1120px) {
+  .os2-summary-section .os2-tool-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .os2-bottom-grid .os2-tool-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 720px) {
+  .os2-summary-section .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--three {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-summary-section .os2-tool-card,
+  .os2-bottom-grid .os2-tool-card {
+    min-height: 125px;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · STRUTTURA FEDELE AL BLUEPRINT
+   ========================================================= */
+
+.os2-middle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.os2-middle-grid .os2-summary-section {
+  min-width: 0;
+}
+
+.os2-middle-grid .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.os2-middle-grid .os2-tool-card {
+  min-height: 130px;
+  padding: 14px;
+}
+
+/* Le quattro card centrali devono avere identica geometria */
+
+.os2-middle-grid .os2-tool-card__copy strong {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.os2-middle-grid .os2-tool-card__copy p {
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.os2-middle-grid .os2-tool-card > button {
+  min-height: 29px;
+  padding: 0 9px;
+  font-size: 7.5px;
+}
+
+/* Ultima riga nelle proporzioni della foto */
+
+.os2-bottom-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.08fr);
+  gap: 16px;
+}
+
+.os2-bottom-grid > div {
+  min-width: 0;
+}
+
+.os2-bottom-grid .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.os2-bottom-grid .os2-tool-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Altezza uniforme dell'ultima riga */
+
+.os2-bottom-grid .os2-tool-card {
+  min-height: 145px;
+  height: 100%;
+}
+
+/* Migliora la leggibilità senza aumentare l'altezza */
+
+.os2-bottom-grid .os2-tool-card__copy strong {
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.os2-bottom-grid .os2-tool-card__copy p {
+  font-size: 7.5px;
+  line-height: 1.4;
+}
+
+/* Desktop MacBook Air */
+
+@media (max-width: 1380px) {
+  .os2-middle-grid {
+    gap: 12px;
+  }
+
+  .os2-middle-grid .os2-tool-grid--two {
+    gap: 9px;
+  }
+
+  .os2-middle-grid .os2-tool-card {
+    min-height: 122px;
+    padding: 12px;
+  }
+
+  .os2-bottom-grid {
+    gap: 12px;
+  }
+
+  .os2-bottom-grid .os2-tool-card {
+    min-height: 136px;
+  }
+}
+
+/* iPad */
+
+@media (max-width: 1120px) {
+  .os2-middle-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 720px) {
+  .os2-middle-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--three {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · SIDEBAR FINALE
+   Allineamento al riferimento approvato
+   ========================================================= */
+
+.sidebar {
+  width: 232px;
+  background:
+    radial-gradient(
+      circle at 24% 0%,
+      rgba(25, 116, 184, 0.16),
+      transparent 17rem
+    ),
+    linear-gradient(
+      180deg,
+      #04172a 0%,
+      #06233e 48%,
+      #052039 100%
+    );
+}
+
+.main {
+  margin-left: 232px;
+}
+
+/* Header logo */
+
+.sidebar__top {
+  min-height: 106px;
+  padding: 22px 18px 18px;
+  border-bottom: 0;
+}
+
+.brand {
+  align-items: center;
+  gap: 13px;
+}
+
+.sidebar .brand__mark {
+  width: 58px;
+  height: 58px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background-color: #ffffff;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.22),
+    0 0 0 4px rgba(255, 255, 255, 0.035);
+}
+
+.brand__text strong {
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 0.13em;
+}
+
+.brand__text small {
+  margin-top: 6px;
+  color: #4da9e8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+/* Navigazione */
+
+.nav {
+  gap: 7px;
+  padding: 18px 14px 12px;
+}
+
+.nav__label {
+  margin: 0 17px 15px;
+  color: rgba(190, 216, 235, 0.62);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.nav__item {
+  min-height: 51px;
+  padding: 0 16px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 720;
+}
+
+.nav__item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav__item--active {
+  min-height: 58px;
+  border: 0;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #10338f;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.12),
+    inset 3px 0 0 #35aeea;
+}
+
+.nav__item--active svg {
+  color: #2465d4;
+}
+
+.nav__item:hover:not(.nav__item--active) {
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  transform: none;
+}
+
+.nav__item em {
+  display: inline-grid;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  margin-left: auto;
+  padding: 0 8px;
+  border-radius: 9px;
+  background: #07569a;
+  color: #ffffff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 850;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Footer */
+
+.sidebar__footer {
+  display: grid;
+  gap: 12px;
+  padding: 18px 15px 18px;
+  border-top: 0;
+}
+
+.ceo-profile {
+  min-height: 92px;
+  padding: 15px;
+  border: 1px solid rgba(124, 187, 232, 0.15);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.025)
+    );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.ceo-profile .avatar {
+  width: 46px;
+  height: 46px;
+  font-size: 12px;
+}
+
+.ceo-profile > span:nth-child(2) strong {
+  font-size: 13px;
+}
+
+.ceo-profile > span:nth-child(2) small {
+  margin-top: 4px;
+  color: #9cb9ce;
+  font-size: 9px;
+}
+
+.ceo-profile::after {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(27, 166, 106, 0.12);
+  color: #52da92;
+  content: "● Live";
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.ceo-profile > svg {
+  display: none;
+}
+
+/* Nasconde il logout dalla vista principale della sidebar */
+
+.sidebar-logout {
+  display: none;
+}
+
+/* Stato sistema separato */
+
+.system-state {
+  min-height: 108px;
+  align-items: flex-start;
+  padding: 18px;
+  border: 1px solid rgba(124, 187, 232, 0.13);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.018)
+    );
+}
+
+.system-state::before {
+  grid-column: 1 / -1;
+  display: block;
+  margin-bottom: 12px;
+  color: #91aeca;
+  content: "STATO SISTEMA";
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.system-state .status-dot {
+  margin-top: 4px;
+}
+
+.system-state strong {
+  color: #dcebf6;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.system-state small {
+  display: block;
+  margin-top: 4px;
+  color: #a8bfd0;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+/* Desktop medio */
+
+@media (max-width: 1380px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main {
+    margin-left: 220px;
+  }
+
+  .sidebar__top {
+    min-height: 98px;
+  }
+
+  .sidebar .brand__mark {
+    width: 52px;
+    height: 52px;
+  }
+
+  .nav__item {
+    min-height: 48px;
+    font-size: 11px;
+  }
+
+  .nav__item--active {
+    min-height: 55px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: min(300px, 88vw);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · SIDEBAR COMPLETA
+   Profilo e stato sistema sempre visibili
+   ========================================================= */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: 232px;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Logo: altezza controllata */
+
+.sidebar__top {
+  flex: 0 0 auto;
+  min-height: 98px;
+  padding: 19px 18px 14px;
+}
+
+/* Menu centrale: occupa solo lo spazio disponibile */
+
+.sidebar .nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 4px;
+  padding: 10px 14px 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar .nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Titolo Governo centrale */
+
+.sidebar .nav__label {
+  flex: 0 0 auto;
+  margin: 0 16px 11px;
+  font-size: 8px;
+  letter-spacing: 0.17em;
+}
+
+/* Voci menu compatte ma leggibili */
+
+.sidebar .nav__item {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: 0 15px;
+  border-radius: 13px;
+  font-size: 11px;
+}
+
+.sidebar .nav__item--active {
+  min-height: 55px;
+  border-radius: 17px;
+}
+
+.sidebar .nav__item svg {
+  width: 19px;
+  height: 19px;
+}
+
+.sidebar .nav__item em {
+  min-width: 27px;
+  height: 27px;
+  padding: 0 7px;
+  border-radius: 9px;
+}
+
+/* Footer sempre presente nella parte bassa */
+
+.sidebar__footer {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px 15px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 32, 57, 0),
+      rgba(5, 32, 57, 0.96) 18%,
+      #052039 100%
+    );
+}
+
+/* Card profilo */
+
+.sidebar .ceo-profile {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid rgba(124, 187, 232, 0.15);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.022)
+    );
+  color: #ffffff;
+  text-align: left;
+}
+
+.sidebar .ceo-profile .avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.84);
+  border-radius: 999px;
+  background: #edf4f8;
+  color: #173b5a;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) {
+  min-width: 0;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) strong {
+  display: block;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) small {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #a8c1d4;
+  font-size: 8px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Badge Live */
+
+.sidebar .ceo-profile::after {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 27px;
+  padding: 0 9px;
+  border: 1px solid rgba(64, 211, 139, 0.12);
+  border-radius: 999px;
+  background: rgba(27, 166, 106, 0.12);
+  color: #52da92;
+  content: "● Live";
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.sidebar .ceo-profile > svg {
+  display: none;
+}
+
+/* Card Stato sistema */
+
+.sidebar .system-state {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  min-height: 92px;
+  padding: 15px;
+  border: 1px solid rgba(124, 187, 232, 0.13);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.018)
+    );
+}
+
+.sidebar .system-state::before {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+  color: #8eabc2;
+  content: "STATO SISTEMA";
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+}
+
+.sidebar .system-state .status-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.sidebar .system-state strong {
+  display: block;
+  color: #dcebf6;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.sidebar .system-state small {
+  display: block;
+  margin-top: 3px;
+  color: #9fb8ca;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+/* Il logout resta disponibile dal profilo, non occupa spazio */
+
+.sidebar .sidebar-logout {
+  display: none;
+}
+
+/* Schermi bassi: il menu centrale scorre, il footer resta fermo */
+
+@media (max-height: 820px) {
+  .sidebar__top {
+    min-height: 86px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+  }
+
+  .sidebar .brand__mark {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sidebar .nav {
+    gap: 2px;
+    padding-top: 7px;
+  }
+
+  .sidebar .nav__label {
+    margin-bottom: 7px;
+  }
+
+  .sidebar .nav__item {
+    min-height: 41px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 49px;
+  }
+
+  .sidebar__footer {
+    gap: 8px;
+    padding-top: 7px;
+    padding-bottom: 10px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 70px;
+    padding: 10px;
+  }
+
+  .sidebar .system-state {
+    min-height: 78px;
+    padding: 12px;
+  }
+}
+
+/* MacBook Air con altezza ridotta */
+
+@media (max-height: 720px) {
+  .sidebar .nav__item {
+    min-height: 37px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 45px;
+  }
+
+  .sidebar .nav__item svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 62px;
+  }
+
+  .sidebar .system-state {
+    min-height: 66px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: min(300px, 88vw);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   ECCOMI OS 2.0 · FIX IMPOSTAZIONI SIDEBAR
+   Mantiene visibili tutte le voci prima del footer
+   ========================================================= */
+
+.sidebar .nav {
+  gap: 2px;
+  padding-top: 7px;
+  padding-bottom: 6px;
+}
+
+.sidebar .nav__label {
+  margin-bottom: 7px;
+}
+
+.sidebar .nav__item {
+  min-height: 39px;
+  padding: 0 14px;
+  font-size: 10.5px;
+}
+
+.sidebar .nav__item--active {
+  min-height: 47px;
+}
+
+.sidebar .nav__item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar .nav__item em {
+  min-width: 26px;
+  height: 26px;
+}
+
+/* Recupera spazio verticale senza comprimere il footer */
+
+.sidebar__top {
+  min-height: 84px;
+  padding-top: 14px;
+  padding-bottom: 9px;
+}
+
+.sidebar .brand__mark {
+  width: 47px;
+  height: 47px;
+}
+
+.brand__text strong {
+  font-size: 15px;
+}
+
+.brand__text small {
+  margin-top: 4px;
+  font-size: 8px;
+}
+
+.sidebar__footer {
+  gap: 8px;
+  padding-top: 7px;
+}
+
+/* MacBook Air: tutte le voci devono essere visibili */
+
+@media (max-height: 800px) {
+  .sidebar .nav__item {
+    min-height: 36px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 44px;
+  }
+
+  .sidebar .nav {
+    gap: 1px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 60px;
+  }
+
+  .sidebar .system-state {
+    min-height: 64px;
+  }
+}
+
+/* Rimuove l'etichetta GOVERNO CENTRALE dalla sidebar */
+
+.sidebar .nav__label {
+  display: none;
+}
+
+.sidebar .nav {
+  padding-top: 10px;
+}
+
+/* Recupera ulteriore spazio verticale */
+
+.sidebar__top {
+  min-height: 80px;
+  padding-bottom: 8px;
+}
+
+@media (max-height: 800px) {
+  .sidebar__top {
+    min-height: 76px;
+  }
+
+  .sidebar .nav {
+    padding-top: 6px;
+  }
+}

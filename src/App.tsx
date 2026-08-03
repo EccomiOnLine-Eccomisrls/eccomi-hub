@@ -59,19 +59,8 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
-import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
-import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
-import { AppRegistry } from "./components/AppRegistry";
-import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
-import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
-import { DataTrustPanel } from "./components/DataTrustPanel";
-import { ExecutiveHealth } from "./components/ExecutiveHealth";
-import { CeoMorningBrief } from "./components/CeoMorningBrief";
-import { WhatChanged } from "./components/WhatChanged";
-import { ExecutiveCopilot } from "./components/ExecutiveCopilot";
-import { DecisionAssistant } from "./components/DecisionAssistant";
-import { SystemPulse } from "./components/SystemPulse";
+import { ExecutiveHomeOs2 } from "./components/ExecutiveHomeOs2";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -1399,33 +1388,44 @@ export default function Home() {
         </header>
 
         <div className="content">
-          <div className="page-heading">
-            <div>
-              <span className="eyebrow">{title.eyebrow}</span>
-              <h1>{title.title}</h1>
-              <p>{title.subtitle}</p>
+          {view !== "dashboard" && (
+            <div className="page-heading">
+              <div>
+                <span className="eyebrow">{title.eyebrow}</span>
+                <h1>{title.title}</h1>
+                <p>{title.subtitle}</p>
+              </div>
+
+              <div className="heading-actions">
+                {postaState === "ready" && (
+                  <span className="live-pill">
+                    <span /> Posta collegata
+                  </span>
+                )}
+
+                {noleggioState === "ready" && (
+                  <span className="live-pill">
+                    <span /> Noleggio collegato
+                  </span>
+                )}
+
+                {testMode && (
+                  <span className="demo-pill">
+                    <span />
+                    {postaState === "ready" ||
+                    noleggioState === "ready"
+                      ? "Altri dati dimostrativi"
+                      : "Dati dimostrativi"}
+                  </span>
+                )}
+
+                <span className="today-pill">
+                  <Clock3 size={15} />
+                  {formatToday()}
+                </span>
+              </div>
             </div>
-            <div className="heading-actions">
-              {postaState === "ready" && (
-                <span className="live-pill">
-                  <span /> Posta collegata
-                </span>
-              )}
-              {noleggioState === "ready" && (
-                <span className="live-pill">
-                  <span /> Noleggio collegato
-                </span>
-              )}
-              {testMode && (
-                <span className="demo-pill">
-                  <span /> {postaState === "ready" || noleggioState === "ready" ? "Altri dati dimostrativi" : "Dati dimostrativi"}
-                </span>
-              )}
-              <span className="today-pill">
-                <Clock3 size={15} /> {formatToday()}
-              </span>
-            </div>
-          </div>
+          )}
 
           {view === "dashboard" && (
             <DashboardView
@@ -2081,114 +2081,47 @@ function DashboardView({
   onSelectEcosystem: (item: Ecosystem) => void;
   onNewEntry: () => void;
 }) {
-  const postaLive = postaState === "ready" ? postaSummary : null;
-  const noleggioLive = noleggioState === "ready" ? noleggioSummary : null;
-  const openDecisionCount = decisions.filter(
+  const postaLive =
+    postaState === "ready" ? postaSummary : null;
 
+  const noleggioLive =
+    noleggioState === "ready" ? noleggioSummary : null;
+
+  const openDecisionCount = decisions.filter(
     (item) => item.status !== "Decisa",
   ).length;
 
-  return (
-    <div className="dashboard-stack">
+  const liveEcosystemCount = [
+    postaState === "ready",
+    noleggioState === "ready",
+  ].filter(Boolean).length;
 
+  const postaOpen =
+    postaLive?.summary.open || 0;
+
+  const noleggioActivities =
+    (noleggioLive?.summary.pendingApproval || 0) +
+    (noleggioLive?.summary.newLeads || 0) +
+    (noleggioLive?.summary.workingLeads || 0);
+
+  const operationalItems =
+    postaOpen + noleggioActivities;
+
+  return (
+    <div className="dashboard-stack dashboard-stack--os2">
       <ExecutiveNavigator />
 
-      <CeoMorningBrief
+      <ExecutiveHomeOs2
         displayName={displayName}
         priorities={priorities}
         openDecisionCount={openDecisionCount}
-        onNavigate={onNavigate}
-        onOpenDecisionCenter={() => onNavigate("decisions")}
-      />
-
-      <WhatChanged
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        onOpenPriorities={() => onNavigate("ai")}
-        onOpenDecisions={() => onNavigate("decisions")}
-      />
-
-      <ExecutiveCopilot
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        postaState={postaState}
-        noleggioState={noleggioState}
+        liveEcosystemCount={liveEcosystemCount}
+        operationalItems={operationalItems}
+        postaOpen={postaOpen}
+        noleggioActivities={noleggioActivities}
+        testMode={testMode}
         onNavigate={onNavigate}
       />
-
-      <DecisionAssistant
-        decisions={decisions}
-        onOpenDecisionCenter={() => onNavigate("decisions")}
-      />
-
-      <ExecutiveHealth
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        postaState={postaState}
-        noleggioState={noleggioState}
-        onOpenPriorities={() => onNavigate("ai")}
-        onOpenDecisions={() => onNavigate("decisions")}
-      />
-
-      <DataTrustPanel />
-
-      <SystemPulse
-        postaState={postaState}
-        noleggioState={noleggioState}
-        openDecisionCount={openDecisionCount}
-        onOpenPosta={() => onNavigate("posta")}
-        onOpenNoleggio={() => onNavigate("noleggio")}
-        onOpenDecisionCenter={() => onNavigate("decisions")}
-      />
-
-      <div id="executive-section-snapshot" className="executive-section-anchor">
-      <ExecutiveSnapshot
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        postaState={postaState}
-        noleggioState={noleggioState}
-        onOpenPriorities={() => onNavigate("ai")}
-        onOpenDecisions={() => onNavigate("decisions")}
-        onOpenPosta={() => onNavigate("posta")}
-        onOpenNoleggio={() => onNavigate("noleggio")}
-      />
-      </div>
-
-      <div id="executive-section-timeline" className="executive-section-anchor">
-      <ExecutiveTimeline
-        priorities={priorities}
-        onNavigate={onNavigate}
-      />
-      </div>
-
-      <div id="executive-section-apps" className="executive-section-anchor">
-      <AppRegistry
-        onOpenPosta={() => onNavigate("posta")}
-        onOpenNoleggio={() => onNavigate("noleggio")}
-        onOpenEcosystems={() => onNavigate("ecosystems")}
-      />
-      </div>
-
-      <div id="executive-section-intelligence" className="executive-section-anchor">
-      <ExecutiveIntelligence
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        onOpenDecisionCenter={() => onNavigate("decisions")}
-        onOpenAI={() => onNavigate("ai")}
-      />
-      </div>
-
-      <div id="executive-section-actions" className="executive-section-anchor">
-      <ExecutiveActionQueue
-        priorities={priorities}
-        openDecisionCount={openDecisionCount}
-        onNavigate={onNavigate}
-        onOpenDecisionCenter={() => onNavigate("decisions")}
-      />
-      </div>
-
-
-
     </div>
   );
 }
