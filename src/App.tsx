@@ -59,19 +59,8 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AIAlertCenter } from "./components/AIAlertCenter";
-import { ExecutiveSnapshot } from "./components/ExecutiveSnapshot";
-import { ExecutiveTimeline } from "./components/ExecutiveTimeline";
-import { AppRegistry } from "./components/AppRegistry";
-import { ExecutiveIntelligence } from "./components/ExecutiveIntelligence";
-import { ExecutiveActionQueue } from "./components/ExecutiveActionQueue";
 import { ExecutiveNavigator } from "./components/ExecutiveNavigator";
-import { DataTrustPanel } from "./components/DataTrustPanel";
-import { ExecutiveHealth } from "./components/ExecutiveHealth";
-import { CeoMorningBrief } from "./components/CeoMorningBrief";
-import { WhatChanged } from "./components/WhatChanged";
-import { ExecutiveCopilot } from "./components/ExecutiveCopilot";
-import { DecisionAssistant } from "./components/DecisionAssistant";
-import { SystemPulse } from "./components/SystemPulse";
+import { ExecutiveHomeOs2 } from "./components/ExecutiveHomeOs2";
 import {
   advanceHubEntryToEvaluation,
   advanceHubProjectToTest,
@@ -2096,318 +2085,32 @@ function DashboardView({
     noleggioState === "ready",
   ].filter(Boolean).length;
 
-  const criticalPriorityCount = priorities.filter(
-    (item) =>
-      item.severity === "critical" ||
-      item.severity === "warning",
-  ).length;
+  const postaOpen =
+    postaLive?.summary.open || 0;
 
-  const totalOperationalItems =
-    (postaLive?.summary.open || 0) +
+  const noleggioActivities =
     (noleggioLive?.summary.pendingApproval || 0) +
     (noleggioLive?.summary.newLeads || 0) +
     (noleggioLive?.summary.workingLeads || 0);
+
+  const operationalItems =
+    postaOpen + noleggioActivities;
 
   return (
     <div className="dashboard-stack dashboard-stack--os2">
       <ExecutiveNavigator />
 
-      <section
-        className="os2-dashboard-overview"
-        aria-label="Riepilogo operativo ECCOMI OS"
-      >
-        <div className="os2-dashboard-overview__copy">
-          <span className="os2-dashboard-overview__eyebrow">
-            ECCOMI OS · CEO WORKSPACE
-          </span>
-
-          <h2>
-            La tua azienda, sotto controllo.
-          </h2>
-
-          <p>
-            ECCOMI OS raccoglie decisioni, priorità e attività
-            operative in un’unica cabina di regia.
-          </p>
-        </div>
-
-        <div className="os2-dashboard-overview__status">
-          <span
-            className={
-              testMode
-                ? "os2-dashboard-overview__mode os2-dashboard-overview__mode--demo"
-                : "os2-dashboard-overview__mode os2-dashboard-overview__mode--live"
-            }
-          >
-            <i />
-            {testMode ? "Modalità Demo" : "Sistemi Live"}
-          </span>
-
-          <small>
-            {greeting}
-          </small>
-        </div>
-      </section>
-
-      <section
-        className="os2-kpi-grid"
-        aria-label="Indicatori principali"
-      >
-        <button
-          type="button"
-          className="os2-kpi-card os2-kpi-card--blue"
-          onClick={() => onNavigate("ecosystems")}
-        >
-          <span className="os2-kpi-card__label">
-            Ecosistemi collegati
-          </span>
-
-          <strong>{liveEcosystemCount}</strong>
-
-          <small>
-            Posta e Noleggio monitorati in tempo reale
-          </small>
-        </button>
-
-        <button
-          type="button"
-          className="os2-kpi-card os2-kpi-card--violet"
-          onClick={() => onNavigate("decisions")}
-        >
-          <span className="os2-kpi-card__label">
-            Decisioni aperte
-          </span>
-
-          <strong>{openDecisionCount}</strong>
-
-          <small>
-            Richiedono valutazione o approvazione
-          </small>
-        </button>
-
-        <button
-          type="button"
-          className="os2-kpi-card os2-kpi-card--amber"
-          onClick={() => onNavigate("ai")}
-        >
-          <span className="os2-kpi-card__label">
-            Priorità da gestire
-          </span>
-
-          <strong>{criticalPriorityCount}</strong>
-
-          <small>
-            Alert critici e operativi rilevati
-          </small>
-        </button>
-
-        <button
-          type="button"
-          className="os2-kpi-card os2-kpi-card--green"
-          onClick={() => onNavigate("operations")}
-        >
-          <span className="os2-kpi-card__label">
-            Attività operative
-          </span>
-
-          <strong>{totalOperationalItems}</strong>
-
-          <small>
-            Pratiche, lead e approvazioni da lavorare
-          </small>
-        </button>
-      </section>
-
-      <section className="os2-dashboard-section">
-        <div className="os2-dashboard-section__heading">
-          <div>
-            <span>OGGI</span>
-            <h2>Priorità del CEO</h2>
-          </div>
-
-          <p>
-            Ciò che richiede attenzione prima di tutto il resto.
-          </p>
-        </div>
-
-        <CeoMorningBrief
-          displayName={displayName}
-          priorities={priorities}
-          openDecisionCount={openDecisionCount}
-          onNavigate={onNavigate}
-          onOpenDecisionCenter={() =>
-            onNavigate("decisions")
-          }
-        />
-      </section>
-
-      <section className="os2-dashboard-grid os2-dashboard-grid--balanced">
-        <WhatChanged
-          priorities={priorities}
-          openDecisionCount={openDecisionCount}
-          onOpenPriorities={() => onNavigate("ai")}
-          onOpenDecisions={() => onNavigate("decisions")}
-        />
-
-        <div
-          id="executive-section-timeline"
-          className="executive-section-anchor"
-        >
-          <ExecutiveTimeline
-            priorities={priorities}
-            onNavigate={onNavigate}
-          />
-        </div>
-      </section>
-
-      <section className="os2-dashboard-section">
-        <div className="os2-dashboard-section__heading">
-          <div>
-            <span>INTELLIGENZA OPERATIVA</span>
-            <h2>Analizza e decidi</h2>
-          </div>
-
-          <p>
-            Contesto, suggerimenti e azioni in un unico punto.
-          </p>
-        </div>
-
-        <div className="os2-dashboard-grid os2-dashboard-grid--intelligence">
-          <ExecutiveCopilot
-            priorities={priorities}
-            openDecisionCount={openDecisionCount}
-            postaState={postaState}
-            noleggioState={noleggioState}
-            onNavigate={onNavigate}
-          />
-
-          <DecisionAssistant
-            decisions={decisions}
-            onOpenDecisionCenter={() =>
-              onNavigate("decisions")
-            }
-          />
-        </div>
-      </section>
-
-      <section className="os2-dashboard-grid os2-dashboard-grid--balanced">
-        <div
-          id="executive-section-snapshot"
-          className="executive-section-anchor"
-        >
-          <ExecutiveSnapshot
-            priorities={priorities}
-            openDecisionCount={openDecisionCount}
-            postaState={postaState}
-            noleggioState={noleggioState}
-            onOpenPriorities={() => onNavigate("ai")}
-            onOpenDecisions={() =>
-              onNavigate("decisions")
-            }
-            onOpenPosta={() => onNavigate("posta")}
-            onOpenNoleggio={() =>
-              onNavigate("noleggio")
-            }
-          />
-        </div>
-
-        <ExecutiveHealth
-          priorities={priorities}
-          openDecisionCount={openDecisionCount}
-          postaState={postaState}
-          noleggioState={noleggioState}
-          onOpenPriorities={() => onNavigate("ai")}
-          onOpenDecisions={() => onNavigate("decisions")}
-        />
-      </section>
-
-      <section className="os2-dashboard-section">
-        <div className="os2-dashboard-section__heading">
-          <div>
-            <span>CONTROLLO ESECUTIVO</span>
-            <h2>Intelligence e azioni</h2>
-          </div>
-
-          <p>
-            Dalle informazioni alle attività concrete.
-          </p>
-        </div>
-
-        <div className="os2-dashboard-grid os2-dashboard-grid--balanced">
-          <div
-            id="executive-section-intelligence"
-            className="executive-section-anchor"
-          >
-            <ExecutiveIntelligence
-              priorities={priorities}
-              openDecisionCount={openDecisionCount}
-              onOpenDecisionCenter={() =>
-                onNavigate("decisions")
-              }
-              onOpenAI={() => onNavigate("ai")}
-            />
-          </div>
-
-          <div
-            id="executive-section-actions"
-            className="executive-section-anchor"
-          >
-            <ExecutiveActionQueue
-              priorities={priorities}
-              openDecisionCount={openDecisionCount}
-              onNavigate={onNavigate}
-              onOpenDecisionCenter={() =>
-                onNavigate("decisions")
-              }
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="os2-dashboard-section os2-dashboard-section--technical">
-        <div className="os2-dashboard-section__heading">
-          <div>
-            <span>SISTEMA</span>
-            <h2>Affidabilità e collegamenti</h2>
-          </div>
-
-          <p>
-            Stato tecnico, qualità dei dati e applicazioni attive.
-          </p>
-        </div>
-
-        <div className="os2-dashboard-grid os2-dashboard-grid--technical">
-          <DataTrustPanel />
-
-          <SystemPulse
-            postaState={postaState}
-            noleggioState={noleggioState}
-            openDecisionCount={openDecisionCount}
-            onOpenPosta={() => onNavigate("posta")}
-            onOpenNoleggio={() =>
-              onNavigate("noleggio")
-            }
-            onOpenDecisionCenter={() =>
-              onNavigate("decisions")
-            }
-          />
-
-          <div
-            id="executive-section-apps"
-            className="executive-section-anchor"
-          >
-            <AppRegistry
-              onOpenPosta={() => onNavigate("posta")}
-              onOpenNoleggio={() =>
-                onNavigate("noleggio")
-              }
-              onOpenEcosystems={() =>
-                onNavigate("ecosystems")
-              }
-            />
-          </div>
-        </div>
-      </section>
+      <ExecutiveHomeOs2
+        displayName={displayName}
+        priorities={priorities}
+        openDecisionCount={openDecisionCount}
+        liveEcosystemCount={liveEcosystemCount}
+        operationalItems={operationalItems}
+        postaOpen={postaOpen}
+        noleggioActivities={noleggioActivities}
+        testMode={testMode}
+        onNavigate={onNavigate}
+      />
     </div>
   );
 }
