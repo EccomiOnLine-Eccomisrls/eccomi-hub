@@ -9,8 +9,9 @@
     "postbuild": "node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
     "test:auth": "npm run build && node scripts/test-sites-auth-worker.mjs",
+    "check:os": "node scripts/check-os-registry.mjs",
     "check:executive": "node scripts/check-executive-home.mjs",
-    "verify": "npm run check:executive && npm run build"
+    "verify": "npm run check:os && npm run check:executive && npm run build"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
