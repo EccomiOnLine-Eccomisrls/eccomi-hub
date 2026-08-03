@@ -1243,24 +1243,21 @@ export default function Home() {
           })}
         </nav>
 
-        <div className="sidebar__footer">
-          <button className="ceo-profile" onClick={() => setToast(`Profilo ${roleLabel}: ${currentUser?.email || "utente"}`) }>
-            <span className="avatar">{initials(currentUser?.fullName || "Salvatore Del Libano")}</span>
-            <span>
-              <strong>{displayName}</strong>
-              <small>{roleLabel} · Accesso riconosciuto</small>
+        <div className="sidebar__footer sidebar__footer--os">
+          <div className="sidebar-os-release">
+            <span className="sidebar-os-release__mark">
+              <Sparkles size={18} />
             </span>
-            <ChevronRight size={16} />
-          </button>
-          <button className="sidebar-logout" onClick={signOut}>
-            <LogOut size={16} /> Esci da ECCOMI OS
-          </button>
-          <div className="system-state">
-            <span className="status-dot status-dot--green" />
-            <span>
-              <strong>Sistemi operativi</strong>
-              <small>Ultimo controllo: ora</small>
+
+            <span className="sidebar-os-release__content">
+              <strong>ECCOMI OS</strong>
+              <small>Release 1.4.0</small>
             </span>
+          </div>
+
+          <div className="sidebar-os-signature">
+            <AtSign size={15} />
+            <span>By Eccomi OnLine</span>
           </div>
         </div>
       </aside>

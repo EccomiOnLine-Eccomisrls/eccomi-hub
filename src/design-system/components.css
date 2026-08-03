@@ -540,3 +540,348 @@ button.eco-kpi:hover {
     min-height: 125px;
   }
 }
+
+/* ECCOMI OS FIXED EXECUTIVE NAVIGATOR START */
+
+.executive-navigator.executive-navigator--fixed-bottom {
+  position: fixed;
+  z-index: 150;
+  left: var(--sidebar-width, 248px);
+  right: 0;
+  bottom: 0;
+  top: auto;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    8px
+    max(20px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  border-top: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.executive-navigator--fixed-bottom
+.executive-navigator__items {
+  width: min(820px, 100%);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+}
+
+.executive-navigator--fixed-bottom
+.executive-navigator__item {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--eco-text-secondary, #526176);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.executive-navigator--fixed-bottom
+.executive-navigator__item:hover {
+  color: var(--eco-primary-700, #1554a2);
+  background: rgba(37, 99, 235, 0.07);
+}
+
+.executive-navigator--fixed-bottom
+.executive-navigator__item--active {
+  color: var(--eco-primary-700, #1554a2);
+  background: rgba(37, 99, 235, 0.11);
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
+}
+
+.dashboard-stack--os2 {
+  padding-bottom: 88px;
+}
+
+[id^="executive-section-"] {
+  scroll-margin-top: 96px;
+}
+
+@media (max-width: 900px) {
+  .executive-navigator.executive-navigator--fixed-bottom {
+    left: 0;
+    min-height: 68px;
+    padding:
+      7px
+      8px
+      max(7px, env(safe-area-inset-bottom));
+  }
+
+  .executive-navigator--fixed-bottom
+  .executive-navigator__items {
+    width: 100%;
+    gap: 2px;
+  }
+
+  .executive-navigator--fixed-bottom
+  .executive-navigator__item {
+    min-height: 50px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 5px 2px;
+    font-size: 10px;
+  }
+
+  .dashboard-stack--os2 {
+    padding-bottom: 94px;
+  }
+}
+
+/* ECCOMI OS FIXED EXECUTIVE NAVIGATOR END */
+
+/* ECCOMI OS EXECUTIVE DOCK 1.4 START */
+
+.sidebar__footer--os {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+}
+
+.sidebar-os-release,
+.sidebar-os-signature {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: linear-gradient(
+    145deg,
+    rgba(18, 45, 75, 0.94),
+    rgba(8, 29, 52, 0.98)
+  );
+}
+
+.sidebar-os-release {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+}
+
+.sidebar-os-release__mark {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #f7c948;
+  background: rgba(247, 201, 72, 0.12);
+  border: 1px solid rgba(247, 201, 72, 0.28);
+}
+
+.sidebar-os-release__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-os-release__content strong {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.sidebar-os-release__content small {
+  color: #6ee7a0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sidebar-os-signature {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.executive-navigator.executive-navigator--os-dock {
+  position: fixed;
+  z-index: 150;
+  left: var(--sidebar-width, 248px);
+  right: 16px;
+  bottom: 12px;
+  top: auto;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1px solid rgba(80, 132, 184, 0.32);
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    rgba(8, 35, 62, 0.98),
+    rgba(12, 50, 83, 0.98)
+  );
+  box-shadow:
+    0 18px 40px rgba(4, 20, 38, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.executive-navigator--os-dock
+.executive-navigator__items {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.executive-navigator--os-dock
+.executive-navigator__item {
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-right: 1px solid rgba(148, 180, 209, 0.12);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.87);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.executive-navigator--os-dock
+.executive-navigator__item:first-child {
+  border-radius: 12px 0 0 12px;
+}
+
+.executive-navigator--os-dock
+.executive-navigator__item:last-child {
+  border-right: 0;
+}
+
+.executive-navigator--os-dock
+.executive-navigator__item:hover {
+  color: #ffffff;
+  background: rgba(64, 137, 205, 0.16);
+}
+
+.executive-navigator--os-dock
+.executive-navigator__item--active {
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    rgba(36, 111, 178, 0.34),
+    rgba(32, 90, 143, 0.24)
+  );
+}
+
+.executive-navigator__separator {
+  width: 1px;
+  height: 44px;
+  margin: 0 12px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.executive-navigator--os-dock
+.executive-navigator__top {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(86, 159, 224, 0.5);
+  border-radius: 16px;
+  color: #ffffff;
+  background: linear-gradient(
+    145deg,
+    rgba(20, 67, 108, 0.96),
+    rgba(10, 43, 75, 0.98)
+  );
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.executive-navigator--os-dock
+.executive-navigator__top:hover {
+  transform: translateY(-2px);
+}
+
+.dashboard-stack--os2 {
+  padding-bottom: 108px;
+}
+
+[id^="executive-section-"] {
+  scroll-margin-top: 96px;
+}
+
+@media (max-width: 900px) {
+  .executive-navigator.executive-navigator--os-dock {
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    min-height: 72px;
+    padding: 7px 8px;
+  }
+
+  .executive-navigator--os-dock
+  .executive-navigator__item {
+    min-height: 54px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 3px;
+    font-size: 10px;
+  }
+
+  .executive-navigator--os-dock
+  .executive-navigator__item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .executive-navigator__separator {
+    margin: 0 7px;
+  }
+
+  .executive-navigator--os-dock
+  .executive-navigator__top {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .dashboard-stack--os2 {
+    padding-bottom: 104px;
+  }
+}
+
+/* ECCOMI OS EXECUTIVE DOCK 1.4 END */
