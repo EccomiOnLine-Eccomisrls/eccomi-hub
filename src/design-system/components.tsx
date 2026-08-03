@@ -172,6 +172,61 @@ export function EcoKpiCard({
   );
 }
 
+type EcoToolCardProps = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  action: string;
+  tone?: Tone;
+  icon?: ReactNode;
+  onClick: () => void;
+  className?: string;
+};
+
+export function EcoToolCard({
+  eyebrow,
+  title,
+  description,
+  action,
+  tone = "primary",
+  icon,
+  onClick,
+  className,
+}: EcoToolCardProps) {
+  return (
+    <EcoCard
+      tone={tone}
+      interactive
+      className={joinClasses(
+        "eco-tool-card",
+        `eco-tool-card--${tone}`,
+        className,
+      )}
+    >
+      {icon && (
+        <span className="eco-tool-card__icon">
+          {icon}
+        </span>
+      )}
+
+      <div className="eco-tool-card__copy">
+        <small>{eyebrow}</small>
+        <strong>{title}</strong>
+        <p>{description}</p>
+      </div>
+
+      <EcoButton
+        variant="secondary"
+        size="sm"
+        iconPosition="end"
+        onClick={onClick}
+      >
+        {action}
+      </EcoButton>
+    </EcoCard>
+  );
+}
+
 type EcoSectionHeaderProps = {
   eyebrow?: string;
   title: string;
