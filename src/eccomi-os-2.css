@@ -3085,3 +3085,30 @@ select {
     min-height: 64px;
   }
 }
+
+/* Rimuove l'etichetta GOVERNO CENTRALE dalla sidebar */
+
+.sidebar .nav__label {
+  display: none;
+}
+
+.sidebar .nav {
+  padding-top: 10px;
+}
+
+/* Recupera ulteriore spazio verticale */
+
+.sidebar__top {
+  min-height: 80px;
+  padding-bottom: 8px;
+}
+
+@media (max-height: 800px) {
+  .sidebar__top {
+    min-height: 76px;
+  }
+
+  .sidebar .nav {
+    padding-top: 6px;
+  }
+}
