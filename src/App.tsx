@@ -290,38 +290,8 @@ const clients: Client[] = [
   },
 ];
 
-const initialDecisions: Decision[] = [
-  {
-    id: 1,
-    title: "Approvare il test della nuova offerta dual Energia",
-    ecosystem: "Eccomi Energia",
-    impact: "+€ 4.800/mese stimati",
-    urgency: "Alta",
-    due: "Oggi",
-    status: "Da analizzare",
-    recommendation: "Avviare un test controllato su 30 clienti con verifica dopo 14 giorni.",
-  },
-  {
-    id: 2,
-    title: "Rivedere la soglia del supplemento peso errato",
-    ecosystem: "Eccomi Spedizioni",
-    impact: "Margine +1,8%",
-    urgency: "Media",
-    due: "Domani",
-    status: "Da analizzare",
-    recommendation: "Mantenere la soglia attuale e migliorare il controllo prima dell'acquisto.",
-  },
-  {
-    id: 3,
-    title: "Autorizzare l'apertura del progetto Eccomi PEC",
-    ecosystem: "Eccomi PEC",
-    impact: "Nuovo ecosistema",
-    urgency: "Bassa",
-    due: "24 lug",
-    status: "Informazioni richieste",
-    recommendation: "Completare prima l'analisi dei costi operativi e dei partner.",
-  },
-];
+const initialDecisions: Decision[] = [];
+
 
 const navItems: Array<{ key: ViewKey; label: string; icon: LucideIcon; badge?: string }> = [
   { key: "dashboard", label: "Dashboard CEO", icon: LayoutDashboard },
@@ -329,7 +299,7 @@ const navItems: Array<{ key: ViewKey; label: string; icon: LucideIcon; badge?: s
   { key: "clients", label: "Clienti", icon: Users },
   { key: "team", label: "Responsabili", icon: UserCog },
   { key: "operations", label: "Operatori e attività", icon: ClipboardCheck, badge: "12" },
-  { key: "decisions", label: "Decision Center", icon: Gavel, badge: "3" },
+  { key: "decisions", label: "Decision Center", icon: Gavel },
   { key: "ai", label: "AI e alert", icon: Sparkles, badge: "5" },
   { key: "reports", label: "Report", icon: BarChart3 },
   { key: "settings", label: "Impostazioni", icon: Settings },
@@ -2319,8 +2289,24 @@ function DecisionsView({
   const open = decisions.filter((decision) => decision.status !== "Decisa").length;
   return (
     <div className="view-stack">
-      <section className="decision-stats"><StatTile icon={Gavel} label="Da decidere" value={String(open)} note="1 ad alta priorità" color="red" /><StatTile icon={Clock3} label="In esecuzione" value={String(decisions.filter((decision) => decision.status !== "Decisa" && assignedToByDecision[decision.id]).length)} note="Assegnate al team" color="blue" /><StatTile icon={CheckCircle2} label="Verificate" value={String(decisions.filter((decision) => decision.status === "Decisa").length)} note="Questo mese" color="green" /><StatTile icon={TrendingUp} label="Impatto prodotto" value="€ 18,4K" note="Ultimi 90 giorni" color="purple" /></section>
-      <section className="decision-list">{decisions.map((decision) => (
+      <section className="decision-stats">
+        <StatTile icon={Gavel} label="Da decidere" value={String(open)} note="Solo decisioni reali" color="red" />
+        <StatTile icon={Clock3} label="In esecuzione" value={String(decisions.filter((decision) => decision.status !== "Decisa" && assignedToByDecision[decision.id]).length)} note="Assegnate al team" color="blue" />
+        <StatTile icon={CheckCircle2} label="Verificate" value={String(decisions.filter((decision) => decision.status === "Decisa").length)} note="Decisioni registrate" color="green" />
+        <StatTile icon={ShieldCheck} label="Qualità dati" value="100%" note="Nessun dato dimostrativo" color="purple" />
+      </section>
+      <section className="decision-list">
+        {!decisions.length && (
+          <div className="empty-state">
+            <ShieldCheck size={28} />
+            <strong>Nessuna decisione reale richiede il tuo intervento</strong>
+            <span>
+              Eccomi Posta e Noleggio sono monitorati. Energia, Spedizioni e PEC
+              non sono ancora collegati al motore decisionale.
+            </span>
+          </div>
+        )}
+        {decisions.map((decision) => (
         <article className={classNames("decision-card", decision.status === "Decisa" && "decision-card--done")} key={decision.id}>
           <div className="decision-card__status"><span className={`urgency-dot urgency-dot--${decision.urgency.toLowerCase()}`} /><span><small>{decision.ecosystem}</small><strong>{decision.urgency} priorità</strong></span></div>
           <div className="decision-card__main"><div className="decision-card__title"><h3>{decision.title}</h3><span className={`status-badge status-badge--${decision.status === "Decisa" ? "green" : decision.status === "Informazioni richieste" ? "amber" : "blue"}`}><span />{decision.status}</span></div>
