@@ -2999,3 +2999,89 @@ select {
     margin-left: 0;
   }
 }
+
+/* =========================================================
+   ECCOMI OS 2.0 · FIX IMPOSTAZIONI SIDEBAR
+   Mantiene visibili tutte le voci prima del footer
+   ========================================================= */
+
+.sidebar .nav {
+  gap: 2px;
+  padding-top: 7px;
+  padding-bottom: 6px;
+}
+
+.sidebar .nav__label {
+  margin-bottom: 7px;
+}
+
+.sidebar .nav__item {
+  min-height: 39px;
+  padding: 0 14px;
+  font-size: 10.5px;
+}
+
+.sidebar .nav__item--active {
+  min-height: 47px;
+}
+
+.sidebar .nav__item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar .nav__item em {
+  min-width: 26px;
+  height: 26px;
+}
+
+/* Recupera spazio verticale senza comprimere il footer */
+
+.sidebar__top {
+  min-height: 84px;
+  padding-top: 14px;
+  padding-bottom: 9px;
+}
+
+.sidebar .brand__mark {
+  width: 47px;
+  height: 47px;
+}
+
+.brand__text strong {
+  font-size: 15px;
+}
+
+.brand__text small {
+  margin-top: 4px;
+  font-size: 8px;
+}
+
+.sidebar__footer {
+  gap: 8px;
+  padding-top: 7px;
+}
+
+/* MacBook Air: tutte le voci devono essere visibili */
+
+@media (max-height: 800px) {
+  .sidebar .nav__item {
+    min-height: 36px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 44px;
+  }
+
+  .sidebar .nav {
+    gap: 1px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 60px;
+  }
+
+  .sidebar .system-state {
+    min-height: 64px;
+  }
+}
