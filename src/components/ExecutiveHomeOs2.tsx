@@ -97,6 +97,7 @@ export function ExecutiveHomeOs2({
   return (
     <div className="os2-operational-home">
       <section
+        id="executive-section-snapshot"
         className="os2-primary-kpis"
         aria-label="Indicatori principali"
       >
@@ -291,7 +292,10 @@ export function ExecutiveHomeOs2({
             Timeline esecutiva
           </span>
 
-          <article className="os2-timeline-card">
+          <article
+            id="executive-section-timeline"
+            className="os2-timeline-card"
+          >
             {mainPriorities.map((priority, index) => (
               <button
                 type="button"
@@ -321,7 +325,10 @@ export function ExecutiveHomeOs2({
       </section>
 
       <section className="os2-middle-grid">
-        <div className="os2-summary-section">
+        <div
+          id="executive-section-intelligence"
+          className="os2-summary-section"
+        >
           <span className="os2-section-label">
             Intelligenza operativa
           </span>
@@ -379,7 +386,7 @@ export function ExecutiveHomeOs2({
       </section>
 
       <section className="os2-bottom-grid">
-        <div>
+        <div id="executive-section-actions">
           <span className="os2-section-label">
             Intelligence e azioni
           </span>
@@ -407,7 +414,7 @@ export function ExecutiveHomeOs2({
           </div>
         </div>
 
-        <div>
+        <div id="executive-section-apps">
           <span className="os2-section-label">
             Sistema e collegamenti
           </span>
