@@ -2677,3 +2677,325 @@ select {
     margin-left: 0;
   }
 }
+
+/* =========================================================
+   ECCOMI OS 2.0 · SIDEBAR COMPLETA
+   Profilo e stato sistema sempre visibili
+   ========================================================= */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: 232px;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Logo: altezza controllata */
+
+.sidebar__top {
+  flex: 0 0 auto;
+  min-height: 98px;
+  padding: 19px 18px 14px;
+}
+
+/* Menu centrale: occupa solo lo spazio disponibile */
+
+.sidebar .nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 4px;
+  padding: 10px 14px 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar .nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Titolo Governo centrale */
+
+.sidebar .nav__label {
+  flex: 0 0 auto;
+  margin: 0 16px 11px;
+  font-size: 8px;
+  letter-spacing: 0.17em;
+}
+
+/* Voci menu compatte ma leggibili */
+
+.sidebar .nav__item {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: 0 15px;
+  border-radius: 13px;
+  font-size: 11px;
+}
+
+.sidebar .nav__item--active {
+  min-height: 55px;
+  border-radius: 17px;
+}
+
+.sidebar .nav__item svg {
+  width: 19px;
+  height: 19px;
+}
+
+.sidebar .nav__item em {
+  min-width: 27px;
+  height: 27px;
+  padding: 0 7px;
+  border-radius: 9px;
+}
+
+/* Footer sempre presente nella parte bassa */
+
+.sidebar__footer {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px 15px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 32, 57, 0),
+      rgba(5, 32, 57, 0.96) 18%,
+      #052039 100%
+    );
+}
+
+/* Card profilo */
+
+.sidebar .ceo-profile {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid rgba(124, 187, 232, 0.15);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.022)
+    );
+  color: #ffffff;
+  text-align: left;
+}
+
+.sidebar .ceo-profile .avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.84);
+  border-radius: 999px;
+  background: #edf4f8;
+  color: #173b5a;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) {
+  min-width: 0;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) strong {
+  display: block;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar .ceo-profile > span:nth-child(2) small {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #a8c1d4;
+  font-size: 8px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Badge Live */
+
+.sidebar .ceo-profile::after {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 27px;
+  padding: 0 9px;
+  border: 1px solid rgba(64, 211, 139, 0.12);
+  border-radius: 999px;
+  background: rgba(27, 166, 106, 0.12);
+  color: #52da92;
+  content: "● Live";
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.sidebar .ceo-profile > svg {
+  display: none;
+}
+
+/* Card Stato sistema */
+
+.sidebar .system-state {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  min-height: 92px;
+  padding: 15px;
+  border: 1px solid rgba(124, 187, 232, 0.13);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.018)
+    );
+}
+
+.sidebar .system-state::before {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+  color: #8eabc2;
+  content: "STATO SISTEMA";
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+}
+
+.sidebar .system-state .status-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.sidebar .system-state strong {
+  display: block;
+  color: #dcebf6;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.sidebar .system-state small {
+  display: block;
+  margin-top: 3px;
+  color: #9fb8ca;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+/* Il logout resta disponibile dal profilo, non occupa spazio */
+
+.sidebar .sidebar-logout {
+  display: none;
+}
+
+/* Schermi bassi: il menu centrale scorre, il footer resta fermo */
+
+@media (max-height: 820px) {
+  .sidebar__top {
+    min-height: 86px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+  }
+
+  .sidebar .brand__mark {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sidebar .nav {
+    gap: 2px;
+    padding-top: 7px;
+  }
+
+  .sidebar .nav__label {
+    margin-bottom: 7px;
+  }
+
+  .sidebar .nav__item {
+    min-height: 41px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 49px;
+  }
+
+  .sidebar__footer {
+    gap: 8px;
+    padding-top: 7px;
+    padding-bottom: 10px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 70px;
+    padding: 10px;
+  }
+
+  .sidebar .system-state {
+    min-height: 78px;
+    padding: 12px;
+  }
+}
+
+/* MacBook Air con altezza ridotta */
+
+@media (max-height: 720px) {
+  .sidebar .nav__item {
+    min-height: 37px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 45px;
+  }
+
+  .sidebar .nav__item svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .sidebar .ceo-profile {
+    min-height: 62px;
+  }
+
+  .sidebar .system-state {
+    min-height: 66px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: min(300px, 88vw);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+}
