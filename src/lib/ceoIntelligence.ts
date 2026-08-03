@@ -112,7 +112,6 @@ export function explainCeoPriority(
   };
 }
 
-
 export type CeoPriorityParams = {
   postaSummary: PostaSummary | null;
   postaState: "idle" | "loading" | "ready" | "error";
@@ -182,45 +181,12 @@ export function buildCeoPriorities(params: CeoPriorityParams): CeoPriority[] {
     );
   }
 
-  if (params.postaState === "ready" && params.postaSummary && params.postaSummary.summary.open > 0) {
-    priorities.push(
-      makePriority(
-        "warning",
-        "Pratiche Posta da lavorare",
-        `${params.postaSummary.summary.open} pratiche risultano ancora aperte e richiedono verifica operativa.`,
-        "Eccomi Posta",
-        "Apri area Posta",
-        "posta",
-      ),
-    );
-  }
-
-  if (params.noleggioState === "ready" && params.noleggioSummary) {
-    const toWork = params.noleggioSummary.summary.pendingApproval + params.noleggioSummary.summary.newLeads + params.noleggioSummary.summary.workingLeads;
-    const expiring = params.noleggioSummary.summary.expiring;
-
-    if (expiring > 0 || toWork > 0) {
-      priorities.push(
-        makePriority(
-          expiring > 0 ? "warning" : "opportunity",
-          expiring > 0 ? "Promozioni Noleggio in scadenza" : "Nuove opportunità Noleggio",
-          expiring > 0
-            ? `${expiring} promozioni risultano in scadenza e richiedono attenzione.`
-            : `${toWork} attività di Noleggio sono ancora da lavorare o da approvare.`,
-          "Eccomi Noleggio",
-          "Apri area Noleggio",
-          "noleggio",
-        ),
-      );
-    }
-  }
-
   if (!priorities.length) {
     priorities.push(
       makePriority(
         "info",
-        "Nessuna criticità bloccante rilevata",
-        "Gli indicatori correnti non mostrano criticità urgenti. Il piano resta monitorato in tempo reale.",
+        "Nessuna decisione richiede il tuo intervento",
+        "Gli ecosistemi collegati restano monitorati. Le attività operative continuano senza coinvolgere il CEO.",
         "Dashboard",
         "Apri dashboard",
         "dashboard",
@@ -279,12 +245,12 @@ export function buildExecutiveBriefing(
 
   if (warningCount > 0) {
     return {
-      headline: "Attenzione controllata",
+      headline: "Decisione urgente da completare",
       message:
         warningCount === 1
-          ? "È presente una priorità operativa da gestire oggi."
-          : `Sono presenti ${warningCount} priorità operative da gestire oggi.`,
-      objective: topPriority?.title || "Completare le priorità operative",
+          ? "È presente una decisione urgente che richiede il tuo intervento."
+          : `Sono presenti ${warningCount} decisioni urgenti che richiedono il tuo intervento.`,
+      objective: topPriority?.title || "Completare le decisioni urgenti",
     };
   }
 
@@ -314,7 +280,7 @@ export function buildExecutiveBriefing(
 
   if (params.postaSummary) {
     realSignals.push(
-      `${params.postaSummary.summary.open} pratiche Posta aperte`,
+      `${params.postaSummary.summary.open} pratiche Posta operative`,
     );
   }
 
@@ -325,19 +291,18 @@ export function buildExecutiveBriefing(
       params.noleggioSummary.summary.workingLeads;
 
     realSignals.push(
-      `${noleggioActivities} attività Noleggio da monitorare`,
+      `${noleggioActivities} attività Noleggio operative`,
     );
   }
 
   return {
     headline: "Ecosistema operativo",
     message: realSignals.length
-      ? `Situazione sotto controllo: ${realSignals.join(" e ")}.`
-      : "Nessuna criticità bloccante rilevata nei sistemi collegati.",
-    objective: "Concentrarsi sulla crescita dell’ecosistema",
+      ? `Nessuna decisione richiede il tuo intervento. Attività monitorate: ${realSignals.join(" e ")}.`
+      : "Nessuna decisione richiede il tuo intervento nei sistemi collegati.",
+    objective: "Concentrarsi sulle decisioni strategiche",
   };
 }
-
 
 export function getCeoGreeting(name: string) {
   const hour = new Date().getHours();
