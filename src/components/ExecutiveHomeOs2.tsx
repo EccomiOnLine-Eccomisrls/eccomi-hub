@@ -387,59 +387,61 @@ export function ExecutiveHomeOs2({
         </div>
       </section>
 
-      <section className="os2-summary-section">
-        <span className="os2-section-label">
-          Intelligenza operativa
-        </span>
+      <section className="os2-middle-grid">
+        <div className="os2-summary-section">
+          <span className="os2-section-label">
+            Intelligenza operativa
+          </span>
 
-        <div className="os2-tool-grid os2-tool-grid--two">
-          <ToolCard
-            eyebrow="ECCOMI OS Copilot"
-            title="Chiedi cosa sta succedendo"
-            description="Risposte operative costruite esclusivamente sui segnali disponibili."
-            action="Apri Copilot"
-            tone="violet"
-            icon={<Bot size={20} />}
-            onClick={() => onNavigate("ai")}
-          />
+          <div className="os2-tool-grid os2-tool-grid--two">
+            <ToolCard
+              eyebrow="ECCOMI OS Copilot"
+              title="Chiedi cosa sta succedendo"
+              description="Risposte operative costruite esclusivamente sui segnali disponibili."
+              action="Apri Copilot"
+              tone="violet"
+              icon={<Bot size={20} />}
+              onClick={() => onNavigate("ai")}
+            />
 
-          <ToolCard
-            eyebrow="Decision Assistant"
-            title="Quale decisione affrontare prima"
-            description={`${openDecisionCount} decisioni disponibili da valutare nel Decision Center.`}
-            action="Apri Decision Assistant"
-            tone="navy"
-            icon={<Gavel size={20} />}
-            onClick={() => onNavigate("decisions")}
-          />
+            <ToolCard
+              eyebrow="Decision Assistant"
+              title="Quale decisione affrontare prima"
+              description={`${openDecisionCount} decisioni disponibili da valutare nel Decision Center.`}
+              action="Apri Decision Assistant"
+              tone="navy"
+              icon={<Gavel size={20} />}
+              onClick={() => onNavigate("decisions")}
+            />
+          </div>
         </div>
-      </section>
 
-      <section className="os2-summary-section">
-        <span className="os2-section-label">
-          Controllo esecutivo
-        </span>
+        <div className="os2-summary-section">
+          <span className="os2-section-label">
+            Controllo esecutivo
+          </span>
 
-        <div className="os2-tool-grid os2-tool-grid--two">
-          <ToolCard
-            eyebrow="Executive Snapshot"
-            title="Il quadro completo, adesso"
-            description="Panoramica dello stato degli ecosistemi e delle priorità."
-            action="Apri Snapshot"
-            tone="blue"
-            icon={<Gauge size={20} />}
-            onClick={() => onNavigate("dashboard")}
-          />
+          <div className="os2-tool-grid os2-tool-grid--two">
+            <ToolCard
+              eyebrow="Executive Snapshot"
+              title="Il quadro completo, adesso"
+              description="Panoramica dello stato degli ecosistemi e delle priorità."
+              action="Apri Snapshot"
+              tone="blue"
+              icon={<Gauge size={20} />}
+              onClick={() => onNavigate("dashboard")}
+            />
 
-          <ToolCard
-            eyebrow="Executive Health"
-            title="Salute operativa"
-            description={`${liveEcosystemCount} sistemi collegati e ${attentionCount} elementi da verificare.`}
-            action="Apri Health"
-            tone="green"
-            icon={<Activity size={20} />}
-            onClick={() => onNavigate("ai")}
-          />
+            <ToolCard
+              eyebrow="Executive Health"
+              title="Salute operativa"
+              description={`${liveEcosystemCount} sistemi collegati e ${attentionCount} elementi da verificare.`}
+              action="Apri Health"
+              tone="green"
+              icon={<Activity size={20} />}
+              onClick={() => onNavigate("ai")}
+            />
+          </div>
         </div>
       </section>
 

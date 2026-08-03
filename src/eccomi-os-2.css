@@ -2264,3 +2264,136 @@ select {
     min-height: 125px;
   }
 }
+
+/* =========================================================
+   ECCOMI OS 2.0 · STRUTTURA FEDELE AL BLUEPRINT
+   ========================================================= */
+
+.os2-middle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.os2-middle-grid .os2-summary-section {
+  min-width: 0;
+}
+
+.os2-middle-grid .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.os2-middle-grid .os2-tool-card {
+  min-height: 130px;
+  padding: 14px;
+}
+
+/* Le quattro card centrali devono avere identica geometria */
+
+.os2-middle-grid .os2-tool-card__copy strong {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.os2-middle-grid .os2-tool-card__copy p {
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.os2-middle-grid .os2-tool-card > button {
+  min-height: 29px;
+  padding: 0 9px;
+  font-size: 7.5px;
+}
+
+/* Ultima riga nelle proporzioni della foto */
+
+.os2-bottom-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.08fr);
+  gap: 16px;
+}
+
+.os2-bottom-grid > div {
+  min-width: 0;
+}
+
+.os2-bottom-grid .os2-tool-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.os2-bottom-grid .os2-tool-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Altezza uniforme dell'ultima riga */
+
+.os2-bottom-grid .os2-tool-card {
+  min-height: 145px;
+  height: 100%;
+}
+
+/* Migliora la leggibilità senza aumentare l'altezza */
+
+.os2-bottom-grid .os2-tool-card__copy strong {
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.os2-bottom-grid .os2-tool-card__copy p {
+  font-size: 7.5px;
+  line-height: 1.4;
+}
+
+/* Desktop MacBook Air */
+
+@media (max-width: 1380px) {
+  .os2-middle-grid {
+    gap: 12px;
+  }
+
+  .os2-middle-grid .os2-tool-grid--two {
+    gap: 9px;
+  }
+
+  .os2-middle-grid .os2-tool-card {
+    min-height: 122px;
+    padding: 12px;
+  }
+
+  .os2-bottom-grid {
+    gap: 12px;
+  }
+
+  .os2-bottom-grid .os2-tool-card {
+    min-height: 136px;
+  }
+}
+
+/* iPad */
+
+@media (max-width: 1120px) {
+  .os2-middle-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 720px) {
+  .os2-middle-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--three {
+    grid-template-columns: 1fr;
+  }
+}
