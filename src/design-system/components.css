@@ -728,13 +728,11 @@ button.eco-kpi:hover {
 }
 
 .executive-navigator.executive-navigator--os-dock {
-  position: fixed;
-  z-index: 150;
-  left: var(--sidebar-width, 248px);
-  right: 16px;
-  bottom: 12px;
-  top: auto;
+  position: static;
+  z-index: auto;
+  width: 100%;
   min-height: 76px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
   padding: 8px 14px;
@@ -837,7 +835,7 @@ button.eco-kpi:hover {
 }
 
 .dashboard-stack--os2 {
-  padding-bottom: 108px;
+  padding-bottom: 24px;
 }
 
 [id^="executive-section-"] {
@@ -846,10 +844,9 @@ button.eco-kpi:hover {
 
 @media (max-width: 900px) {
   .executive-navigator.executive-navigator--os-dock {
-    left: 10px;
-    right: 10px;
-    bottom: max(10px, env(safe-area-inset-bottom));
+    width: 100%;
     min-height: 72px;
+    margin-top: 18px;
     padding: 7px 8px;
   }
 
@@ -880,7 +877,7 @@ button.eco-kpi:hover {
   }
 
   .dashboard-stack--os2 {
-    padding-bottom: 104px;
+    padding-bottom: 18px;
   }
 }
 

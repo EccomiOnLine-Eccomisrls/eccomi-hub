@@ -2076,8 +2076,6 @@ function DashboardView({
 
   return (
     <div className="dashboard-stack dashboard-stack--os2">
-      <ExecutiveNavigator />
-
       <ExecutiveHomeOs2
         displayName={displayName}
         priorities={priorities}
@@ -2089,6 +2087,8 @@ function DashboardView({
         testMode={testMode}
         onNavigate={onNavigate}
       />
+
+      <ExecutiveNavigator />
     </div>
   );
 }

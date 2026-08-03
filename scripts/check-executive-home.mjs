@@ -24,8 +24,8 @@ const main = read("src/main.tsx");
 const executiveCss = read("src/executive-home.css");
 
 const requiredComponents = [
-  "ExecutiveNavigator",
   "ExecutiveHomeOs2",
+  "ExecutiveNavigator",
 ];
 
 const requiredFiles = [
