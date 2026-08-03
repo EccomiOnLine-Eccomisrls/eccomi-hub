@@ -170,6 +170,7 @@ export function ExecutiveNavigator() {
       <div className="executive-navigator__identity">
         <span>ECCOMI OS</span>
         <strong>Executive Home</strong>
+        <small>La tua azienda, sotto controllo.</small>
       </div>
 
       <div className="executive-navigator__items">

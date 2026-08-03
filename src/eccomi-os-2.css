@@ -1618,3 +1618,383 @@ select {
     grid-column: 2;
   }
 }
+
+/* =========================================================
+   ECCOMI OS 2.0 · FINAL EXECUTIVE HOME ALIGNMENT
+   Riferimento grafico approvato
+   ========================================================= */
+
+/* Area centrale più larga e più vicina al riferimento */
+
+.content {
+  width: 100%;
+  max-width: none;
+  padding:
+    20px
+    clamp(24px, 2.5vw, 42px)
+    60px;
+}
+
+.dashboard-stack--os2 {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+/* Navigator Executive */
+
+.dashboard-stack--os2 > .executive-navigator {
+  margin: 0 0 2px;
+  border: 1px solid #dfe7ee;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(16, 37, 62, 0.055);
+}
+
+/* KPI: più larghi, leggibili e bassi */
+
+.os2-primary-kpis {
+  gap: 14px;
+}
+
+.os2-primary-kpi {
+  grid-template-columns: 66px minmax(0, 1fr);
+  min-height: 142px;
+  padding: 20px 18px;
+  border-radius: 18px;
+}
+
+.os2-primary-kpi > span {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+}
+
+.os2-primary-kpi small {
+  font-size: 10px;
+}
+
+.os2-primary-kpi strong {
+  margin-top: 8px;
+  font-size: 38px;
+}
+
+.os2-primary-kpi p {
+  max-width: 190px;
+  font-size: 10px;
+}
+
+/* Griglia principale identica al blueprint */
+
+.os2-executive-main-grid {
+  grid-template-columns:
+    minmax(520px, 1.75fr)
+    minmax(260px, 0.82fr)
+    minmax(260px, 0.82fr);
+  gap: 16px;
+}
+
+.os2-executive-main-grid > div {
+  min-height: 430px;
+}
+
+.os2-section-label {
+  min-height: 18px;
+  margin-bottom: 9px;
+  font-size: 10px;
+}
+
+/* Morning Brief */
+
+.os2-morning-hero {
+  min-height: 402px;
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.os2-morning-hero__intro {
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+}
+
+.os2-morning-hero__intro strong {
+  font-size: 17px;
+}
+
+.os2-morning-hero__intro p {
+  max-width: 320px;
+  font-size: 10px;
+}
+
+.os2-morning-hero__stats {
+  margin: 14px 0;
+}
+
+.os2-morning-hero__stats span {
+  min-height: 72px;
+}
+
+.os2-morning-hero__stats strong {
+  font-size: 24px;
+}
+
+.os2-priority-row {
+  min-height: 60px;
+  margin-top: 6px;
+  padding: 9px 11px;
+}
+
+.os2-priority-row strong {
+  font-size: 10px;
+}
+
+.os2-priority-row p {
+  max-width: 370px;
+  font-size: 8px;
+}
+
+/* Cosa è cambiato e Timeline stessa altezza */
+
+.os2-change-card,
+.os2-timeline-card {
+  min-height: 402px;
+  padding: 15px;
+  border-radius: 19px;
+}
+
+.os2-change-row {
+  min-height: 118px;
+}
+
+.os2-change-row strong {
+  font-size: 17px;
+}
+
+.os2-change-row p {
+  font-size: 9px;
+}
+
+.os2-timeline-card > button {
+  min-height: 118px;
+}
+
+.os2-timeline-card strong {
+  font-size: 10px;
+}
+
+.os2-timeline-card p {
+  font-size: 9px;
+}
+
+/* Sezioni inferiori */
+
+.os2-summary-section,
+.os2-bottom-grid > div {
+  min-width: 0;
+}
+
+.os2-tool-grid {
+  gap: 12px;
+}
+
+.os2-tool-card {
+  min-height: 134px;
+  padding: 16px;
+  border-radius: 17px;
+}
+
+.os2-tool-card__copy small {
+  font-size: 8px;
+}
+
+.os2-tool-card__copy strong {
+  font-size: 12px;
+}
+
+.os2-tool-card__copy p {
+  max-width: 320px;
+  font-size: 9px;
+}
+
+.os2-tool-card > button {
+  min-height: 32px;
+  font-size: 8px;
+}
+
+/* Le sezioni inferiori diventano due colonne parallele */
+
+.os2-bottom-grid {
+  grid-template-columns:
+    minmax(0, 0.98fr)
+    minmax(0, 1.02fr);
+  gap: 16px;
+}
+
+/* Sistema e collegamenti compatto */
+
+.os2-bottom-grid .os2-tool-grid--three .os2-tool-card {
+  min-height: 166px;
+  grid-template-columns: 40px minmax(0, 1fr);
+}
+
+.os2-bottom-grid .os2-tool-grid--three .os2-tool-card__copy strong {
+  font-size: 11px;
+}
+
+/* Hover uniformi */
+
+.os2-primary-kpi,
+.os2-priority-row,
+.os2-change-row button,
+.os2-timeline-card > button,
+.os2-tool-card,
+.os2-tool-card > button {
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.os2-priority-row:hover,
+.os2-tool-card:hover {
+  border-color: #bfd6e7;
+  box-shadow: 0 14px 32px rgba(16, 37, 62, 0.09);
+  transform: translateY(-2px);
+}
+
+.os2-timeline-card > button:hover,
+.os2-change-row:hover {
+  background: #f8fbfd;
+}
+
+/* Sidebar proporzionata come blueprint */
+
+.sidebar {
+  width: 238px;
+}
+
+.main {
+  margin-left: 238px;
+}
+
+.sidebar__top {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* Topbar */
+
+.topbar {
+  min-height: 72px;
+}
+
+.global-search {
+  width: min(520px, 48vw);
+}
+
+/* Desktop medio / MacBook Air */
+
+@media (max-width: 1380px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main {
+    margin-left: 220px;
+  }
+
+  .content {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns:
+      minmax(470px, 1.6fr)
+      minmax(225px, 0.8fr)
+      minmax(225px, 0.8fr);
+  }
+
+  .os2-primary-kpi {
+    grid-template-columns: 54px minmax(0, 1fr);
+    padding: 17px 14px;
+  }
+
+  .os2-primary-kpi > span {
+    width: 50px;
+    height: 50px;
+  }
+
+  .os2-primary-kpi strong {
+    font-size: 32px;
+  }
+}
+
+/* iPad orizzontale */
+
+@media (max-width: 1120px) {
+  .os2-primary-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .os2-executive-main-grid > div {
+    min-height: auto;
+  }
+
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet e mobile */
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: min(290px, 86vw);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding:
+      16px
+      14px
+      50px;
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .os2-executive-main-grid > div:first-child {
+    grid-column: auto;
+  }
+
+  .os2-change-card,
+  .os2-timeline-card,
+  .os2-morning-hero {
+    min-height: auto;
+  }
+}
+
+.executive-navigator__identity small {
+  display: block;
+  margin-top: 3px;
+  color: #728195;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}

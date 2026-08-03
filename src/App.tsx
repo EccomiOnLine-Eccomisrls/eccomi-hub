@@ -1388,33 +1388,44 @@ export default function Home() {
         </header>
 
         <div className="content">
-          <div className="page-heading">
-            <div>
-              <span className="eyebrow">{title.eyebrow}</span>
-              <h1>{title.title}</h1>
-              <p>{title.subtitle}</p>
+          {view !== "dashboard" && (
+            <div className="page-heading">
+              <div>
+                <span className="eyebrow">{title.eyebrow}</span>
+                <h1>{title.title}</h1>
+                <p>{title.subtitle}</p>
+              </div>
+
+              <div className="heading-actions">
+                {postaState === "ready" && (
+                  <span className="live-pill">
+                    <span /> Posta collegata
+                  </span>
+                )}
+
+                {noleggioState === "ready" && (
+                  <span className="live-pill">
+                    <span /> Noleggio collegato
+                  </span>
+                )}
+
+                {testMode && (
+                  <span className="demo-pill">
+                    <span />
+                    {postaState === "ready" ||
+                    noleggioState === "ready"
+                      ? "Altri dati dimostrativi"
+                      : "Dati dimostrativi"}
+                  </span>
+                )}
+
+                <span className="today-pill">
+                  <Clock3 size={15} />
+                  {formatToday()}
+                </span>
+              </div>
             </div>
-            <div className="heading-actions">
-              {postaState === "ready" && (
-                <span className="live-pill">
-                  <span /> Posta collegata
-                </span>
-              )}
-              {noleggioState === "ready" && (
-                <span className="live-pill">
-                  <span /> Noleggio collegato
-                </span>
-              )}
-              {testMode && (
-                <span className="demo-pill">
-                  <span /> {postaState === "ready" || noleggioState === "ready" ? "Altri dati dimostrativi" : "Dati dimostrativi"}
-                </span>
-              )}
-              <span className="today-pill">
-                <Clock3 size={15} /> {formatToday()}
-              </span>
-            </div>
-          </div>
+          )}
 
           {view === "dashboard" && (
             <DashboardView
