@@ -116,21 +116,17 @@ export function ExecutiveNavigator() {
     sections.forEach(({ element }) => observer.observe(element));
 
     function updateProgress() {
-      const first = sections[0].element;
-      const last = sections[sections.length - 1].element;
+      const scrollableHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
 
-      const start =
-        first.getBoundingClientRect().top + window.scrollY;
-
-      const end =
-        last.getBoundingClientRect().bottom + window.scrollY;
-
-      const current = window.scrollY + window.innerHeight * 0.35;
-      const total = Math.max(1, end - start);
+      if (scrollableHeight <= 0) {
+        setProgress(100);
+        return;
+      }
 
       const nextProgress = Math.min(
         100,
-        Math.max(0, ((current - start) / total) * 100),
+        Math.max(0, (window.scrollY / scrollableHeight) * 100),
       );
 
       setProgress(Math.round(nextProgress));
