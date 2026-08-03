@@ -3112,3 +3112,380 @@ select {
     padding-top: 6px;
   }
 }
+
+
+
+/* =========================================================
+   ECCOMI OS 2.0 · IPAD OPTIMIZATION
+   Mantiene il layout desktop anche su iPad
+   ========================================================= */
+
+/* iPad landscape / tablet ampio */
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .sidebar {
+    width: 184px;
+  }
+
+  .main {
+    margin-left: 184px;
+  }
+
+  .sidebar__top {
+    min-height: 78px;
+    padding: 13px 12px 8px;
+  }
+
+  .sidebar .brand {
+    gap: 9px;
+  }
+
+  .sidebar .brand__mark {
+    width: 43px;
+    height: 43px;
+  }
+
+  .brand__text strong {
+    font-size: 13px;
+  }
+
+  .brand__text small {
+    margin-top: 3px;
+    font-size: 7px;
+  }
+
+  .sidebar .nav {
+    gap: 1px;
+    padding: 6px 9px;
+  }
+
+  .sidebar .nav__item {
+    min-height: 36px;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: 11px;
+    font-size: 9px;
+  }
+
+  .sidebar .nav__item--active {
+    min-height: 43px;
+    border-radius: 14px;
+  }
+
+  .sidebar .nav__item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sidebar .nav__item em {
+    min-width: 23px;
+    height: 23px;
+    padding: 0 6px;
+    font-size: 8px;
+  }
+
+  .sidebar__footer {
+    gap: 7px;
+    padding: 7px 9px 10px;
+  }
+
+  .sidebar .ceo-profile {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    min-height: 58px;
+    gap: 7px;
+    padding: 8px;
+    border-radius: 13px;
+  }
+
+  .sidebar .ceo-profile .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 9px;
+  }
+
+  .sidebar .ceo-profile > span:nth-child(2) strong {
+    font-size: 9px;
+  }
+
+  .sidebar .ceo-profile > span:nth-child(2) small {
+    font-size: 7px;
+  }
+
+  .sidebar .ceo-profile::after {
+    min-height: 23px;
+    padding: 0 7px;
+    font-size: 7px;
+  }
+
+  .sidebar .system-state {
+    min-height: 60px;
+    gap: 7px;
+    padding: 9px;
+    border-radius: 13px;
+  }
+
+  .sidebar .system-state::before {
+    margin-bottom: 2px;
+    font-size: 6.5px;
+  }
+
+  .sidebar .system-state strong {
+    font-size: 8px;
+  }
+
+  .sidebar .system-state small {
+    font-size: 6.5px;
+  }
+
+  .topbar {
+    min-height: 62px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .global-search {
+    width: min(450px, 46vw);
+    min-height: 37px;
+  }
+
+  .topbar-pill,
+  .topbar-status-pill,
+  .topbar-profile-button,
+  .new-entry-button {
+    min-height: 35px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .content {
+    padding:
+      16px
+      16px
+      48px;
+  }
+
+  .dashboard-stack--os2 {
+    max-width: none;
+    gap: 16px;
+  }
+
+  .executive-navigator {
+    min-height: 62px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .executive-navigator__identity strong {
+    font-size: 14px;
+  }
+
+  .executive-navigator__identity small {
+    font-size: 8px;
+  }
+
+  .executive-navigator__items {
+    gap: 2px;
+  }
+
+  .executive-navigator__item {
+    min-height: 34px;
+    padding: 0 8px;
+    font-size: 8px;
+  }
+
+  .os2-primary-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .os2-primary-kpi {
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 112px;
+    gap: 10px;
+    padding: 13px;
+    border-radius: 15px;
+  }
+
+  .os2-primary-kpi > span {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+  }
+
+  .os2-primary-kpi small {
+    font-size: 7px;
+  }
+
+  .os2-primary-kpi strong {
+    margin-top: 5px;
+    font-size: 29px;
+  }
+
+  .os2-primary-kpi p {
+    margin-top: 5px;
+    font-size: 7px;
+  }
+
+  .os2-executive-main-grid {
+    grid-template-columns:
+      minmax(410px, 1.5fr)
+      minmax(210px, 0.75fr)
+      minmax(210px, 0.75fr);
+    gap: 10px;
+  }
+
+  .os2-executive-main-grid > div {
+    min-height: 360px;
+  }
+
+  .os2-morning-hero {
+    min-height: 338px;
+    padding: 14px;
+  }
+
+  .os2-morning-hero__intro {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 11px;
+  }
+
+  .os2-morning-hero__sun {
+    width: 44px;
+    height: 44px;
+  }
+
+  .os2-morning-hero__intro strong {
+    font-size: 14px;
+  }
+
+  .os2-morning-hero__intro p {
+    font-size: 8px;
+  }
+
+  .os2-morning-hero__stats {
+    gap: 7px;
+    margin: 11px 0;
+    padding-left: 59px;
+  }
+
+  .os2-morning-hero__stats span {
+    min-height: 57px;
+    padding: 8px;
+  }
+
+  .os2-morning-hero__stats strong {
+    font-size: 19px;
+  }
+
+  .os2-morning-hero__stats small {
+    font-size: 6.5px;
+  }
+
+  .os2-priority-row {
+    min-height: 48px;
+    padding: 7px 8px;
+  }
+
+  .os2-priority-row strong {
+    font-size: 8px;
+  }
+
+  .os2-priority-row p,
+  .os2-priority-row em {
+    font-size: 6.5px;
+  }
+
+  .os2-change-card,
+  .os2-timeline-card {
+    min-height: 338px;
+    padding: 11px;
+  }
+
+  .os2-change-row,
+  .os2-timeline-card > button {
+    min-height: 98px;
+  }
+
+  .os2-change-row strong {
+    font-size: 13px;
+  }
+
+  .os2-change-row p,
+  .os2-timeline-card p {
+    font-size: 7px;
+  }
+
+  .os2-timeline-card strong {
+    font-size: 8px;
+  }
+
+  .os2-middle-grid,
+  .os2-bottom-grid {
+    gap: 10px;
+  }
+
+  .os2-middle-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--two,
+  .os2-bottom-grid .os2-tool-grid--three {
+    gap: 8px;
+  }
+
+  .os2-middle-grid .os2-tool-card {
+    min-height: 108px;
+    padding: 10px;
+  }
+
+  .os2-bottom-grid .os2-tool-card {
+    min-height: 116px;
+    padding: 10px;
+  }
+
+  .os2-tool-card {
+    grid-template-columns: 33px minmax(0, 1fr);
+  }
+
+  .os2-tool-card__icon {
+    width: 31px;
+    height: 31px;
+  }
+
+  .os2-tool-card__copy small {
+    font-size: 6px;
+  }
+
+  .os2-tool-card__copy strong {
+    font-size: 8px;
+  }
+
+  .os2-tool-card__copy p {
+    font-size: 6.5px;
+  }
+
+  .os2-tool-card > button {
+    min-height: 25px;
+    padding: 0 7px;
+    font-size: 6px;
+  }
+}
+
+/* iPad portrait */
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .sidebar {
+    width: 165px;
+  }
+
+  .main {
+    margin-left: 165px;
+  }
+
+  .os2-primary-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .os2-executive-main-grid,
+  .os2-middle-grid,
+  .os2-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
