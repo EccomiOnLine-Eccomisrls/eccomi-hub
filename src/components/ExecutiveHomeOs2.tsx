@@ -15,6 +15,7 @@ import {
   Sun,
 } from "lucide-react";
 import type { CeoPriority } from "../lib/ceoIntelligence";
+import { EcoKpiCard } from "../design-system/components";
 
 type ExecutiveView =
   | "dashboard"
@@ -139,69 +140,41 @@ export function ExecutiveHomeOs2({
         className="os2-primary-kpis"
         aria-label="Indicatori principali"
       >
-        <button
-          type="button"
-          className="os2-primary-kpi os2-primary-kpi--blue"
+        <EcoKpiCard
+          label="Ecosistemi collegati"
+          value={liveEcosystemCount}
+          description="Posta e Noleggio monitorati"
+          tone="primary"
+          icon={<Network size={25} />}
           onClick={() => onNavigate("ecosystems")}
-        >
-          <span>
-            <Network size={25} />
-          </span>
+        />
 
-          <div>
-            <small>Ecosistemi collegati</small>
-            <strong>{liveEcosystemCount}</strong>
-            <p>Posta e Noleggio monitorati</p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          className="os2-primary-kpi os2-primary-kpi--violet"
+        <EcoKpiCard
+          label="Decisioni aperte"
+          value={openDecisionCount}
+          description="Da valutare o approvare"
+          tone="ai"
+          icon={<ClipboardCheck size={25} />}
           onClick={() => onNavigate("decisions")}
-        >
-          <span>
-            <ClipboardCheck size={25} />
-          </span>
+        />
 
-          <div>
-            <small>Decisioni aperte</small>
-            <strong>{openDecisionCount}</strong>
-            <p>Da valutare o approvare</p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          className="os2-primary-kpi os2-primary-kpi--orange"
+        <EcoKpiCard
+          label="Priorità da gestire"
+          value={attentionCount}
+          description="Criticità e attività urgenti"
+          tone="warning"
+          icon={<AlertTriangle size={25} />}
           onClick={() => onNavigate("ai")}
-        >
-          <span>
-            <AlertTriangle size={25} />
-          </span>
+        />
 
-          <div>
-            <small>Priorità da gestire</small>
-            <strong>{attentionCount}</strong>
-            <p>Criticità e attività urgenti</p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          className="os2-primary-kpi os2-primary-kpi--green"
+        <EcoKpiCard
+          label="Attività operative"
+          value={operationalItems}
+          description="Pratiche, lead e approvazioni"
+          tone="success"
+          icon={<Activity size={25} />}
           onClick={() => onNavigate("operations")}
-        >
-          <span>
-            <Activity size={25} />
-          </span>
-
-          <div>
-            <small>Attività operative</small>
-            <strong>{operationalItems}</strong>
-            <p>Pratiche, lead e approvazioni</p>
-          </div>
-        </button>
+        />
       </section>
 
       <section className="os2-executive-main-grid">

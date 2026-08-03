@@ -335,3 +335,50 @@ button.eco-kpi:hover {
     min-height: 124px;
   }
 }
+
+/* =========================================================
+   ECCOMI OS · EXECUTIVE HOME KPI ADAPTER
+   ========================================================= */
+
+.os2-primary-kpis .eco-kpi {
+  width: 100%;
+  height: 100%;
+}
+
+.os2-primary-kpis .eco-kpi__content {
+  min-width: 0;
+}
+
+.os2-primary-kpis .eco-kpi__content p {
+  max-width: 200px;
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .os2-primary-kpis .eco-kpi {
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 112px;
+    gap: 10px;
+    padding: 13px;
+    border-radius: 15px;
+  }
+
+  .os2-primary-kpis .eco-kpi__icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+  }
+
+  .os2-primary-kpis .eco-kpi__content small {
+    font-size: 7px;
+  }
+
+  .os2-primary-kpis .eco-kpi__content strong {
+    margin-top: 5px;
+    font-size: 29px;
+  }
+
+  .os2-primary-kpis .eco-kpi__content p {
+    margin-top: 5px;
+    font-size: 7px;
+  }
+}
