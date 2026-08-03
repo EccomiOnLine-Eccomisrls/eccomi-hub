@@ -15,7 +15,10 @@ import {
   Sun,
 } from "lucide-react";
 import type { CeoPriority } from "../lib/ceoIntelligence";
-import { EcoKpiCard } from "../design-system/components";
+import {
+  EcoKpiCard,
+  EcoToolCard,
+} from "../design-system/components";
 
 type ExecutiveView =
   | "dashboard"
@@ -37,49 +40,6 @@ type ExecutiveHomeOs2Props = {
   testMode: boolean;
   onNavigate: (view: ExecutiveView) => void;
 };
-
-type ToolCardProps = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  action: string;
-  tone:
-    | "blue"
-    | "navy"
-    | "green"
-    | "violet"
-    | "orange"
-    | "teal";
-  icon: React.ReactNode;
-  onClick: () => void;
-};
-
-function ToolCard({
-  eyebrow,
-  title,
-  description,
-  action,
-  tone,
-  icon,
-  onClick,
-}: ToolCardProps) {
-  return (
-    <article className={`os2-tool-card os2-tool-card--${tone}`}>
-      <span className="os2-tool-card__icon">{icon}</span>
-
-      <div className="os2-tool-card__copy">
-        <small>{eyebrow}</small>
-        <strong>{title}</strong>
-        <p>{description}</p>
-      </div>
-
-      <button type="button" onClick={onClick}>
-        {action}
-        <ArrowRight size={14} />
-      </button>
-    </article>
-  );
-}
 
 function priorityTone(priority: CeoPriority) {
   if (priority.severity === "critical") return "critical";
@@ -367,22 +327,22 @@ export function ExecutiveHomeOs2({
           </span>
 
           <div className="os2-tool-grid os2-tool-grid--two">
-            <ToolCard
+            <EcoToolCard
               eyebrow="ECCOMI OS Copilot"
               title="Chiedi cosa sta succedendo"
               description="Risposte operative costruite esclusivamente sui segnali disponibili."
               action="Apri Copilot"
-              tone="violet"
+              tone="ai"
               icon={<Bot size={20} />}
               onClick={() => onNavigate("ai")}
             />
 
-            <ToolCard
+            <EcoToolCard
               eyebrow="Decision Assistant"
               title="Quale decisione affrontare prima"
               description={`${openDecisionCount} decisioni disponibili da valutare nel Decision Center.`}
               action="Apri Decision Assistant"
-              tone="navy"
+              tone="neutral"
               icon={<Gavel size={20} />}
               onClick={() => onNavigate("decisions")}
             />
@@ -395,22 +355,22 @@ export function ExecutiveHomeOs2({
           </span>
 
           <div className="os2-tool-grid os2-tool-grid--two">
-            <ToolCard
+            <EcoToolCard
               eyebrow="Executive Snapshot"
               title="Il quadro completo, adesso"
               description="Panoramica dello stato degli ecosistemi e delle priorità."
               action="Apri Snapshot"
-              tone="blue"
+              tone="primary"
               icon={<Gauge size={20} />}
               onClick={() => onNavigate("dashboard")}
             />
 
-            <ToolCard
+            <EcoToolCard
               eyebrow="Executive Health"
               title="Salute operativa"
               description={`${liveEcosystemCount} sistemi collegati e ${attentionCount} elementi da verificare.`}
               action="Apri Health"
-              tone="green"
+              tone="success"
               icon={<Activity size={20} />}
               onClick={() => onNavigate("ai")}
             />
@@ -425,22 +385,22 @@ export function ExecutiveHomeOs2({
           </span>
 
           <div className="os2-tool-grid os2-tool-grid--two">
-            <ToolCard
+            <EcoToolCard
               eyebrow="Executive Intelligence"
               title="Insight e segnali"
               description={`${opportunityCount} opportunità rilevate dai dati disponibili.`}
               action="Apri Intelligence"
-              tone="blue"
+              tone="primary"
               icon={<Sparkles size={20} />}
               onClick={() => onNavigate("ai")}
             />
 
-            <ToolCard
+            <EcoToolCard
               eyebrow="Executive Action Queue"
               title="Azioni in attesa"
               description={`${operationalItems} attività complessive richiedono lavorazione.`}
               action="Apri Action Queue"
-              tone="orange"
+              tone="warning"
               icon={<ClipboardCheck size={20} />}
               onClick={() => onNavigate("operations")}
             />
@@ -453,7 +413,7 @@ export function ExecutiveHomeOs2({
           </span>
 
           <div className="os2-tool-grid os2-tool-grid--three">
-            <ToolCard
+            <EcoToolCard
               eyebrow="Data Trust"
               title="Qualità dei dati"
               description={
@@ -462,27 +422,27 @@ export function ExecutiveHomeOs2({
                   : "Dati live disponibili."
               }
               action="Verifica dati"
-              tone="teal"
+              tone="info"
               icon={<ShieldCheck size={20} />}
               onClick={() => onNavigate("dashboard")}
             />
 
-            <ToolCard
+            <EcoToolCard
               eyebrow="System Pulse"
               title="Stato sistemi"
               description={`${liveEcosystemCount} collegamenti operativi monitorati.`}
               action="Apri sistemi"
-              tone="blue"
+              tone="primary"
               icon={<Activity size={20} />}
               onClick={() => onNavigate("ecosystems")}
             />
 
-            <ToolCard
+            <EcoToolCard
               eyebrow="App Registry"
               title="Workspace ECCOMI"
               description="Accedi agli ecosistemi disponibili."
               action="Apri app"
-              tone="violet"
+              tone="ai"
               icon={<Network size={20} />}
               onClick={() => onNavigate("ecosystems")}
             />
