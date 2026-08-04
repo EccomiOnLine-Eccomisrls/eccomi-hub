@@ -5,6 +5,7 @@ const root = process.cwd();
 
 const requiredFiles = [
   "docs/os/ECCOMI-OS-CONSTITUTION.md",
+  "docs/architecture/HUB-OS-VERTICALS.md",
   "src/os/registry/types.ts",
   "src/os/registry/apps.ts",
   "src/os/registry/index.ts",
@@ -29,6 +30,7 @@ const requiredApps = [
   "noleggio",
   "energia",
   "spedizioni",
+  "performance",
   "guide",
   "book",
   "fiscal",
@@ -41,5 +43,6 @@ for (const app of requiredApps) {
 }
 
 console.log("✅ ECCOMI OS Constitution presente");
+console.log("✅ Architettura HUB ↔ OS ↔ verticali presente");
 console.log(`✅ ${requiredApps.length} app registrate`);
 console.log("✅ ECCOMI OS Lab presente");
