@@ -7,12 +7,12 @@ import httpx
 
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_ROLE_KEY = (
     os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
     or os.getenv("SUPABASE_SERVICE_KEY", "")
 )
 
+_original_get = httpx.AsyncClient.get
 _original_post = httpx.AsyncClient.post
 _installed = False
 
@@ -37,7 +37,7 @@ async def _is_authorized_hub_email(email: str) -> bool:
     }
 
     async with httpx.AsyncClient(timeout=8.0) as client:
-        response = await _original_post.__self__.get(  # type: ignore[attr-defined]
+        response = await _original_get(
             client,
             f"{SUPABASE_URL}/rest/v1/hub_profiles",
             headers=headers,
