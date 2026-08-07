@@ -1,63 +1,47 @@
-const STORAGE_KEY = "eccomi-hub-manager-delegations-v1";
-
+type HubSession = { accessToken?: string; access_token?: string };
 type Delegation = {
   id: string;
   label: string;
   description: string;
   functionText: string;
-  enabled: boolean;
+  dependsOn?: string[];
 };
+type DelegationState = { user_id: string; ecosystem_key: string; permissions: Record<string, boolean> };
 
-const defaults: Delegation[] = [
-  {
-    id: "offers",
-    label: "Gestione offerte",
-    description: "Gestione operativa dell'offerta prima della fase di approvazione.",
-    functionText: "Consente di caricare, aprire, modificare e aggiornare le offerte di Eccomi Noleggio.",
-    enabled: true,
-  },
-  {
-    id: "approve",
-    label: "Approvazione offerte",
-    description: "Validazione dell'offerta quando è completa e pronta per il passaggio successivo.",
-    functionText: "Consente di approvare o respingere un'offerta dopo il controllo di condizioni, validità e completezza.",
-    enabled: false,
-  },
-  {
-    id: "publish",
-    label: "Pubblicazione offerte",
-    description: "Messa online di un'offerta già approvata.",
-    functionText: "Consente di pubblicare nel canale operativo le promozioni che hanno già superato l'approvazione.",
-    enabled: false,
-  },
-  {
-    id: "leads",
-    label: "Gestione lead",
-    description: "Lavorazione commerciale dei contatti assegnati a Eccomi Noleggio.",
-    functionText: "Consente di aprire i lead, aggiornarne lo stato, registrare attività e portarli avanti nel percorso commerciale.",
-    enabled: true,
-  },
-  {
-    id: "archive",
-    label: "Archiviazione pratiche",
-    description: "Chiusura amministrativa delle attività concluse.",
-    functionText: "Consente di chiudere e archiviare pratiche o attività terminate, mantenendole nello storico.",
-    enabled: true,
-  },
+const API_URL = String(import.meta.env.VITE_HUB_API_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
+
+const definitions: Delegation[] = [
+  { id: "offers", label: "Gestione offerte", description: "Gestione operativa dell'offerta prima della fase di approvazione.", functionText: "Consente di caricare, aprire, modificare e aggiornare le offerte di Eccomi Noleggio." },
+  { id: "approve", label: "Approvazione offerte", description: "Validazione dell'offerta quando è completa e pronta per il passaggio successivo.", functionText: "Consente di approvare o respingere un'offerta dopo il controllo di condizioni, validità e completezza.", dependsOn: ["offers"] },
+  { id: "publish", label: "Pubblicazione offerte", description: "Messa online di un'offerta già approvata.", functionText: "Consente di pubblicare nel canale operativo soltanto offerte che hanno già superato l'approvazione.", dependsOn: ["offers", "approve"] },
+  { id: "leads", label: "Gestione lead", description: "Lavorazione commerciale dei contatti assegnati a Eccomi Noleggio.", functionText: "Consente di aprire i lead, aggiornarne lo stato, registrare attività e portarli avanti nel percorso commerciale." },
+  { id: "negotiations", label: "Gestione trattative", description: "Gestione dell'avanzamento commerciale dopo il primo contatto.", functionText: "Consente di portare il lead da contatto a preventivo, trattativa ed esito, registrando i passaggi commerciali." },
+  { id: "documents", label: "Gestione documenti cliente", description: "Accesso ai documenti necessari alla pratica.", functionText: "Consente di visualizzare e caricare i documenti richiesti per la pratica di noleggio." },
+  { id: "cases", label: "Gestione pratiche e contratti", description: "Gestione della pratica dopo l'accettazione dell'offerta.", functionText: "Consente di seguire la pratica, aggiornare gli stati e gestire il percorso fino al contratto e alla consegna." },
+  { id: "archive", label: "Archiviazione pratiche", description: "Chiusura amministrativa delle attività concluse.", functionText: "Consente di chiudere e archiviare pratiche terminate mantenendole nello storico.", dependsOn: ["cases"] },
+  { id: "export", label: "Export dati", description: "Esportazione dei dati del proprio servizio.", functionText: "Consente di esportare offerte, lead e pratiche di Eccomi Noleggio secondo i dati disponibili." },
 ];
 
-function readState(): Delegation[] {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") as Record<string, boolean> | null;
-    if (!saved) return defaults;
-    return defaults.map((item) => ({ ...item, enabled: typeof saved[item.id] === "boolean" ? saved[item.id] : item.enabled }));
-  } catch {
-    return defaults;
+function token(): string {
+  for (const key of ["eccomi-hub-session", "hub_session", "eccomi_session", "session"]) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || "") as HubSession;
+      if (parsed.accessToken || parsed.access_token) return parsed.accessToken || parsed.access_token || "";
+    } catch {}
   }
+  return "";
 }
 
-function saveState(items: Delegation[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.fromEntries(items.map((item) => [item.id, item.enabled]))));
+async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const auth = token();
+  if (!auth) throw new Error("Sessione non disponibile. Accedi nuovamente.");
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${auth}`, ...(options.headers || {}) },
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(String(payload.detail || "Operazione non riuscita."));
+  return payload as T;
 }
 
 function installStyles() {
@@ -71,69 +55,127 @@ function installStyles() {
     .ec-delegation-count{white-space:nowrap;font-weight:900;color:#0c5597}
     .ec-delegation-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:14px;border:1px solid #dce7f0;border-radius:14px;background:#fff}
     .ec-delegation-row strong{display:block;color:#102b48;font-size:15px}.ec-delegation-row small{display:block;color:#74859a;margin-top:4px;line-height:1.35}
-    .ec-delegation-function{margin-top:9px;padding-top:9px;border-top:1px solid #e7eef5;color:#31516e;font-size:12px;line-height:1.45}
-    .ec-delegation-function b{color:#173e63}
-    .ec-switch{width:54px;height:30px;border:0;border-radius:999px;background:#cbd7e2;padding:3px;cursor:pointer;transition:.2s;position:relative}
-    .ec-switch span{display:block;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:.2s}
-    .ec-switch.on{background:#18a765}.ec-switch.on span{transform:translateX(24px)}
-    .ec-switch:focus-visible{outline:3px solid rgba(12,85,151,.25);outline-offset:2px}
-    .ec-delegation-state{font-size:12px;font-weight:900;margin-top:5px;text-align:center;color:#7b8794}.ec-delegation-state.on{color:#087443}
+    .ec-delegation-function{margin-top:9px;padding-top:9px;border-top:1px solid #e7eef5;color:#31516e;font-size:12px;line-height:1.45}.ec-delegation-function b{color:#173e63}
+    .ec-delegation-requirement{display:inline-flex;margin-top:8px;padding:5px 8px;border-radius:999px;background:#f3f6f9;color:#597087;font-size:11px;font-weight:800}
+    .ec-switch{width:54px;height:30px;border:0;border-radius:999px;background:#cbd7e2;padding:3px;cursor:pointer;transition:.2s;position:relative}.ec-switch span{display:block;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:.2s}.ec-switch.on{background:#18a765}.ec-switch.on span{transform:translateX(24px)}.ec-switch:disabled{opacity:.45;cursor:not-allowed}.ec-switch:focus-visible{outline:3px solid rgba(12,85,151,.25);outline-offset:2px}
+    .ec-delegation-state{font-size:12px;font-weight:900;margin-top:5px;text-align:center;color:#7b8794}.ec-delegation-state.on{color:#087443}.ec-delegation-save{font-size:11px;color:#718197;text-align:right;margin-top:4px}.ec-delegation-error{padding:12px 14px;border-radius:12px;background:#fff0f0;border:1px solid #ffcaca;color:#9b2020;font-weight:750}
     @media(max-width:600px){.ec-delegation-intro{align-items:flex-start;flex-direction:column}.ec-delegation-row{grid-template-columns:1fr auto}}
   `;
   document.head.appendChild(style);
 }
 
-function render(section: HTMLElement) {
+function managerUserId(section: HTMLElement): string {
+  const owner = section.querySelector<HTMLElement>(".team-delegation-owner");
+  const card = document.querySelector<HTMLElement>(".manager-card[data-real-manager]");
+  return String(card?.dataset.realManager || owner?.dataset.userId || "");
+}
+
+function dependencyLabels(ids: string[] | undefined): string {
+  if (!ids?.length) return "";
+  return ids.map((id) => definitions.find((item) => item.id === id)?.label || id).join(" + ");
+}
+
+function normalizeClient(permissions: Record<string, boolean>): Record<string, boolean> {
+  const next = { ...permissions };
+  if (!next.offers) { next.approve = false; next.publish = false; }
+  if (!next.approve) next.publish = false;
+  if (next.approve && !next.offers) next.approve = false;
+  if (next.publish && (!next.offers || !next.approve)) next.publish = false;
+  if (!next.cases) next.archive = false;
+  if (next.archive && !next.cases) next.archive = false;
+  return next;
+}
+
+async function render(section: HTMLElement) {
   if (section.dataset.delegationControls === "ready") return;
   section.dataset.delegationControls = "ready";
   const empty = section.querySelector<HTMLElement>(".team-delegation-empty");
   if (!empty) return;
-
-  let items = readState();
   empty.style.display = "none";
+
+  const userId = managerUserId(section);
   const host = document.createElement("div");
   host.className = "ec-delegation-controls";
   section.appendChild(host);
 
+  if (!userId) {
+    host.innerHTML = `<div class="ec-delegation-error">Responsabile non identificato. Aggiorna la pagina e riprova.</div>`;
+    return;
+  }
+
+  let state: DelegationState;
+  try {
+    state = await api<DelegationState>(`/v1/team/responsibles/${encodeURIComponent(userId)}/delegations`);
+  } catch (error) {
+    host.innerHTML = `<div class="ec-delegation-error">${error instanceof Error ? error.message : "Deleghe non disponibili."}</div>`;
+    return;
+  }
+
+  let permissions = normalizeClient(state.permissions || {});
+  let saving = false;
+
+  const save = async () => {
+    saving = true;
+    draw();
+    try {
+      state = await api<DelegationState>(`/v1/team/responsibles/${encodeURIComponent(userId)}/delegations`, {
+        method: "PUT",
+        body: JSON.stringify({ permissions }),
+      });
+      permissions = normalizeClient(state.permissions || {});
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Salvataggio deleghe non riuscito.");
+    } finally {
+      saving = false;
+      draw();
+    }
+  };
+
   const draw = () => {
-    const active = items.filter((item) => item.enabled).length;
+    const active = definitions.filter((item) => Boolean(permissions[item.id])).length;
     host.innerHTML = `
       <div class="ec-delegation-intro">
-        <span><strong>Autorizzazioni del Responsabile</strong><small>Ogni delega governa una fase distinta del lavoro. Il CEO può attivarla o disattivarla con un solo comando.</small></span>
-        <span class="ec-delegation-count">${active}/${items.length} attive</span>
+        <span><strong>Autorizzazioni del Responsabile</strong><small>Le deleghe sono salvate nell'HUB e rispettano le dipendenze operative definite dal CEO.</small></span>
+        <span class="ec-delegation-count">${active}/${definitions.length} attive</span>
       </div>
-      ${items.map((item) => `
-        <div class="ec-delegation-row" data-delegation-id="${item.id}">
+      ${definitions.map((item) => {
+        const enabled = Boolean(permissions[item.id]);
+        const deps = item.dependsOn || [];
+        const unmet = deps.some((id) => !permissions[id]);
+        return `<div class="ec-delegation-row" data-delegation-id="${item.id}">
           <span>
             <strong>${item.label}</strong>
             <small>${item.description}</small>
             <div class="ec-delegation-function"><b>Funzione:</b> ${item.functionText}</div>
+            ${deps.length ? `<span class="ec-delegation-requirement">Richiede: ${dependencyLabels(deps)}</span>` : ""}
           </span>
           <span>
-            <button class="ec-switch ${item.enabled ? "on" : ""}" type="button" role="switch" aria-checked="${item.enabled}" aria-label="${item.enabled ? "Disattiva" : "Attiva"} ${item.label}"><span></span></button>
-            <div class="ec-delegation-state ${item.enabled ? "on" : ""}">${item.enabled ? "ON" : "OFF"}</div>
+            <button class="ec-switch ${enabled ? "on" : ""}" ${saving || (unmet && !enabled) ? "disabled" : ""} type="button" role="switch" aria-checked="${enabled}" aria-label="${enabled ? "Disattiva" : "Attiva"} ${item.label}"><span></span></button>
+            <div class="ec-delegation-state ${enabled ? "on" : ""}">${enabled ? "ON" : "OFF"}</div>
+            <div class="ec-delegation-save">${saving ? "Salvataggio…" : "Salvato HUB"}</div>
           </span>
-        </div>`).join("")}
+        </div>`;
+      }).join("")}
     `;
 
     host.querySelectorAll<HTMLElement>("[data-delegation-id]").forEach((row) => {
       const id = row.dataset.delegationId;
       const button = row.querySelector<HTMLButtonElement>(".ec-switch");
-      if (!id || !button) return;
-      button.addEventListener("click", () => {
-        items = items.map((item) => item.id === id ? { ...item, enabled: !item.enabled } : item);
-        saveState(items);
-        draw();
+      if (!id || !button || button.disabled) return;
+      button.addEventListener("click", async () => {
+        permissions = normalizeClient({ ...permissions, [id]: !permissions[id] });
+        await save();
       });
     });
   };
+
   draw();
 }
 
 function scan() {
   installStyles();
   const section = document.getElementById("team-real-delegations");
-  if (section instanceof HTMLElement) render(section);
+  if (section instanceof HTMLElement) void render(section);
 }
 
 const observer = new MutationObserver(scan);
