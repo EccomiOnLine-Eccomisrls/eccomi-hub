@@ -4,6 +4,7 @@ import os
 from typing import Any
 
 import httpx
+from fastapi import HTTPException, status
 
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
@@ -73,11 +74,12 @@ async def _guarded_post(
 
         if not await _is_authorized_hub_email(email):
             print(f"[HUB AUTH] OTP blocked email={email}")
-            request = httpx.Request("POST", url)
-            return httpx.Response(
-                status_code=403,
-                json={"message": "Email non autorizzata per ECCOMI HUB."},
-                request=request,
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=(
+                    "Accesso non autorizzato. "
+                    "Questo indirizzo email non è abilitato ad accedere a ECCOMI HUB."
+                ),
             )
 
     response = await _original_post(self, url, *args, **kwargs)
