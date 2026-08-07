@@ -8,6 +8,6 @@ def install_preview_cors() -> None:
         CORSMiddleware,
         allow_origin_regex=r"https://eccomi-hub-frontend-pr-\d+\.onrender\.com",
         allow_credentials=False,
-        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type"],
     )
