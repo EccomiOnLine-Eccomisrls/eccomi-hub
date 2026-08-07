@@ -18,12 +18,9 @@ _installed = False
 
 
 async def _is_authorized_hub_email(email: str) -> bool:
-    """Return True only for active emails present in hub_profiles.
-
-    The service-role key is required because anonymous users must not be able
-    to enumerate HUB identities through the public REST API.
-    """
+    """Return True only for active emails present in hub_profiles."""
     if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
+        print("[HUB AUTH] allowlist unavailable: missing Supabase configuration")
         return False
 
     normalized = email.strip().lower()
@@ -50,10 +47,16 @@ async def _is_authorized_hub_email(email: str) -> bool:
         )
 
     if response.status_code != 200:
+        print(
+            "[HUB AUTH] allowlist query failed "
+            f"status={response.status_code} body={response.text[:500]}"
+        )
         return False
 
     payload = response.json()
-    return isinstance(payload, list) and len(payload) > 0
+    authorized = isinstance(payload, list) and len(payload) > 0
+    print(f"[HUB AUTH] allowlist email={normalized} authorized={authorized}")
+    return authorized
 
 
 async def _guarded_post(
@@ -62,11 +65,14 @@ async def _guarded_post(
     *args: Any,
     **kwargs: Any,
 ) -> httpx.Response:
-    if url.rstrip("/") == f"{SUPABASE_URL}/auth/v1/otp":
+    is_otp_request = url.rstrip("/") == f"{SUPABASE_URL}/auth/v1/otp"
+
+    if is_otp_request:
         body = kwargs.get("json") or {}
         email = str(body.get("email") or "").strip().lower()
 
         if not await _is_authorized_hub_email(email):
+            print(f"[HUB AUTH] OTP blocked email={email}")
             request = httpx.Request("POST", url)
             return httpx.Response(
                 status_code=403,
@@ -74,11 +80,15 @@ async def _guarded_post(
                 request=request,
             )
 
-        # The email is already guaranteed to belong to an active HUB profile.
-        # Keep the original Supabase OTP payload unchanged so existing users
-        # continue to use the proven login flow.
+    response = await _original_post(self, url, *args, **kwargs)
 
-    return await _original_post(self, url, *args, **kwargs)
+    if is_otp_request:
+        print(
+            "[HUB AUTH] Supabase OTP response "
+            f"status={response.status_code} body={response.text[:500]}"
+        )
+
+    return response
 
 
 def install_auth_guard() -> None:
