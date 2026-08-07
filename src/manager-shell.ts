@@ -177,8 +177,8 @@ async function renderManagerShell(token: string): Promise<void> {
             <div>
               <span class="mgr-eyebrow">CABINA DI REGIA · ${escapeHtml(profile.ec_id)}</span>
               <h1>Buongiorno ${escapeHtml(firstName)}</h1>
-              <p>Qui gestisci il lavoro quotidiano di Eccomi Noleggio: offerte, lead, priorità e risultati. Vedi soltanto ciò che rientra nel tuo perimetro.</p>
-              <span class="mgr-role">Responsabile operativo · ${escapeHtml(ecosystemLabel)}</span>
+              <p>Qui guidi il lavoro quotidiano di Eccomi Noleggio: offerte, lead, priorità e risultati. La tua cabina di regia ti aiuta a trasformare ogni opportunità in avanzamento concreto.</p>
+              <span class="mgr-role">Responsabile · ${escapeHtml(ecosystemLabel)}</span>
             </div>
             ${hasNoleggio ? `<button class="mgr-open-app" type="button" data-action="open-noleggio">Apri Eccomi Noleggio ↗</button>` : ""}
           </div>
@@ -189,12 +189,12 @@ async function renderManagerShell(token: string): Promise<void> {
           <div class="mgr-grid">
             <section class="mgr-card">
               <div class="mgr-card-head">
-                <div><span class="mgr-eyebrow">PRIORITÀ OPERATIVE</span><h2>La tua coda di lavoro</h2><p>Parti da ciò che richiede una decisione o un contatto.</p></div>
+                <div><span class="mgr-eyebrow">PRIORITÀ OPERATIVE</span><h2>La tua coda di lavoro</h2><p>Parti dalle opportunità che possono generare il maggiore risultato oggi.</p></div>
                 <span class="mgr-live"><i></i>Live</span>
               </div>
               <div class="mgr-today">
-                <div class="mgr-task mgr-task--urgent"><span class="mgr-task-icon">✓</span><div><strong>${pending} offerte da approvare</strong><small>Controlla condizioni, validità e completezza prima della pubblicazione.</small></div><button type="button" data-action="open-noleggio">Gestisci offerte</button></div>
-                <div class="mgr-task mgr-task--lead"><span class="mgr-task-icon">☎</span><div><strong>${leadsToWork} lead da lavorare</strong><small>${newLeads} nuovi · ${workingLeads} già in lavorazione.</small></div><button type="button" data-action="open-noleggio">Lavora lead</button></div>
+                <div class="mgr-task mgr-task--urgent"><span class="mgr-task-icon">✓</span><div><strong>${pending} offerte da approvare</strong><small>Controlla condizioni, validità e completezza e portale verso la pubblicazione.</small></div><button type="button" data-action="open-noleggio">Gestisci offerte</button></div>
+                <div class="mgr-task mgr-task--lead"><span class="mgr-task-icon">☎</span><div><strong>${leadsToWork} lead da lavorare</strong><small>${newLeads} nuovi · ${workingLeads} già in lavorazione. Trasforma i contatti in opportunità.</small></div><button type="button" data-action="open-noleggio">Lavora lead</button></div>
                 <div class="mgr-task"><span class="mgr-task-icon">↗</span><div><strong>${active} promozioni attive</strong><small>${promotionsTotal} promozioni complessive monitorate dal sistema.</small></div><button type="button" data-action="open-noleggio">Vedi promo</button></div>
               </div>
             </section>
@@ -202,19 +202,19 @@ async function renderManagerShell(token: string): Promise<void> {
             <section class="mgr-card">
               <span class="mgr-eyebrow">AZIONI RAPIDE</span>
               <h2>Lavora da qui</h2>
-              <p>Le funzioni operative restano nel perimetro Noleggio.</p>
+              <p>Tutto ciò che ti serve per far avanzare Eccomi Noleggio.</p>
               <div class="mgr-actions">
-                <button class="mgr-action mgr-action--primary" type="button" data-action="open-noleggio"><strong>Apri Noleggio</strong><small>Entra nell’area operativa.</small></button>
+                <button class="mgr-action mgr-action--primary" type="button" data-action="open-noleggio"><strong>Apri Noleggio</strong><small>Entra nella tua area operativa.</small></button>
                 <button class="mgr-action" type="button" data-action="refresh"><strong>Aggiorna dati</strong><small>Ricarica KPI e coda di lavoro.</small></button>
-                <button class="mgr-action" type="button" data-action="open-noleggio"><strong>Offerte</strong><small>Carica, controlla e gestisci promozioni.</small></button>
-                <button class="mgr-action" type="button" data-action="open-noleggio"><strong>Lead</strong><small>Apri i contatti da lavorare.</small></button>
+                <button class="mgr-action" type="button" data-action="open-noleggio"><strong>Offerte</strong><small>Carica, controlla e porta avanti le promozioni.</small></button>
+                <button class="mgr-action" type="button" data-action="open-noleggio"><strong>Lead</strong><small>Apri i contatti e fai avanzare le opportunità.</small></button>
               </div>
             </section>
           </div>
 
           <div class="mgr-section-title">Quadro operativo</div>
           <section class="mgr-card">
-            <div class="mgr-card-head"><div><span class="mgr-eyebrow">ECCOMI NOLEGGIO</span><h2>Numeri del tuo perimetro</h2><p>Indicatori live per decidere dove concentrare il lavoro.</p></div><span class="mgr-live"><i></i>Attivo</span></div>
+            <div class="mgr-card-head"><div><span class="mgr-eyebrow">ECCOMI NOLEGGIO</span><h2>I numeri di Eccomi Noleggio</h2><p>Indicatori live per decidere dove concentrare energia e azioni.</p></div><span class="mgr-live"><i></i>Attivo</span></div>
             <div class="mgr-kpis">
               ${kpi("Promozioni attive", active, "open-noleggio")}
               ${kpi("Da approvare", pending, "open-noleggio")}
@@ -224,13 +224,13 @@ async function renderManagerShell(token: string): Promise<void> {
             <div class="mgr-performance">
               <div><small>Contratti</small><strong>${contracts}</strong></div>
               <div><small>Conversione indicativa</small><strong>${conversion}%</strong></div>
-              <div><small>Carico operativo</small><strong>${tasks}</strong></div>
+              <div><small>Attività da trasformare in risultato</small><strong>${tasks}</strong></div>
             </div>
-            ${dataError ? `<div class="mgr-error">${escapeHtml(dataError)}</div>` : `<div class="mgr-note"><strong>Perimetro protetto.</strong> Posta, Decision Center, New Entry, gestione Responsabili e controlli executive rimangono riservati al CEO. Il Responsabile può lavorare e vedere i dati solo di Eccomi Noleggio.</div>`}
+            ${dataError ? `<div class="mgr-error">${escapeHtml(dataError)}</div>` : `<div class="mgr-note"><strong>Il tuo spazio di lavoro.</strong> Hai tutto ciò che serve per guidare Eccomi Noleggio: offerte, lead, attività e risultati. Concentrati sulle priorità, fai avanzare le opportunità e porta ogni contatto verso il risultato.</div>`}
             <button class="mgr-refresh" type="button" data-action="refresh">↻ Aggiorna quadro</button>
           </section>
-        ` : `<div class="mgr-section-title">Ecosistemi assegnati</div><section class="mgr-card mgr-empty">Nessun ecosistema operativo assegnato a questo profilo.</section>`}
-        <div class="mgr-footer-note">ECCOMI HUB · Area operativa Responsabile · accesso governato dal ruolo</div>
+        ` : `<div class="mgr-section-title">Ecosistemi</div><section class="mgr-card mgr-empty">La tua prossima area operativa comparirà qui appena sarà pronta.</section>`}
+        <div class="mgr-footer-note">ECCOMI HUB · Cabina di Regia Responsabile · ${escapeHtml(ecosystemLabel)}</div>
       </main>
     `;
 
