@@ -4,15 +4,46 @@ type Delegation = {
   id: string;
   label: string;
   description: string;
+  functionText: string;
   enabled: boolean;
 };
 
 const defaults: Delegation[] = [
-  { id: "offers", label: "Gestione offerte", description: "Caricare, modificare e portare avanti le offerte di Eccomi Noleggio.", enabled: true },
-  { id: "approve", label: "Approvazione offerte", description: "Approvare le offerte complete prima della pubblicazione.", enabled: false },
-  { id: "publish", label: "Pubblicazione offerte", description: "Pubblicare le promozioni approvate nel canale operativo.", enabled: false },
-  { id: "leads", label: "Gestione lead", description: "Aprire, lavorare e aggiornare i contatti commerciali.", enabled: true },
-  { id: "archive", label: "Archiviazione pratiche", description: "Chiudere e archiviare le attività concluse.", enabled: true },
+  {
+    id: "offers",
+    label: "Gestione offerte",
+    description: "Gestione operativa dell'offerta prima della fase di approvazione.",
+    functionText: "Consente di caricare, aprire, modificare e aggiornare le offerte di Eccomi Noleggio.",
+    enabled: true,
+  },
+  {
+    id: "approve",
+    label: "Approvazione offerte",
+    description: "Validazione dell'offerta quando è completa e pronta per il passaggio successivo.",
+    functionText: "Consente di approvare o respingere un'offerta dopo il controllo di condizioni, validità e completezza.",
+    enabled: false,
+  },
+  {
+    id: "publish",
+    label: "Pubblicazione offerte",
+    description: "Messa online di un'offerta già approvata.",
+    functionText: "Consente di pubblicare nel canale operativo le promozioni che hanno già superato l'approvazione.",
+    enabled: false,
+  },
+  {
+    id: "leads",
+    label: "Gestione lead",
+    description: "Lavorazione commerciale dei contatti assegnati a Eccomi Noleggio.",
+    functionText: "Consente di aprire i lead, aggiornarne lo stato, registrare attività e portarli avanti nel percorso commerciale.",
+    enabled: true,
+  },
+  {
+    id: "archive",
+    label: "Archiviazione pratiche",
+    description: "Chiusura amministrativa delle attività concluse.",
+    functionText: "Consente di chiudere e archiviare pratiche o attività terminate, mantenendole nello storico.",
+    enabled: true,
+  },
 ];
 
 function readState(): Delegation[] {
@@ -40,6 +71,8 @@ function installStyles() {
     .ec-delegation-count{white-space:nowrap;font-weight:900;color:#0c5597}
     .ec-delegation-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:14px;border:1px solid #dce7f0;border-radius:14px;background:#fff}
     .ec-delegation-row strong{display:block;color:#102b48;font-size:15px}.ec-delegation-row small{display:block;color:#74859a;margin-top:4px;line-height:1.35}
+    .ec-delegation-function{margin-top:9px;padding-top:9px;border-top:1px solid #e7eef5;color:#31516e;font-size:12px;line-height:1.45}
+    .ec-delegation-function b{color:#173e63}
     .ec-switch{width:54px;height:30px;border:0;border-radius:999px;background:#cbd7e2;padding:3px;cursor:pointer;transition:.2s;position:relative}
     .ec-switch span{display:block;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:.2s}
     .ec-switch.on{background:#18a765}.ec-switch.on span{transform:translateX(24px)}
@@ -66,12 +99,16 @@ function render(section: HTMLElement) {
     const active = items.filter((item) => item.enabled).length;
     host.innerHTML = `
       <div class="ec-delegation-intro">
-        <span><strong>Autorizzazioni del Responsabile</strong><small>Dal CEO puoi attivare o disattivare ogni delega con un solo comando.</small></span>
+        <span><strong>Autorizzazioni del Responsabile</strong><small>Ogni delega governa una fase distinta del lavoro. Il CEO può attivarla o disattivarla con un solo comando.</small></span>
         <span class="ec-delegation-count">${active}/${items.length} attive</span>
       </div>
       ${items.map((item) => `
         <div class="ec-delegation-row" data-delegation-id="${item.id}">
-          <span><strong>${item.label}</strong><small>${item.description}</small></span>
+          <span>
+            <strong>${item.label}</strong>
+            <small>${item.description}</small>
+            <div class="ec-delegation-function"><b>Funzione:</b> ${item.functionText}</div>
+          </span>
           <span>
             <button class="ec-switch ${item.enabled ? "on" : ""}" type="button" role="switch" aria-checked="${item.enabled}" aria-label="${item.enabled ? "Disattiva" : "Attiva"} ${item.label}"><span></span></button>
             <div class="ec-delegation-state ${item.enabled ? "on" : ""}">${item.enabled ? "ON" : "OFF"}</div>
