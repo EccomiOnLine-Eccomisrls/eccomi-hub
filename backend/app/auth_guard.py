@@ -74,9 +74,9 @@ async def _guarded_post(
                 request=request,
             )
 
-        safe_body = dict(body)
-        safe_body["create_user"] = False
-        kwargs["json"] = safe_body
+        # The email is already guaranteed to belong to an active HUB profile.
+        # Keep the original Supabase OTP payload unchanged so existing users
+        # continue to use the proven login flow.
 
     return await _original_post(self, url, *args, **kwargs)
 
