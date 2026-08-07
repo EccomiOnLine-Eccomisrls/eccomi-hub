@@ -1,6 +1,6 @@
 type HubSession = {
   accessToken?: string;
-  user?: { role?: string };
+  access_token?: string;
 };
 
 type Responsible = {
@@ -26,20 +26,41 @@ const ecosystemLabels: Record<string, string> = {
   pec: "Eccomi PEC",
 };
 
-function session(): HubSession | null {
-  try {
-    return JSON.parse(localStorage.getItem("eccomi-hub-session") || "null") as HubSession | null;
-  } catch {
-    return null;
+function readStoredToken(): string {
+  const candidateKeys = [
+    "eccomi-hub-session",
+    "hub_session",
+    "eccomi_session",
+    "session",
+  ];
+
+  for (const key of candidateKeys) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw) as HubSession;
+      const value = parsed.accessToken || parsed.access_token;
+      if (value) return value;
+    } catch {
+      // Continue with the next known storage key.
+    }
   }
-}
 
-function token(): string {
-  return session()?.accessToken || "";
-}
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+    if (!key) continue;
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw || !raw.startsWith("{")) continue;
+      const parsed = JSON.parse(raw) as HubSession;
+      const value = parsed.accessToken || parsed.access_token;
+      if (value) return value;
+    } catch {
+      // Ignore unrelated localStorage entries.
+    }
+  }
 
-function isCeo(): boolean {
-  return session()?.user?.role === "ceo";
+  return "";
 }
 
 function escapeHtml(value: string): string {
@@ -56,7 +77,7 @@ function initials(name: string): string {
 }
 
 async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const accessToken = token();
+  const accessToken = readStoredToken();
   if (!accessToken) throw new Error("Sessione non disponibile. Accedi nuovamente.");
 
   const response = await fetch(`${API_URL}${path}`, {
@@ -69,9 +90,7 @@ async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
 
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(payload.detail || "Operazione non riuscita.");
-  }
+  if (!response.ok) throw new Error(payload.detail || "Operazione non riuscita.");
   return payload as T;
 }
 
@@ -80,7 +99,8 @@ function ensureStyles(): void {
   const style = document.createElement("style");
   style.id = `${EXTENSION_ID}-styles`;
   style.textContent = `
-    .team-live-toolbar{display:flex;justify-content:flex-end;margin:-2px 0 18px}
+    .team-live-toolbar{display:flex;justify-content:flex-end;margin:0 0 18px}
+    .team-live-add{border:0;background:#0c5597;color:#fff;border-radius:12px;padding:12px 17px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(12,85,151,.18)}
     .team-live-empty{grid-column:1/-1;background:#fff;border:1px dashed #bfd0e2;border-radius:18px;padding:28px;text-align:center;color:#5b6778}
     .team-live-empty strong{display:block;color:#102033;font-size:17px;margin-bottom:6px}
     .team-live-badge{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:12px;font-weight:800;color:#087443;background:#e9f8f0;border-radius:999px;padding:5px 9px}
@@ -96,14 +116,12 @@ function ensureStyles(): void {
     .team-form{display:grid;gap:16px}
     .team-form label{display:grid;gap:7px;font-weight:800;color:#26384b;font-size:13px}
     .team-form input,.team-form select{width:100%;border:1px solid #cbd8e5;border-radius:12px;padding:13px 14px;font:inherit;color:#102033;background:#fff;box-sizing:border-box}
-    .team-form input:focus,.team-form select:focus{outline:3px solid rgba(12,85,151,.12);border-color:#0c5597}
     .team-form__note{display:flex;gap:10px;background:#eef7ff;border:1px solid #cde4f7;border-radius:14px;padding:13px;color:#31516e;font-size:13px;line-height:1.45}
     .team-form__error{background:#fff0f0;border:1px solid #ffcaca;color:#9b2020;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:700}
     .team-form__actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
     .team-form__actions button{border-radius:12px;padding:12px 17px;font-weight:900;cursor:pointer}
     .team-form__cancel{border:1px solid #cbd8e5;background:#fff;color:#31516e}
     .team-form__save{border:0;background:#0c5597;color:#fff}
-    .team-form__save:disabled{opacity:.55;cursor:not-allowed}
   `;
   document.head.appendChild(style);
 }
@@ -111,137 +129,79 @@ function ensureStyles(): void {
 function managerCard(item: Responsible): string {
   const ecosystem = item.ecosystem_keys[0] || "da-assegnare";
   const area = ecosystemLabels[ecosystem] || ecosystem;
-  return `
-    <article class="manager-card" data-real-manager="${escapeHtml(item.user_id)}">
-      <div class="manager-card__top">
-        <span class="manager-avatar" style="color:#0c5597;background:#e9f2fa">${escapeHtml(initials(item.full_name))}</span>
-        <em class="team-live-badge"><i></i>${item.active ? "Attivo" : "Sospeso"}</em>
-      </div>
-      <h3>${escapeHtml(item.full_name)}</h3>
-      <p>${escapeHtml(area)}</p>
-      <div class="manager-score">
-        <span><small>Ruolo</small><strong>Responsabile</strong></span>
-        <div><span style="width:100%;background:#0c5597"></span></div>
-      </div>
-      <div class="manager-meta">
-        <span>${escapeHtml(item.ec_id)}</span>
-        <span>${escapeHtml(item.email)}</span>
-      </div>
-    </article>`;
+  return `<article class="manager-card" data-real-manager="${escapeHtml(item.user_id)}">
+    <div class="manager-card__top"><span class="manager-avatar" style="color:#0c5597;background:#e9f2fa">${escapeHtml(initials(item.full_name))}</span><em class="team-live-badge"><i></i>${item.active ? "Attivo" : "Sospeso"}</em></div>
+    <h3>${escapeHtml(item.full_name)}</h3><p>${escapeHtml(area)}</p>
+    <div class="manager-score"><span><small>Ruolo</small><strong>Responsabile</strong></span><div><span style="width:100%;background:#0c5597"></span></div></div>
+    <div class="manager-meta"><span>${escapeHtml(item.ec_id)}</span><span>${escapeHtml(item.email)}</span></div>
+  </article>`;
 }
 
 async function loadManagers(): Promise<void> {
   const grid = document.querySelector<HTMLElement>(".manager-grid");
-  if (!grid || loading || !isCeo()) return;
+  if (!grid || loading) return;
   loading = true;
   try {
     const managers = await api<Responsible[]>("/v1/team/responsibles");
-    grid.dataset.live = "true";
-    grid.innerHTML = managers.length
-      ? managers.map(managerCard).join("")
-      : `<div class="team-live-empty"><strong>Nessun responsabile reale registrato</strong><span>Usa “Nuovo responsabile” per assegnare la prima area.</span></div>`;
+    grid.innerHTML = managers.length ? managers.map(managerCard).join("") : `<div class="team-live-empty"><strong>Nessun responsabile reale registrato</strong><span>Usa “Nuovo responsabile” per assegnare la prima area.</span></div>`;
   } catch (error) {
     grid.innerHTML = `<div class="team-live-empty"><strong>Responsabili non disponibili</strong><span>${escapeHtml(error instanceof Error ? error.message : "Errore di collegamento")}</span></div>`;
-  } finally {
-    loading = false;
-  }
+  } finally { loading = false; }
 }
 
-function closeModal(): void {
-  document.getElementById(`${EXTENSION_ID}-modal`)?.remove();
-}
+function closeModal(): void { document.getElementById(`${EXTENSION_ID}-modal`)?.remove(); }
 
 function openModal(): void {
   if (document.getElementById(`${EXTENSION_ID}-modal`)) return;
   const layer = document.createElement("div");
   layer.id = `${EXTENSION_ID}-modal`;
   layer.className = "team-modal-layer";
-  layer.innerHTML = `
-    <button class="team-modal-scrim" aria-label="Chiudi"></button>
-    <section class="team-modal" role="dialog" aria-modal="true" aria-labelledby="team-modal-title">
-      <div class="team-modal__head">
-        <div><small>Solo CEO</small><h2 id="team-modal-title">Nuovo responsabile</h2><p>Collega una persona reale a un ecosistema e abilita l’accesso OTP a ECCOMI HUB.</p></div>
-        <button class="team-modal__close" type="button" aria-label="Chiudi">×</button>
-      </div>
-      <form class="team-form">
-        <label>Nome e cognome<input name="full_name" autocomplete="name" required minlength="2" placeholder="Es. Salvo Rossi"></label>
-        <label>Indirizzo email<input name="email" type="email" autocomplete="email" required placeholder="nome@email.it"></label>
-        <label>Ecosistema assegnato
-          <select name="ecosystem_key" required>
-            <option value="noleggio">Eccomi Noleggio</option>
-            <option value="posta">Eccomi Posta</option>
-            <option value="energia">Eccomi Energia</option>
-            <option value="spedizioni">Eccomi Spedizioni</option>
-            <option value="pec">Eccomi PEC</option>
-          </select>
-        </label>
-        <div class="team-form__note">🔐 Il profilo verrà creato con ruolo <strong>manager</strong>. L’indirizzo potrà ricevere il codice OTP soltanto dopo il salvataggio.</div>
-        <div class="team-form__error" hidden></div>
-        <div class="team-form__actions">
-          <button type="button" class="team-form__cancel">Annulla</button>
-          <button type="submit" class="team-form__save">Crea responsabile</button>
-        </div>
-      </form>
-    </section>`;
+  layer.innerHTML = `<button class="team-modal-scrim" aria-label="Chiudi"></button><section class="team-modal" role="dialog" aria-modal="true"><div class="team-modal__head"><div><small>Solo CEO</small><h2>Nuovo responsabile</h2><p>Collega una persona reale a un ecosistema e abilita l’accesso OTP.</p></div><button class="team-modal__close" type="button">×</button></div><form class="team-form"><label>Nome e cognome<input name="full_name" required minlength="2" placeholder="Es. Salvo Rossi"></label><label>Indirizzo email<input name="email" type="email" required placeholder="nome@email.it"></label><label>Ecosistema assegnato<select name="ecosystem_key"><option value="noleggio">Eccomi Noleggio</option><option value="posta">Eccomi Posta</option><option value="energia">Eccomi Energia</option><option value="spedizioni">Eccomi Spedizioni</option><option value="pec">Eccomi PEC</option></select></label><div class="team-form__note">🔐 Il backend verificherà che l’operazione sia eseguita dal CEO.</div><div class="team-form__error" hidden></div><div class="team-form__actions"><button type="button" class="team-form__cancel">Annulla</button><button type="submit" class="team-form__save">Crea responsabile</button></div></form></section>`;
   document.body.appendChild(layer);
-
-  layer.querySelectorAll(".team-modal-scrim,.team-modal__close,.team-form__cancel").forEach((element) => {
-    element.addEventListener("click", closeModal);
-  });
-
+  layer.querySelectorAll(".team-modal-scrim,.team-modal__close,.team-form__cancel").forEach((el) => el.addEventListener("click", closeModal));
   const form = layer.querySelector<HTMLFormElement>("form")!;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const save = form.querySelector<HTMLButtonElement>(".team-form__save")!;
     const errorBox = form.querySelector<HTMLElement>(".team-form__error")!;
     const data = new FormData(form);
-    save.disabled = true;
-    save.textContent = "Creazione in corso…";
-    errorBox.hidden = true;
+    save.disabled = true; save.textContent = "Creazione in corso…"; errorBox.hidden = true;
     try {
-      await api<Responsible>("/v1/team/responsibles", {
-        method: "POST",
-        body: JSON.stringify({
-          full_name: String(data.get("full_name") || "").trim(),
-          email: String(data.get("email") || "").trim().toLowerCase(),
-          ecosystem_key: String(data.get("ecosystem_key") || "noleggio"),
-        }),
-      });
-      closeModal();
-      await loadManagers();
+      await api<Responsible>("/v1/team/responsibles", { method: "POST", body: JSON.stringify({ full_name: String(data.get("full_name") || "").trim(), email: String(data.get("email") || "").trim().toLowerCase(), ecosystem_key: String(data.get("ecosystem_key") || "noleggio") }) });
+      closeModal(); await loadManagers();
     } catch (error) {
-      errorBox.textContent = error instanceof Error ? error.message : "Creazione non riuscita.";
-      errorBox.hidden = false;
-      save.disabled = false;
-      save.textContent = "Crea responsabile";
+      errorBox.textContent = error instanceof Error ? error.message : "Creazione non riuscita."; errorBox.hidden = false; save.disabled = false; save.textContent = "Crea responsabile";
     }
   });
 }
 
 function installOnTeamPage(): void {
-  const heading = Array.from(document.querySelectorAll("h1")).find((node) => node.textContent?.trim() === "Responsabili");
-  if (!heading || !isCeo()) return;
-  const page = heading.closest(".content") || document.body;
-  const key = `${heading.textContent}-${Boolean(page.querySelector(".manager-grid"))}`;
+  const heading = Array.from(document.querySelectorAll("h1,h2")).find((node) => node.textContent?.trim() === "Responsabili");
+  const grid = document.querySelector<HTMLElement>(".manager-grid");
+  if (!heading || !grid) return;
+  const key = `${heading.textContent}-${Boolean(grid)}`;
   if (lastPathKey === key && document.getElementById(`${EXTENSION_ID}-button`)) return;
   lastPathKey = key;
 
-  const actions = heading.closest(".page-heading")?.querySelector(".heading-actions") || heading.parentElement;
-  if (actions && !document.getElementById(`${EXTENSION_ID}-button`)) {
+  if (!document.getElementById(`${EXTENSION_ID}-toolbar`)) {
+    const toolbar = document.createElement("div");
+    toolbar.id = `${EXTENSION_ID}-toolbar`;
+    toolbar.className = "team-live-toolbar";
     const button = document.createElement("button");
     button.id = `${EXTENSION_ID}-button`;
-    button.className = "new-entry-button";
-    button.innerHTML = "+ Nuovo responsabile";
+    button.className = "team-live-add";
+    button.textContent = "+ Nuovo responsabile";
     button.addEventListener("click", openModal);
-    actions.appendChild(button);
+    toolbar.appendChild(button);
+    grid.parentElement?.insertBefore(toolbar, grid);
   }
 
   void loadManagers();
 }
 
 ensureStyles();
-const observer = new MutationObserver(() => installOnTeamPage());
+const observer = new MutationObserver(installOnTeamPage);
 observer.observe(document.documentElement, { childList: true, subtree: true });
 window.addEventListener("popstate", installOnTeamPage);
-window.setInterval(installOnTeamPage, 1200);
+window.setInterval(installOnTeamPage, 700);
 installOnTeamPage();
