@@ -15,6 +15,8 @@ alter table public.hub_manager_delegations enable row level security;
 revoke all on table public.hub_manager_delegations from anon;
 revoke all on table public.hub_manager_delegations from authenticated;
 
+grant usage on schema public to service_role;
+grant select, insert, update, delete on table public.hub_manager_delegations to service_role;
 grant select on table public.hub_manager_delegations to authenticated;
 
 drop policy if exists "hub_manager_delegations_read_self" on public.hub_manager_delegations;
