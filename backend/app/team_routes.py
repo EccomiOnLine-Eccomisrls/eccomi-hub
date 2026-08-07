@@ -13,15 +13,17 @@ SUPABASE_SERVICE_ROLE_KEY = (os.getenv("SUPABASE_SERVICE_ROLE_KEY", "") or os.ge
 _original_fastapi_init = FastAPI.__init__
 _installed = False
 
+# New Responsabili start with only basic offer management enabled.
+# Every additional power is explicitly granted by the CEO.
 PERMISSION_DEFAULTS: dict[str, bool] = {
     "offers": True,
     "approve": False,
     "publish": False,
-    "leads": True,
-    "negotiations": True,
+    "leads": False,
+    "negotiations": False,
     "documents": False,
-    "cases": True,
-    "archive": True,
+    "cases": False,
+    "archive": False,
     "export": False,
 }
 
@@ -60,6 +62,11 @@ class DelegationState(BaseModel):
     user_id: str
     ecosystem_key: str
     permissions: dict[str, bool]
+
+
+class PermissionCheck(BaseModel):
+    permission: str
+    allowed: bool
 
 
 def _service_headers() -> dict[str, str]:
@@ -137,7 +144,7 @@ def _normalize_permissions(raw: dict[str, Any] | None) -> dict[str, bool]:
     if normalized["archive"] and not normalized["cases"]:
         normalized["archive"] = False
 
-    # Reverse dependency cascade: disabling a parent disables children.
+    # Reverse dependency cascade.
     if not normalized["offers"]:
         normalized["approve"] = False
         normalized["publish"] = False
@@ -183,7 +190,11 @@ async def _write_delegations(user_id: str, ecosystem_key: str, permissions: dict
         "ecosystem_key": ecosystem_key,
         "permissions": normalized,
         "updated_by": updated_by,
+        "updated_at": "now()",
     }
+    # PostgREST does not evaluate now() strings, so omit updated_at and let the
+    # database default handle creation; future trigger can maintain updates.
+    row.pop("updated_at", None)
     async with httpx.AsyncClient(timeout=12.0) as client:
         response = await client.post(
             f"{SUPABASE_URL}/rest/v1/hub_manager_delegations",
@@ -194,7 +205,7 @@ async def _write_delegations(user_id: str, ecosystem_key: str, permissions: dict
     if response.status_code in (404, 400):
         raise HTTPException(status_code=503, detail="Archivio deleghe non ancora attivato in Supabase.")
     if response.status_code not in (200, 201):
-        raise HTTPException(status_code=502, detail="Salvataggio delle deleghe non riuscito.")
+        raise HTTPException(status_code=502, detail=f"Salvataggio delle deleghe non riuscito: {response.text[:240]}")
     return DelegationState(user_id=user_id, ecosystem_key=ecosystem_key, permissions=normalized)
 
 
@@ -308,6 +319,16 @@ async def get_my_delegations(authorization: str | None = Header(default=None)) -
     return await _read_delegations(str(profile.get("user_id") or ""), ecosystem_key)
 
 
+async def check_my_permission(permission: str, authorization: str | None = Header(default=None)) -> PermissionCheck:
+    profile = await _require_manager(authorization)
+    if permission not in PERMISSION_DEFAULTS:
+        raise HTTPException(status_code=404, detail="Permesso non riconosciuto.")
+    ecosystem_keys = profile.get("ecosystem_keys") or []
+    ecosystem_key = ecosystem_keys[0] if ecosystem_keys else "noleggio"
+    state = await _read_delegations(str(profile.get("user_id") or ""), ecosystem_key)
+    return PermissionCheck(permission=permission, allowed=bool(state.permissions.get(permission)))
+
+
 def _install_routes(app: FastAPI) -> None:
     app.add_api_route("/v1/team/responsibles", list_responsibles, methods=["GET"], response_model=list[ResponsibleProfile], tags=["team"])
     app.add_api_route("/v1/team/responsibles", create_responsible, methods=["POST"], response_model=ResponsibleProfile, status_code=201, tags=["team"])
@@ -315,6 +336,7 @@ def _install_routes(app: FastAPI) -> None:
     app.add_api_route("/v1/team/responsibles/{user_id}/delegations", get_responsible_delegations, methods=["GET"], response_model=DelegationState, tags=["team"])
     app.add_api_route("/v1/team/responsibles/{user_id}/delegations", update_responsible_delegations, methods=["PUT"], response_model=DelegationState, tags=["team"])
     app.add_api_route("/v1/team/me/delegations", get_my_delegations, methods=["GET"], response_model=DelegationState, tags=["team"])
+    app.add_api_route("/v1/team/me/permissions/{permission}", check_my_permission, methods=["GET"], response_model=PermissionCheck, tags=["team"])
 
 
 def _patched_fastapi_init(self: FastAPI, *args: Any, **kwargs: Any) -> None:
