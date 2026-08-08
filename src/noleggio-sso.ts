@@ -42,8 +42,13 @@ function nextPath(element: HTMLElement): string | null {
   }
 
   if (!isNoleggioContext(element)) return null;
-  if (text.includes("gestisci offerte")) return "/offerte";
-  if (text.includes("apri servizio") || text.includes("apri area operativa")) return "/ceo";
+  if (text.includes("gestisci offerte") || text === "offerte" || text.includes("apri offerte")) return "/offerte";
+  if (
+    text.includes("apri servizio") ||
+    text.includes("apri area operativa") ||
+    text.includes("apri eccomi noleggio") ||
+    text.includes("apri noleggio")
+  ) return "/ceo";
   return null;
 }
 
