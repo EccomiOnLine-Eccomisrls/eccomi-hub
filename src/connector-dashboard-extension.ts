@@ -12,6 +12,7 @@ const HOST_ID = "eccomi-connector-dashboard";
 let loading = false;
 let lastToken = "";
 let states: Record<string, ConnectorState> = {};
+let lastMarkup = "";
 
 function apiBaseUrl(): string {
   const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
@@ -84,34 +85,11 @@ function stateClass(state: ConnectorState): string {
   return "planned";
 }
 
-function render(): void {
-  const current = document.getElementById(HOST_ID);
-  if (!dashboardVisible()) {
-    current?.remove();
-    return;
-  }
-
-  const { token, role } = readSession();
-  if (!token || role !== "ceo") {
-    current?.remove();
-    return;
-  }
-
-  const anchor = document.querySelector<HTMLElement>(".os2-primary-kpis");
-  if (!anchor) return;
-
-  let host = current;
-  if (!host) {
-    host = document.createElement("section");
-    host.id = HOST_ID;
-    host.className = "connector-dashboard";
-    anchor.insertAdjacentElement("afterend", host);
-  }
-
+function buildMarkup(): string {
   const connected = ecosystemRegistry.filter((definition) => states[definition.key] === "ready").length;
   const pending = ecosystemRegistry.length - connected;
 
-  host.innerHTML = `
+  return `
     <div class="connector-dashboard__head">
       <div>
         <small>ECCOMI ECOSYSTEM CONNECTOR</small>
@@ -139,24 +117,62 @@ function render(): void {
   `;
 }
 
-async function scan(): Promise<void> {
-  const { token, role } = readSession();
-  if (!dashboardVisible() || !token || role !== "ceo") {
-    document.getElementById(HOST_ID)?.remove();
+function render(): void {
+  const current = document.getElementById(HOST_ID);
+  if (!dashboardVisible()) {
+    current?.remove();
+    lastMarkup = "";
     return;
   }
 
-  if (token !== lastToken || Object.keys(states).length === 0) {
+  const { token, role } = readSession();
+  if (!token || role !== "ceo") {
+    current?.remove();
+    lastMarkup = "";
+    return;
+  }
+
+  const anchor = document.querySelector<HTMLElement>(".os2-primary-kpis");
+  if (!anchor) return;
+
+  let host = current;
+  if (!host) {
+    host = document.createElement("section");
+    host.id = HOST_ID;
+    host.className = "connector-dashboard";
+    anchor.insertAdjacentElement("afterend", host);
+  }
+
+  const markup = buildMarkup();
+  if (markup !== lastMarkup) {
+    host.innerHTML = markup;
+    lastMarkup = markup;
+  }
+}
+
+async function scan(forceReload = false): Promise<void> {
+  const { token, role } = readSession();
+  if (!dashboardVisible() || !token || role !== "ceo") {
+    document.getElementById(HOST_ID)?.remove();
+    lastMarkup = "";
+    return;
+  }
+
+  if (forceReload || token !== lastToken || Object.keys(states).length === 0) {
     await loadStates(token);
   }
   render();
 }
 
-const observer = new MutationObserver(() => { void scan(); });
-observer.observe(document.documentElement, { childList: true, subtree: true });
 window.addEventListener("focus", () => {
-  lastToken = "";
+  void scan(true);
+});
+window.addEventListener("popstate", () => {
   void scan();
 });
-window.setInterval(() => { void scan(); }, 10_000);
-void scan();
+window.setInterval(() => {
+  void scan();
+}, 15_000);
+window.setTimeout(() => {
+  void scan();
+}, 500);
