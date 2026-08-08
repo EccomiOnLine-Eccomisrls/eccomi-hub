@@ -66,8 +66,16 @@ function installStyles() {
 
 function managerUserId(section: HTMLElement): string {
   const owner = section.querySelector<HTMLElement>(".team-delegation-owner");
-  const card = document.querySelector<HTMLElement>(".manager-card[data-real-manager]");
-  return String(card?.dataset.realManager || owner?.dataset.userId || "");
+  const explicitUserId = String(owner?.dataset.userId || "").trim();
+  if (explicitUserId) return explicitUserId;
+
+  const ownerIdentity = owner?.querySelector<HTMLElement>("span")?.textContent || "";
+  const ecId = ownerIdentity.split("·").pop()?.trim() || "";
+  if (!ecId) return "";
+
+  const card = Array.from(document.querySelectorAll<HTMLElement>(".manager-card[data-real-manager]"))
+    .find((candidate) => (candidate.textContent || "").includes(ecId));
+  return String(card?.dataset.realManager || "");
 }
 
 function dependencyLabels(ids: string[] | undefined): string {
