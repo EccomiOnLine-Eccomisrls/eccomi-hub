@@ -52,7 +52,9 @@ function applyUnavailableState(): void {
   panel.dataset.summaryUnavailable = "true";
 }
 
-const observer = new MutationObserver(() => {
+const noleggioSafetyObserver = new MutationObserver(() => {
   if (noleggioSummaryAvailable === false) applyUnavailableState();
 });
-observer.observe(document.documentElement, { childList: true, subtree: true });
+noleggioSafetyObserver.observe(document.documentElement, { childList: true, subtree: true });
+
+export {};
