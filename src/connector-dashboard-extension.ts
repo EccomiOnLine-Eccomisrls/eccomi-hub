@@ -14,7 +14,8 @@ let lastToken = "";
 let states: Record<string, ConnectorState> = {};
 
 function apiBaseUrl(): string {
-  const env = import.meta.env as ImportMetaEnv & Record<string, string | undefined>;
+  const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
+  const env = meta.env || {};
   return String(env.VITE_HUB_API_URL || env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
 }
 
