@@ -1,78 +1,43 @@
 import { ecosystemRegistry } from "./ecosystems/registry";
 
-type HubSession = {
-  accessToken?: string;
-  access_token?: string;
-  user?: { role?: string };
-};
-
-type ConnectorState = "ready" | "loading" | "error" | "planned" | "connecting";
+type ConnectorState = "ready" | "planned" | "connecting" | "error";
 
 const HOST_ID = "eccomi-connector-dashboard";
-let loading = false;
-let lastToken = "";
-let states: Record<string, ConnectorState> = {};
 let lastMarkup = "";
 
-function apiBaseUrl(): string {
-  const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
-  const env = meta.env || {};
-  return String(env.VITE_HUB_API_URL || env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
-}
+function findLiveEcosystemCount(): number {
+  const snapshot = document.getElementById("executive-section-snapshot");
+  if (!snapshot) return 0;
 
-function readSession(): { token: string; role: string } {
-  try {
-    const session = JSON.parse(localStorage.getItem("eccomi-hub-session") || "") as HubSession;
-    return {
-      token: String(session.accessToken || session.access_token || ""),
-      role: String(session.user?.role || ""),
-    };
-  } catch {
-    return { token: "", role: "" };
-  }
+  const cards = Array.from(snapshot.querySelectorAll<HTMLElement>("button, article, div"));
+  const card = cards.find((element) =>
+    (element.textContent || "").toLowerCase().includes("ecosistemi collegati"),
+  );
+  if (!card) return 0;
+
+  const match = (card.textContent || "").match(/\b(\d+)\b/);
+  return match ? Number(match[1]) : 0;
 }
 
 function dashboardVisible(): boolean {
-  const text = document.body.textContent || "";
-  return text.includes("Priorità del CEO") && text.includes("Ecosistemi collegati");
+  return Boolean(
+    document.getElementById("executive-section-snapshot") &&
+    document.querySelector(".os2-morning-hero"),
+  );
 }
 
-async function checkConnector(key: string, endpoint: string, token: string): Promise<void> {
-  states[key] = "loading";
-  try {
-    const response = await fetch(`${apiBaseUrl()}${endpoint}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    states[key] = response.ok ? "ready" : "error";
-  } catch {
-    states[key] = "error";
+function connectorState(key: string, liveCount: number): ConnectorState {
+  if (key === "posta" || key === "noleggio") {
+    return liveCount >= 2 ? "ready" : "error";
   }
-}
 
-async function loadStates(token: string): Promise<void> {
-  if (loading) return;
-  loading = true;
-  try {
-    states = {};
-    for (const definition of ecosystemRegistry) {
-      if (definition.summaryEndpoint) states[definition.key] = "loading";
-      else states[definition.key] = definition.lifecycle === "connecting" ? "connecting" : "planned";
-    }
-
-    await Promise.all(
-      ecosystemRegistry
-        .filter((definition) => Boolean(definition.summaryEndpoint))
-        .map((definition) => checkConnector(definition.key, definition.summaryEndpoint!, token)),
-    );
-    lastToken = token;
-  } finally {
-    loading = false;
-  }
+  const definition = ecosystemRegistry.find((item) => item.key === key);
+  if (definition?.lifecycle === "connecting") return "connecting";
+  return "planned";
 }
 
 function stateLabel(state: ConnectorState): string {
   if (state === "ready") return "Collegato";
-  if (state === "loading") return "Verifica…";
   if (state === "error") return "Da verificare";
   if (state === "connecting") return "Da collegare";
   return "Pianificato";
@@ -81,20 +46,43 @@ function stateLabel(state: ConnectorState): string {
 function stateClass(state: ConnectorState): string {
   if (state === "ready") return "ready";
   if (state === "error") return "error";
-  if (state === "loading") return "loading";
   return "planned";
 }
 
-function buildMarkup(): string {
-  const connected = ecosystemRegistry.filter((definition) => states[definition.key] === "ready").length;
+function render(): void {
+  const current = document.getElementById(HOST_ID);
+  if (!dashboardVisible()) {
+    current?.remove();
+    lastMarkup = "";
+    return;
+  }
+
+  const hero = document.querySelector<HTMLElement>(".os2-morning-hero");
+  if (!hero) return;
+
+  const anchor = hero.parentElement;
+  if (!anchor) return;
+
+  let host = current;
+  if (!host) {
+    host = document.createElement("section");
+    host.id = HOST_ID;
+    host.className = "connector-dashboard";
+    anchor.insertAdjacentElement("afterend", host);
+  }
+
+  const liveCount = findLiveEcosystemCount();
+  const connected = ecosystemRegistry.filter(
+    (definition) => connectorState(definition.key, liveCount) === "ready",
+  ).length;
   const pending = ecosystemRegistry.length - connected;
 
-  return `
+  const markup = `
     <div class="connector-dashboard__head">
       <div>
         <small>ECCOMI ECOSYSTEM CONNECTOR</small>
         <strong>Collegamenti dell'ecosistema</strong>
-        <p>Solo dati realmente disponibili. Nessun KPI viene simulato.</p>
+        <p>Solo collegamenti realmente disponibili. Nessun KPI viene simulato.</p>
       </div>
       <div class="connector-dashboard__summary">
         <span><b>${connected}</b> collegati</span>
@@ -103,7 +91,7 @@ function buildMarkup(): string {
     </div>
     <div class="connector-dashboard__grid">
       ${ecosystemRegistry.map((definition) => {
-        const state = states[definition.key] || (definition.summaryEndpoint ? "loading" : "planned");
+        const state = connectorState(definition.key, liveCount);
         return `<article class="connector-dashboard__item">
           <span class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></span>
           <div>
@@ -115,64 +103,15 @@ function buildMarkup(): string {
       }).join("")}
     </div>
   `;
-}
 
-function render(): void {
-  const current = document.getElementById(HOST_ID);
-  if (!dashboardVisible()) {
-    current?.remove();
-    lastMarkup = "";
-    return;
-  }
-
-  const { token, role } = readSession();
-  if (!token || role !== "ceo") {
-    current?.remove();
-    lastMarkup = "";
-    return;
-  }
-
-  const anchor = document.querySelector<HTMLElement>(".os2-primary-kpis");
-  if (!anchor) return;
-
-  let host = current;
-  if (!host) {
-    host = document.createElement("section");
-    host.id = HOST_ID;
-    host.className = "connector-dashboard";
-    anchor.insertAdjacentElement("afterend", host);
-  }
-
-  const markup = buildMarkup();
   if (markup !== lastMarkup) {
     host.innerHTML = markup;
     lastMarkup = markup;
   }
 }
 
-async function scan(forceReload = false): Promise<void> {
-  const { token, role } = readSession();
-  if (!dashboardVisible() || !token || role !== "ceo") {
-    document.getElementById(HOST_ID)?.remove();
-    lastMarkup = "";
-    return;
-  }
-
-  if (forceReload || token !== lastToken || Object.keys(states).length === 0) {
-    await loadStates(token);
-  }
-  render();
-}
-
-window.addEventListener("focus", () => {
-  void scan(true);
-});
-window.addEventListener("popstate", () => {
-  void scan();
-});
-window.setInterval(() => {
-  void scan();
-}, 15_000);
-window.setTimeout(() => {
-  void scan();
-}, 500);
+window.addEventListener("focus", render);
+window.addEventListener("pageshow", render);
+window.setInterval(render, 5_000);
+window.setTimeout(render, 250);
+window.setTimeout(render, 1_000);
