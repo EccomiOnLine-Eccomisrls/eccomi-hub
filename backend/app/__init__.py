@@ -11,7 +11,9 @@ install_team_routes()
 
 from .preview_cors import install_preview_cors
 from .manager_access import install_manager_access_routes
+from .noleggio_sso import install_noleggio_sso_routes
 from .main import app
 
 install_manager_access_routes(app)
+install_noleggio_sso_routes(app)
 install_preview_cors()
