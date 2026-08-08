@@ -1,22 +1,30 @@
 import { ecosystemRegistry } from "./ecosystems/registry";
 
 type ConnectorState = "ready" | "planned" | "connecting" | "error";
+type HubSession = { accessToken?: string; access_token?: string };
 
 const HOST_ID = "eccomi-connector-dashboard";
+const API_URL = String(import.meta.env.VITE_HUB_API_URL || import.meta.env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
+const verifiedStates = new Map<string, ConnectorState>();
 let lastMarkup = "";
+let verifying = false;
 
-function findLiveEcosystemCount(): number {
-  const snapshot = document.getElementById("executive-section-snapshot");
-  if (!snapshot) return 0;
-
-  const cards = Array.from(snapshot.querySelectorAll<HTMLElement>("button, article, div"));
-  const card = cards.find((element) =>
-    (element.textContent || "").toLowerCase().includes("ecosistemi collegati"),
-  );
-  if (!card) return 0;
-
-  const match = (card.textContent || "").match(/\b(\d+)\b/);
-  return match ? Number(match[1]) : 0;
+function sessionToken(): string {
+  for (const key of ["eccomi-hub-session", "hub_session", "eccomi_session", "session"]) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || "") as HubSession;
+      const token = parsed.accessToken || parsed.access_token;
+      if (token) return token;
+    } catch {}
+  }
+  for (let i = 0; i < localStorage.length; i += 1) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(localStorage.key(i) || "") || "") as HubSession;
+      const token = parsed.accessToken || parsed.access_token;
+      if (token) return token;
+    } catch {}
+  }
+  return "";
 }
 
 function dashboardVisible(): boolean {
@@ -26,26 +34,55 @@ function dashboardVisible(): boolean {
   );
 }
 
-function connectorState(key: string, liveCount: number): ConnectorState {
-  if (key === "posta" || key === "noleggio") {
-    return liveCount >= 2 ? "ready" : "error";
-  }
-
+function defaultState(key: string): ConnectorState {
   const definition = ecosystemRegistry.find((item) => item.key === key);
+  if (definition?.summaryEndpoint) return verifiedStates.get(key) || "connecting";
   if (definition?.lifecycle === "connecting") return "connecting";
   return "planned";
+}
+
+async function verifyOperationalConnectors(): Promise<void> {
+  if (verifying) return;
+  const token = sessionToken();
+  if (!token) {
+    ecosystemRegistry.filter((item) => item.summaryEndpoint).forEach((item) => verifiedStates.set(item.key, "error"));
+    render();
+    return;
+  }
+
+  verifying = true;
+  try {
+    await Promise.all(ecosystemRegistry.filter((item) => item.summaryEndpoint).map(async (definition) => {
+      verifiedStates.set(definition.key, "connecting");
+      try {
+        const response = await fetch(`${API_URL}${definition.summaryEndpoint}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        await response.json();
+        verifiedStates.set(definition.key, "ready");
+      } catch {
+        verifiedStates.set(definition.key, "error");
+      }
+    }));
+  } finally {
+    verifying = false;
+    render();
+  }
 }
 
 function stateLabel(state: ConnectorState): string {
   if (state === "ready") return "Collegato";
   if (state === "error") return "Da verificare";
-  if (state === "connecting") return "Da collegare";
+  if (state === "connecting") return "Verifica in corso";
   return "Pianificato";
 }
 
 function stateClass(state: ConnectorState): string {
   if (state === "ready") return "ready";
   if (state === "error") return "error";
+  if (state === "connecting") return "loading";
   return "planned";
 }
 
@@ -58,23 +95,17 @@ function render(): void {
   }
 
   const hero = document.querySelector<HTMLElement>(".os2-morning-hero");
-  if (!hero) return;
-
-  const anchor = hero.parentElement;
-  if (!anchor) return;
+  if (!hero?.parentElement) return;
 
   let host = current;
   if (!host) {
     host = document.createElement("section");
     host.id = HOST_ID;
     host.className = "connector-dashboard";
-    anchor.insertAdjacentElement("afterend", host);
+    hero.parentElement.insertAdjacentElement("afterend", host);
   }
 
-  const liveCount = findLiveEcosystemCount();
-  const connected = ecosystemRegistry.filter(
-    (definition) => connectorState(definition.key, liveCount) === "ready",
-  ).length;
+  const connected = ecosystemRegistry.filter((definition) => defaultState(definition.key) === "ready").length;
   const pending = ecosystemRegistry.length - connected;
 
   const markup = `
@@ -82,7 +113,7 @@ function render(): void {
       <div>
         <small>ECCOMI ECOSYSTEM CONNECTOR</small>
         <strong>Collegamenti dell'ecosistema</strong>
-        <p>Solo collegamenti realmente disponibili. Nessun KPI viene simulato.</p>
+        <p>Solo collegamenti verificati realmente. Nessun KPI viene simulato.</p>
       </div>
       <div class="connector-dashboard__summary">
         <span><b>${connected}</b> collegati</span>
@@ -91,7 +122,7 @@ function render(): void {
     </div>
     <div class="connector-dashboard__grid">
       ${ecosystemRegistry.map((definition) => {
-        const state = connectorState(definition.key, liveCount);
+        const state = defaultState(definition.key);
         return `<article class="connector-dashboard__item">
           <span class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></span>
           <div>
@@ -110,8 +141,13 @@ function render(): void {
   }
 }
 
-window.addEventListener("focus", render);
-window.addEventListener("pageshow", render);
-window.setInterval(render, 5_000);
-window.setTimeout(render, 250);
-window.setTimeout(render, 1_000);
+function refresh(): void {
+  render();
+  void verifyOperationalConnectors();
+}
+
+window.addEventListener("focus", refresh);
+window.addEventListener("pageshow", refresh);
+window.setInterval(refresh, 30_000);
+window.setTimeout(refresh, 250);
+window.setTimeout(refresh, 1_000);
