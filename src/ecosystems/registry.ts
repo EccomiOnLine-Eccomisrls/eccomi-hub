@@ -72,13 +72,14 @@ export const ecosystemRegistry: EcosystemConnectorDefinition[] = [
   {
     key: "performance",
     name: "ECCOMI Performance",
-    description: "Verticale Performance multi-azienda da collegare a ECCOMI HUB.",
-    lifecycle: "planned",
+    description: "Piattaforma gestionale multi-azienda collegata alla cabina di regia.",
+    lifecycle: "connecting",
     health: "unknown",
     access: { supportsSso: false },
+    summaryEndpoint: "/v1/ecosystems/performance/summary",
     kpis: [],
     priorities: [],
-    capabilities: [],
+    capabilities: ["summary"],
   },
   {
     key: "future",
