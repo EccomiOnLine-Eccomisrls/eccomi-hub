@@ -4,7 +4,7 @@ type ConnectorState = "ready" | "planned" | "connecting" | "error";
 type HubSession = { accessToken?: string; access_token?: string };
 
 const HOST_ID = "eccomi-connector-dashboard";
-const API_URL = String(import.meta.env.VITE_HUB_API_URL || import.meta.env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
+const API_URL = String(import.meta.env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
 const verifiedStates = new Map<string, ConnectorState>();
 let lastMarkup = "";
 let verifying = false;
