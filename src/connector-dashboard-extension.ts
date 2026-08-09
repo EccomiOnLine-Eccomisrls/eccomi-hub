@@ -75,7 +75,7 @@ async function verifyOperationalConnectors(): Promise<void> {
 function stateLabel(state: ConnectorState): string {
   if (state === "ready") return "Collegato";
   if (state === "error") return "Da verificare";
-  if (state === "connecting") return "Verifica in corso";
+  if (state === "connecting") return "Da collegare";
   return "Pianificato";
 }
 
