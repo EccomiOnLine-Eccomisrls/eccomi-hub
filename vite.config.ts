@@ -12,4 +12,12 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: ["terminal.local"],
   },
+  preview: {
+    host: "0.0.0.0",
+    allowedHosts: [
+      "terminal.local",
+      "eccomi-performance-v2.onrender.com",
+      ".onrender.com",
+    ],
+  },
 });

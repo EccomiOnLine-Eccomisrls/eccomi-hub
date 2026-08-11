@@ -22,7 +22,8 @@ export type OsAppId =
   | "spedizioni"
   | "guide"
   | "book"
-  | "fiscal";
+  | "fiscal"
+  | "performance";
 
 export type OsAppManifest = {
   id: OsAppId;
