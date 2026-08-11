@@ -125,7 +125,7 @@ function render(): void {
         <div>
           <small>ECCOMI ECOSYSTEM CONNECTOR</small>
           <strong>Stato dell'ecosistema</strong>
-          <p>Collegamenti reali, verificati dalla cabina di regia.</p>
+          <p>Collegamenti reali, verificati dalla cabina di regia. Nessun KPI viene simulato.</p>
         </div>
       </div>
       <div class="connector-dashboard__metrics" aria-label="Riepilogo collegamenti">
