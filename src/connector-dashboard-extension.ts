@@ -86,6 +86,16 @@ function stateClass(state: ConnectorState): string {
   return "planned";
 }
 
+function openEcosystems(): void {
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>("a,button,[role='button']"));
+  const target = candidates.find((element) => element.textContent?.trim().toLowerCase() === "ecosistemi");
+  target?.click();
+}
+
+function bindActions(host: HTMLElement): void {
+  host.querySelector<HTMLButtonElement>("[data-connector-open-ecosystems]")?.addEventListener("click", openEcosystems);
+}
+
 function render(): void {
   const current = document.getElementById(HOST_ID);
   if (!dashboardVisible()) {
@@ -94,43 +104,45 @@ function render(): void {
     return;
   }
 
-  const hero = document.querySelector<HTMLElement>(".os2-morning-hero");
-  if (!hero?.parentElement) return;
+  const snapshot = document.getElementById("executive-section-snapshot");
+  if (!snapshot?.parentElement) return;
 
   let host = current;
   if (!host) {
     host = document.createElement("section");
     host.id = HOST_ID;
-    host.className = "connector-dashboard";
-    hero.parentElement.insertAdjacentElement("afterend", host);
+    host.className = "connector-dashboard connector-dashboard--compact";
+    snapshot.insertAdjacentElement("afterend", host);
   }
 
   const connected = ecosystemRegistry.filter((definition) => defaultState(definition.key) === "ready").length;
   const pending = ecosystemRegistry.length - connected;
 
   const markup = `
-    <div class="connector-dashboard__head">
-      <div>
-        <small>ECCOMI ECOSYSTEM CONNECTOR</small>
-        <strong>Collegamenti dell'ecosistema</strong>
-        <p>Solo collegamenti verificati realmente. Nessun KPI viene simulato.</p>
+    <div class="connector-dashboard__compact-main">
+      <div class="connector-dashboard__identity">
+        <span class="connector-dashboard__icon" aria-hidden="true">⌘</span>
+        <div>
+          <small>ECCOMI ECOSYSTEM CONNECTOR</small>
+          <strong>Stato dell'ecosistema</strong>
+          <p>Collegamenti reali, verificati dalla cabina di regia.</p>
+        </div>
       </div>
-      <div class="connector-dashboard__summary">
-        <span><b>${connected}</b> collegati</span>
-        <span><b>${pending}</b> da completare</span>
+      <div class="connector-dashboard__metrics" aria-label="Riepilogo collegamenti">
+        <span><b>${ecosystemRegistry.length}</b><small>Ecosistemi</small></span>
+        <span class="is-ready"><b>${connected}</b><small>Collegati</small></span>
+        <span><b>${pending}</b><small>Da completare</small></span>
       </div>
+      <button class="connector-dashboard__open" type="button" data-connector-open-ecosystems>Apri Ecosistemi <span>→</span></button>
     </div>
-    <div class="connector-dashboard__grid">
+    <div class="connector-dashboard__status-strip">
       ${ecosystemRegistry.map((definition) => {
         const state = defaultState(definition.key);
-        return `<article class="connector-dashboard__item">
-          <span class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></span>
-          <div>
-            <strong>${definition.name}</strong>
-            <small>${definition.description}</small>
-          </div>
-          <em class="connector-dashboard__badge connector-dashboard__badge--${stateClass(state)}">${stateLabel(state)}</em>
-        </article>`;
+        return `<span class="connector-dashboard__status connector-dashboard__status--${stateClass(state)}" title="${definition.name}: ${stateLabel(state)}">
+          <i class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></i>
+          <b>${definition.name.replace(/^ECCOMI\s+/i, "")}</b>
+          <em>${stateLabel(state)}</em>
+        </span>`;
       }).join("")}
     </div>
   `;
@@ -138,6 +150,7 @@ function render(): void {
   if (markup !== lastMarkup) {
     host.innerHTML = markup;
     lastMarkup = markup;
+    bindActions(host);
   }
 }
 
