@@ -4,9 +4,11 @@ type ConnectorState = "ready" | "planned" | "connecting" | "error";
 type HubSession = { accessToken?: string; access_token?: string };
 
 const HOST_ID = "eccomi-connector-dashboard";
+const DETAIL_ID = "eccomi-connector-ecosystems";
 const API_URL = String(import.meta.env.VITE_HUB_API_BASE_URL || "https://eccomi-hub.onrender.com").replace(/\/$/, "");
 const verifiedStates = new Map<string, ConnectorState>();
 let lastMarkup = "";
+let lastDetailMarkup = "";
 let verifying = false;
 
 function sessionToken(): string {
@@ -17,21 +19,7 @@ function sessionToken(): string {
       if (token) return token;
     } catch {}
   }
-  for (let i = 0; i < localStorage.length; i += 1) {
-    try {
-      const parsed = JSON.parse(localStorage.getItem(localStorage.key(i) || "") || "") as HubSession;
-      const token = parsed.accessToken || parsed.access_token;
-      if (token) return token;
-    } catch {}
-  }
   return "";
-}
-
-function dashboardVisible(): boolean {
-  return Boolean(
-    document.getElementById("executive-section-snapshot") &&
-    document.querySelector(".os2-morning-hero"),
-  );
 }
 
 function defaultState(key: string): ConnectorState {
@@ -49,7 +37,6 @@ async function verifyOperationalConnectors(): Promise<void> {
     render();
     return;
   }
-
   verifying = true;
   try {
     await Promise.all(ecosystemRegistry.filter((item) => item.summaryEndpoint).map(async (definition) => {
@@ -96,17 +83,16 @@ function bindActions(host: HTMLElement): void {
   host.querySelector<HTMLButtonElement>("[data-connector-open-ecosystems]")?.addEventListener("click", openEcosystems);
 }
 
-function render(): void {
+function renderDashboard(): void {
+  const visible = Boolean(document.getElementById("executive-section-snapshot") && document.querySelector(".os2-morning-hero"));
   const current = document.getElementById(HOST_ID);
-  if (!dashboardVisible()) {
+  if (!visible) {
     current?.remove();
     lastMarkup = "";
     return;
   }
-
   const snapshot = document.getElementById("executive-section-snapshot");
   if (!snapshot?.parentElement) return;
-
   let host = current;
   if (!host) {
     host = document.createElement("section");
@@ -114,19 +100,13 @@ function render(): void {
     host.className = "connector-dashboard connector-dashboard--compact";
     snapshot.insertAdjacentElement("afterend", host);
   }
-
   const connected = ecosystemRegistry.filter((definition) => defaultState(definition.key) === "ready").length;
   const pending = ecosystemRegistry.length - connected;
-
   const markup = `
     <div class="connector-dashboard__compact-main">
       <div class="connector-dashboard__identity">
         <span class="connector-dashboard__icon" aria-hidden="true">⌘</span>
-        <div>
-          <small>ECCOMI ECOSYSTEM CONNECTOR</small>
-          <strong>Stato dell'ecosistema</strong>
-          <p>Collegamenti reali, verificati dalla cabina di regia. Nessun KPI viene simulato.</p>
-        </div>
+        <div><small>ECCOMI ECOSYSTEM CONNECTOR</small><strong>Stato dell'ecosistema</strong><p>Riepilogo tecnico sintetico. Il dettaglio vive nella sezione Ecosistemi.</p></div>
       </div>
       <div class="connector-dashboard__metrics" aria-label="Riepilogo collegamenti">
         <span><b>${ecosystemRegistry.length}</b><small>Ecosistemi</small></span>
@@ -138,15 +118,9 @@ function render(): void {
     <div class="connector-dashboard__status-strip">
       ${ecosystemRegistry.map((definition) => {
         const state = defaultState(definition.key);
-        return `<span class="connector-dashboard__status connector-dashboard__status--${stateClass(state)}" title="${definition.name}: ${stateLabel(state)}">
-          <i class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></i>
-          <b>${definition.name.replace(/^ECCOMI\s+/i, "")}</b>
-          <em>${stateLabel(state)}</em>
-        </span>`;
+        return `<span class="connector-dashboard__status connector-dashboard__status--${stateClass(state)}" title="${definition.name}: ${stateLabel(state)}"><i class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></i><b>${definition.name.replace(/^ECCOMI\s+/i, "")}</b><em>${stateLabel(state)}</em></span>`;
       }).join("")}
-    </div>
-  `;
-
+    </div>`;
   if (markup !== lastMarkup) {
     host.innerHTML = markup;
     lastMarkup = markup;
@@ -154,11 +128,48 @@ function render(): void {
   }
 }
 
+function renderEcosystemsDetail(): void {
+  const overview = document.querySelector<HTMLElement>(".overview-strip");
+  const grid = document.querySelector<HTMLElement>(".ecosystem-grid");
+  const current = document.getElementById(DETAIL_ID);
+  if (!overview || !grid) {
+    current?.remove();
+    lastDetailMarkup = "";
+    return;
+  }
+  let host = current;
+  if (!host) {
+    host = document.createElement("section");
+    host.id = DETAIL_ID;
+    host.className = "connector-detail";
+    overview.insertAdjacentElement("afterend", host);
+  }
+  const markup = `
+    <div class="connector-detail__head"><div><small>ECCOMI ECOSYSTEM CONNECTOR</small><strong>Collegamenti reali</strong><p>Controllo tecnico completo dei verticali registrati. Nessun KPI viene simulato.</p></div></div>
+    <div class="connector-detail__grid">
+      ${ecosystemRegistry.map((definition) => {
+        const state = defaultState(definition.key);
+        return `<article class="connector-detail__item"><span class="connector-dashboard__dot connector-dashboard__dot--${stateClass(state)}"></span><div><strong>${definition.name}</strong><small>${definition.description}</small></div><em class="connector-detail__badge connector-detail__badge--${stateClass(state)}">${stateLabel(state)}</em></article>`;
+      }).join("")}
+    </div>`;
+  if (markup !== lastDetailMarkup) {
+    host.innerHTML = markup;
+    lastDetailMarkup = markup;
+  }
+}
+
+function render(): void {
+  renderDashboard();
+  renderEcosystemsDetail();
+}
+
 function refresh(): void {
   render();
   void verifyOperationalConnectors();
 }
 
+const observer = new MutationObserver(render);
+observer.observe(document.documentElement, { childList: true, subtree: true });
 window.addEventListener("focus", refresh);
 window.addEventListener("pageshow", refresh);
 window.setInterval(refresh, 30_000);
